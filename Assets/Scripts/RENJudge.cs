@@ -115,11 +115,11 @@ public class RENJudge : MonoBehaviour
 
     string GetRenComment(int ren)
     {
-        if (ren == 0) return "..... Well, unfortunately the reality is cruel";
-        if (ren <= 3) return "sigh... You better try hard...";
-        if (ren <= 5) return "Not bad, but you could do more better";
-        if (ren <= 10) return "Wow, you pretty good at REN";
-        return "You are God Tetris Player";
+        if (ren == 0) return ".....Well, unfortunately the reality is cruel";
+        if (ren <= 3) return "Sigh... You better try harder than that...";
+        if (ren <= 5) return "Not bad, but could be better...";
+        if (ren <= 10) return "Wow, you're pretty good at REN";
+        return "You are a God Tier Tetris Player";
     }
 
     void UpdateClearMessage()

@@ -108,7 +108,7 @@ public class Tetromino : MonoBehaviour
 
         // シーン名に応じた挙動
         string sceneName = SceneManager.GetActiveScene().name;
-        bool isNormalMode = sceneName.Contains("TSD_N") || sceneName.Contains("TST_N") || sceneName.Contains("REN_N");
+        bool isNormalMode = sceneName.Contains("TSD_N") || sceneName.Contains("TST_N") || sceneName.Contains("REN_N") || sceneName.Contains("40Lines");
 
         if (isNormalMode)
         {
@@ -652,6 +652,19 @@ public class Tetromino : MonoBehaviour
         }
 
         // ===== 各Judgeへ通知 =====
+        var fortyJudge = FindObjectOfType<FortyLineJudge>();
+        if (fortyJudge != null)
+        {
+            fortyJudge.OnPieceLocked(this, linesCleared);
+            if (fortyJudge.IsStageCleared)
+            {
+                enabled = false;
+                Destroy(gameObject);
+                return;
+            }
+        }
+
+        // (Optional) Legacy: T-Spin Double mode
         var tsdJudge = FindObjectOfType<TSpinDoubleJudge>();
         if (tsdJudge != null)
         {

@@ -1,13 +1,12 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class TSpinDoubleJudge : MonoBehaviour
+public class FortyLineJudge : MonoBehaviour
 {
     [Header("UI / Scene Settings")]
     public GameObject clearUIRoot;
-    public string stageSelectSceneName = "TechniqueSelect";
-    public string nextStageSceneName = "";
     public bool stopTimeOnClear = true;
 
     [Header("Clear Animation")]
@@ -17,19 +16,22 @@ public class TSpinDoubleJudge : MonoBehaviour
     public Text clearMessageText;
     public Text timeText;
 
+    [Header("Line Counter UI")]
+    public TMP_Text linesRemainingText;
+
     public bool IsStageCleared { get; private set; } = false;
+
+    [Header("40 Line Mode Settings")]
+    public int targetLines = 40;
+    int totalLinesCleared = 0;
 
     bool isEasyLikeMode = false;
 
     void Start()
     {
-        string sceneName = SceneManager.GetActiveScene().name;
-
-        // Easy 系モードかどうか
-        isEasyLikeMode = sceneName.Contains("TSD_E") || sceneName.Contains("TSD_B");
-
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
+        UpdateLinesRemainingText();
     }
 
     // Tetromino がロックされたときに Tetromino 側から呼ぶ
@@ -37,40 +39,21 @@ public class TSpinDoubleJudge : MonoBehaviour
     {
         if (IsStageCleared) return;
 
-        // Tミノ以外は無視（I,J,L,O,S,T,Z の順なら T は index 5）
-        if (piece.typeIndex != 5) return;
+        // 加算
+        totalLinesCleared += linesCleared;
+        Debug.Log($"[40L] Total Lines: {totalLinesCleared}/{targetLines}");
+        UpdateLinesRemainingText();
 
-        if (isEasyLikeMode)
+        if (totalLinesCleared >= targetLines)
         {
-            if (linesCleared == 2)
-            {
-                Debug.Log("[TSD] SUCCESS (Easy): 2 lines cleared -> HandleStageClear()");
-                
-                SoundManager.Instance?.PlaySE(SeType.StageClear);
-                HandleStageClear();
-            }
-            else
-            {
-                Debug.Log($"[TSD] FAIL (Easy): linesCleared={linesCleared}, time={GetClearTimeSeconds():F2} sec -> ForceRestartScene()");
-                SoundManager.Instance?.PlaySE(SeType.StageFail);
-                ForceRestartScene();
-            }
-        }
-        else
-        {
-            // Normal / Hard: T で 2ライン消したときだけクリア
-            if (linesCleared == 2)
-            {
-                
-                SoundManager.Instance?.PlaySE(SeType.StageClear);
-                HandleStageClear();
-            }
+            SoundManager.Instance?.PlaySE(SeType.StageClear);
+            HandleStageClear();
         }
     }
 
     void HandleStageClear()
     {
-        Debug.Log("[TSD] HandleStageClear START");
+        Debug.Log("HandleStageClear START");
 
         IsStageCleared = true;
 
@@ -95,11 +78,11 @@ public class TSpinDoubleJudge : MonoBehaviour
             if (stopTimeOnClear)
                 Time.timeScale = 0f;
 
-            Debug.Log("[TSD] HandleStageClear: FaridUI=null -> panel only");
+            Debug.Log("HandleStageClear: FaridUI=null -> panel only");
             return;
         }
 
-        Debug.Log($"[TSD] HandleStageClear: time={clearTime:F2}, easy={isEasyLikeMode}, spriteIndex={spriteIndex}");
+        Debug.Log($"HandleStageClear: time={clearTime:F2}, easy={isEasyLikeMode}, spriteIndex={spriteIndex}");
 
         clearFaridUI.SetImageByIndex(spriteIndex);
         clearFaridUI.Play();
@@ -107,7 +90,7 @@ public class TSpinDoubleJudge : MonoBehaviour
         if (stopTimeOnClear)
             Time.timeScale = 0f;
 
-        Debug.Log("[TSD] HandleStageClear END");
+        Debug.Log("HandleStageClear END");
     }
 
     float GetClearTimeSeconds()
@@ -120,30 +103,22 @@ public class TSpinDoubleJudge : MonoBehaviour
 
     int GetSpriteIndexByTime(float seconds, bool easyMode)
     {
-        if (easyMode)
-        {
-            // Easy モード
-            if (seconds >= 60f) return 0;   // 1分以上
-            if (seconds > 30f)  return 1;   // 30〜60秒
-            if (seconds > 20f)  return 2;   // 20〜30秒
-            if (seconds > 10f)  return 3;   // 10〜20秒
-            return 4;                       // 10秒以内
-        }
-        else
-        {
-            // Normal / Hard
-            if (seconds >= 180f) return 0;  // 3分以上
-            if (seconds > 120f)  return 1;  // 2〜3分
-            if (seconds > 60f)   return 2;  // 1〜2分
-            if (seconds > 30f)   return 3;  // 30〜60秒
-            return 4;                       // 30秒以内
-        }
+        // 40L スプリント基準
+        if (seconds >= 180f) return 0;  // 3分以上
+        if (seconds > 120f)  return 1;
+        if (seconds > 90f)   return 2;
+        if (seconds > 60f)   return 3;
+        return 4; // 1分以内
     }
 
     void UpdateClearTexts(float clearTime, int spriteIndex)
     {
         if (timeText != null)
-            timeText.text = $"You took {clearTime:F2} seconds";
+        {
+            int minutes = Mathf.FloorToInt(clearTime / 60f);
+            float seconds = clearTime % 60f;
+            timeText.text = $"Time: {minutes}:{seconds:00.00}";
+        }
 
         if (clearMessageText != null)
             clearMessageText.text = GetTimeCommentByIndex(spriteIndex);
@@ -186,36 +161,34 @@ public class TSpinDoubleJudge : MonoBehaviour
         if (GameTimer.Instance != null)
             GameTimer.Instance.ResetTimer();
 
+        totalLinesCleared = 0;
+        UpdateLinesRemainingText();
+
         Time.timeScale = 1f;
         Scene current = SceneManager.GetActiveScene();
         SceneManager.LoadScene(current.buildIndex);
     }
 
-    public void OnNextStageButton()
+    public void OnTitleSelectButton()
     {
-        if (string.IsNullOrEmpty(nextStageSceneName))
+        string titleSceneName = "Title";
+        if (string.IsNullOrEmpty(titleSceneName))
         {
-            Debug.LogWarning("TSpinDoubleJudge: nextStageSceneName が設定されていません。");
+            Debug.LogWarning("FortyLineJudge: titleSceneName が設定されていません。");
             return;
         }
 
         SoundManager.Instance?.PlaySE(SeType.ButtonClick);
 
         Time.timeScale = 1f;
-        SceneManager.LoadScene(nextStageSceneName);
+        SceneManager.LoadScene(titleSceneName);
     }
 
-    public void OnStageSelectButton()
+    void UpdateLinesRemainingText()
     {
-        if (string.IsNullOrEmpty(stageSelectSceneName))
-        {
-            Debug.LogWarning("TSpinDoubleJudge: stageSelectSceneName が設定されていません。");
-            return;
-        }
+        if (linesRemainingText == null) return;
 
-        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
-
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(stageSelectSceneName);
+        int remaining = Mathf.Max(0, targetLines - totalLinesCleared);
+        linesRemainingText.text = remaining.ToString();
     }
 }
