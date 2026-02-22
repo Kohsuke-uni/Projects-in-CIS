@@ -124,6 +124,13 @@ public class Spawner : MonoBehaviour
             }
         }
 
+        // ★ テスト用: Baking_Test は最初に S ミノを出す
+        if (sceneName == "Baking_Test")
+        {
+            spawnMode = SpawnMode.Sequence;
+            EnqueueSequence('S');
+        }
+
         // 将来 TST_B_* などを追加したい場合も、
         // 同じように sceneName を見て sequenceQueue に積めばOK。
     }

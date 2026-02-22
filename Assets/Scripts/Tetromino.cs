@@ -99,6 +99,11 @@ public class Tetromino : MonoBehaviour
         if (board == null || !board.IsValidPosition(this, Vector3.zero))
         {
             Debug.Log("Game Over (spawn invalid)");
+            var fortyJudge = FindObjectOfType<FortyLineJudge>();
+            if (fortyJudge != null)
+            {
+                fortyJudge.OnTopOut();
+            }
             enabled = false;
             return;
         }

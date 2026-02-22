@@ -20,6 +20,7 @@ public class FortyLineJudge : MonoBehaviour
     public TMP_Text linesRemainingText;
 
     public bool IsStageCleared { get; private set; } = false;
+    public bool IsStageFailed { get; private set; } = false;
 
     [Header("40 Line Mode Settings")]
     public int targetLines = 40;
@@ -37,7 +38,7 @@ public class FortyLineJudge : MonoBehaviour
     // Tetromino がロックされたときに Tetromino 側から呼ぶ
     public void OnPieceLocked(Tetromino piece, int linesCleared)
     {
-        if (IsStageCleared) return;
+        if (IsStageCleared || IsStageFailed) return;
 
         // 加算
         totalLinesCleared += linesCleared;
@@ -48,6 +49,47 @@ public class FortyLineJudge : MonoBehaviour
         {
             SoundManager.Instance?.PlaySE(SeType.StageClear);
             HandleStageClear();
+        }
+    }
+
+    // Tetromino のスポーンに失敗したときに呼ぶ（Top Out）
+    public void OnTopOut()
+    {
+        if (IsStageCleared || IsStageFailed) return;
+
+        IsStageFailed = true;
+
+        var controlUI = FindObjectOfType<GameControlUI>();
+        if (controlUI != null)
+            controlUI.HideAllUI();
+
+        if (GameTimer.Instance != null)
+            GameTimer.Instance.StopTimer();
+
+        float failTime = GetClearTimeSeconds();
+
+        if (timeText != null)
+        {
+            int minutes = Mathf.FloorToInt(failTime / 60f);
+            float seconds = failTime % 60f;
+            timeText.text = $"Top Out: {minutes}:{seconds:00.00}";
+        }
+
+        if (clearMessageText != null)
+            clearMessageText.text = "You topped out...";
+
+        if (clearUIRoot != null)
+            clearUIRoot.SetActive(true);
+
+        SoundManager.Instance?.PlaySE(SeType.StageFail);
+
+        if (stopTimeOnClear)
+            Time.timeScale = 0f;
+
+        if (clearFaridUI != null)
+        {
+            clearFaridUI.SetImageByIndex(1);
+            clearFaridUI.Play();
         }
     }
 

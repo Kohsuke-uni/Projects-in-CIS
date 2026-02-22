@@ -116,4 +116,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TST_StageSelect.unity
     guid: be26c9afdc04e974bb038e8886f56a78
+  - enabled: 1
+    path: Assets/Scenes/40Lines.unity
+    guid: e6ce2c6e0626a44bf8b60ef29df2c112
+  - enabled: 1
+    path: Assets/Scenes/Baking_Test.unity
+    guid: 49f37f71f71eb46228377adf937fd8d4
+  - enabled: 1
+    path: Assets/Scenes/Intro.unity
+    guid: 7c55d0ad29fdd4eaba9e122f009026ba
   m_configObjects: {}
