@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PageTurner : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class PageTurner : MonoBehaviour
     public TMP_Text pageIndicatorText;
     public Button prevButton;
     public Button nextButton;
+
+    [Header("Scene Settings")]
+    public string titleSceneName = "Title";
 
     private GameObject[] pages;
     private int index = 0;
@@ -36,7 +40,14 @@ public class PageTurner : MonoBehaviour
 
     public void Next()
     {
-        index = Mathf.Min(index + 1, pages.Length - 1);
+        // If we're on the last page, go to Title scene
+        if (index >= pages.Length - 1)
+        {
+            SceneManager.LoadScene(titleSceneName);
+            return;
+        }
+
+        index++;
         ShowPage(index);
     }
 
@@ -60,10 +71,22 @@ public class PageTurner : MonoBehaviour
         if (pageIndicatorText != null)
             pageIndicatorText.text = $"{i + 1} / {pages.Length}";
 
+        if (nextButton != null)
+        {
+            TMP_Text buttonText = nextButton.GetComponentInChildren<TMP_Text>();
+            if (buttonText != null)
+            {
+                if (i >= pages.Length - 1)
+                    buttonText.text = "Title";
+                else
+                    buttonText.text = "Next";
+            }
+        }
+
         if (prevButton != null)
             prevButton.gameObject.SetActive(i > 0);
 
         if (nextButton != null)
-            nextButton.gameObject.SetActive(i < pages.Length - 1);
+            nextButton.gameObject.SetActive(true);
     }
 }
