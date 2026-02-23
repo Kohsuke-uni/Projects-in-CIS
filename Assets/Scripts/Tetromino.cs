@@ -277,7 +277,7 @@ public class Tetromino : MonoBehaviour
 
         // Soft Drop (↓)
         //コントローラーはD-downでソフトドロップ
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButto15))
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton15))
         {
             fastDropping = true;
 
