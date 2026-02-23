@@ -10,7 +10,7 @@ public class GoBackESC : MonoBehaviour
     {
         // ESC判定（旧 InputSystem で動作）
         //コントローラーだとL1/R1でESCメニュー開閉
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton8) || Input.GetKeyDown(KeyCode.JoystickButton9))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton4) || Input.GetKeyDown(KeyCode.JoystickButton5))
         {
             if (!string.IsNullOrEmpty(targetSceneName))
             {
