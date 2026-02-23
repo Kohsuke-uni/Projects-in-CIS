@@ -44,6 +44,9 @@ public class Spawner : MonoBehaviour
     private bool canHold = true;
     private bool nextHoldSpawn = false; // 互換性のために残しているが、現在は使用していない
 
+    [Header("CPU Mode")]
+    public bool spawnCpuControlled = false;
+    public CpuDifficulty cpuDifficulty = CpuDifficulty.Normal;
     // 初期化
     private void Awake()
     {
@@ -341,6 +344,14 @@ public class Spawner : MonoBehaviour
         piece.typeIndex = idx;
         piece.spawnedFromHold = fromHold;
 
+
+        if (spawnCpuControlled)
+        {
+            piece.enablePlayerInput = false;
+
+            var agent = piece.gameObject.AddComponent<CpuAgent>();
+            agent.difficulty = cpuDifficulty;
+        }
         // ゴーストの生成
         if (ghostPrefabs != null &&
             ghostPrefabs.Length > idx &&

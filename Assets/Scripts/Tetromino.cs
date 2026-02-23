@@ -64,6 +64,20 @@ public class Tetromino : MonoBehaviour
     private float dasTimer = 0f;
     private float arrTimer = 0f;
 
+    public bool enablePlayerInput = true;
+
+    public int RotationIndex => rotationIndex;
+
+    public bool CpuTryMove(Vector3 delta) => TryMove(delta);
+
+    public bool CpuTryRotate(int dir) => TryRotateAndRecordWithSE(dir);
+
+    public void CpuHardDropAndLock()
+    {
+        while (TryMove(Vector3.down)) { }
+        Lock();
+    }
+
     private void Awake()
     {
         var list = new List<Transform>(4);
@@ -134,11 +148,16 @@ public class Tetromino : MonoBehaviour
 
         if (locked) return;
 
+        if (enablePlayerInput)
+        {
+            HandleInput();
+            HandleHorizontalAutoShift();
+        }
+
         UpdateGroundedState();
-        HandleInput();
-        HandleHorizontalAutoShift(); // ★ 長押し横移動
         HandleFalling();
         TryAutoLockIfNeeded();
+    
     }
 
     private void UpdateGroundedState()
