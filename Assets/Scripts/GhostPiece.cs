@@ -8,8 +8,7 @@ public class GhostPiece : MonoBehaviour
     [Tooltip("Board（Spawnerが代入）")]
     public Board board;
 
-    [Tooltip("半透明色（Prefab側のSpriteRendererにも反映しておくと良い）")]
-    public Color ghostColor = new Color(1f, 1f, 1f, 0.28f);
+    private float ghostAlpha = 0.5f;
 
     [Tooltip("Ghost側のPivot（Prefab内のEmpty）。名前に \"Pivot\" を含めるとAwakeで自動検出")]
     public Transform pivotOverride;
@@ -29,8 +28,6 @@ public class GhostPiece : MonoBehaviour
             if (i < 4)
             {
                 cells[i++] = c;
-                var sr = c.GetComponent<SpriteRenderer>();
-                if (sr) sr.color = ghostColor;
             }
         }
     }
@@ -54,7 +51,20 @@ public class GhostPiece : MonoBehaviour
             for (int i = 0; i < 4 && i < cells.Length; i++)
             {
                 if (cells[i] != null && target.Cells[i] != null)
+                {
+                    // Copy shape
                     cells[i].localPosition = target.Cells[i].localPosition;
+
+                    // Copy color but force ghost alpha
+                    var targetSR = target.Cells[i].GetComponent<SpriteRenderer>();
+                    var ghostSR = cells[i].GetComponent<SpriteRenderer>();
+
+                    if (targetSR != null && ghostSR != null)
+                    {
+                        Color c = targetSR.color;
+                        ghostSR.color = new Color(c.r, c.g, c.b, ghostAlpha);
+                    }
+                }
             }
         }
 

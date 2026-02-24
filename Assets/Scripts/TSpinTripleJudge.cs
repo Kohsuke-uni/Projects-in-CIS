@@ -146,15 +146,15 @@ public class TSpinTripleJudge : MonoBehaviour
         switch (index)
         {
             case 0:
-                return "..... Well, unfortunately the reality is cruel";
+                return ".....Well, unfortunately the reality is cruel";
             case 1:
-                return "sigh... You better try hard...";
+                return "Sigh... You better try harder than that...";
             case 2:
-                return "Not bad, but you could more better";
+                return "Not bad, but could be better...";
             case 3:
-                return "Wow, you pretty good at T-Spin!";
+                return "Wow, you're pretty good at T-Spin!";
             default:
-                return "You are God Tetris Player";
+                return "You are a God Tier Tetris Player";
         }
     }
 
