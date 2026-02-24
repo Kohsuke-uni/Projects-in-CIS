@@ -18,6 +18,7 @@ public class FortyLineJudge : MonoBehaviour
 
     [Header("Line Counter UI")]
     public TMP_Text linesRemainingText;
+    public TMP_Text ppsText;
 
     public bool IsStageCleared { get; private set; } = false;
     public bool IsStageFailed { get; private set; } = false;
@@ -25,6 +26,7 @@ public class FortyLineJudge : MonoBehaviour
     [Header("40 Line Mode Settings")]
     public int targetLines = 40;
     int totalLinesCleared = 0;
+    int totalPiecesLocked = 0;
 
     bool isEasyLikeMode = false;
 
@@ -33,6 +35,13 @@ public class FortyLineJudge : MonoBehaviour
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
         UpdateLinesRemainingText();
+        UpdatePpsText();
+    }
+
+    void Update()
+    {
+        if (IsStageCleared || IsStageFailed) return;
+        UpdatePpsText();
     }
 
     // Tetromino がロックされたときに Tetromino 側から呼ぶ
@@ -40,10 +49,13 @@ public class FortyLineJudge : MonoBehaviour
     {
         if (IsStageCleared || IsStageFailed) return;
 
+        totalPiecesLocked++;
+
         // 加算
         totalLinesCleared += linesCleared;
         Debug.Log($"[40L] Total Lines: {totalLinesCleared}/{targetLines}");
         UpdateLinesRemainingText();
+        UpdatePpsText();
 
         if (totalLinesCleared >= targetLines)
         {
@@ -67,6 +79,7 @@ public class FortyLineJudge : MonoBehaviour
             GameTimer.Instance.StopTimer();
 
         float failTime = GetClearTimeSeconds();
+        UpdatePpsText();
 
         if (timeText != null)
         {
@@ -108,6 +121,7 @@ public class FortyLineJudge : MonoBehaviour
 
         float clearTime = GetClearTimeSeconds();
         int spriteIndex = GetSpriteIndexByTime(clearTime, isEasyLikeMode);
+        UpdatePpsText();
 
         // 先にテキストを更新
         UpdateClearTexts(clearTime, spriteIndex);
@@ -204,7 +218,9 @@ public class FortyLineJudge : MonoBehaviour
             GameTimer.Instance.ResetTimer();
 
         totalLinesCleared = 0;
+        totalPiecesLocked = 0;
         UpdateLinesRemainingText();
+        UpdatePpsText();
 
         Time.timeScale = 1f;
         Scene current = SceneManager.GetActiveScene();
@@ -232,5 +248,14 @@ public class FortyLineJudge : MonoBehaviour
 
         int remaining = Mathf.Max(0, targetLines - totalLinesCleared);
         linesRemainingText.text = remaining.ToString();
+    }
+
+    void UpdatePpsText()
+    {
+        if (ppsText == null) return;
+
+        float seconds = GetClearTimeSeconds();
+        float pps = seconds > 0f ? totalPiecesLocked / seconds : 0f;
+        ppsText.text = $"PPS: {pps:F2}";
     }
 }

@@ -126,6 +126,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Intro.unity
     guid: 7c55d0ad29fdd4eaba9e122f009026ba
   - enabled: 1
-    path: Assets/Scenes/Intermediate.unity
+    path: Assets/Scenes/TST_About.unity
     guid: 9c4733468c9074f1aac649e2280efc6d
   m_configObjects: {}
