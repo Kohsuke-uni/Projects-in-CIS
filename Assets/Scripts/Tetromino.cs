@@ -669,12 +669,11 @@ public class Tetromino : MonoBehaviour
             }
         }
 
-        // (Optional) Legacy: T-Spin Double mode
-        var tsdJudge = FindObjectOfType<TSpinDoubleJudge>();
-        if (tsdJudge != null)
+        var practiceJudge = FindObjectOfType<PracticeJudge>();
+        if (practiceJudge != null)
         {
-            tsdJudge.OnPieceLocked(this, linesCleared);
-            if (tsdJudge.IsStageCleared)
+            practiceJudge.OnPieceLocked(this, linesCleared);
+            if (practiceJudge.IsStageCleared)
             {
                 enabled = false;
                 Destroy(gameObject);
@@ -682,15 +681,31 @@ public class Tetromino : MonoBehaviour
             }
         }
 
-        var tstJudge = FindObjectOfType<TSpinTripleJudge>();
-        if (tstJudge != null)
+        if (practiceJudge == null)
         {
-            tstJudge.OnPieceLocked(this, linesCleared);
-            if (tstJudge.IsStageCleared)
+            // (Optional) Legacy: T-Spin Double mode
+            var tsdJudge = FindObjectOfType<TSpinDoubleJudge>();
+            if (tsdJudge != null)
             {
-                enabled = false;
-                Destroy(gameObject);
-                return;
+                tsdJudge.OnPieceLocked(this, linesCleared);
+                if (tsdJudge.IsStageCleared)
+                {
+                    enabled = false;
+                    Destroy(gameObject);
+                    return;
+                }
+            }
+
+            var tstJudge = FindObjectOfType<TSpinTripleJudge>();
+            if (tstJudge != null)
+            {
+                tstJudge.OnPieceLocked(this, linesCleared);
+                if (tstJudge.IsStageCleared)
+                {
+                    enabled = false;
+                    Destroy(gameObject);
+                    return;
+                }
             }
         }
 

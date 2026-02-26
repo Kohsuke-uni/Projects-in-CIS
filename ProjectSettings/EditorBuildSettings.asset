@@ -128,4 +128,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TST_About.unity
     guid: 9c4733468c9074f1aac649e2280efc6d
+  - enabled: 1
+    path: Assets/Scenes/Intermediate.unity
+    guid: 4f71dd29f9cc54c4cbdc67696bd8f2ac
+  - enabled: 1
+    path: Assets/Scenes/SRS_About.unity
+    guid: d9bc41907559e4f2b8716cb4b6361e79
+  - enabled: 1
+    path: Assets/Scenes/SRS_SZ_1.unity
+    guid: b599d3a86f72f4acab87074849bffc90
   m_configObjects: {}

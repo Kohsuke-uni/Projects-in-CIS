@@ -124,11 +124,19 @@ public class Spawner : MonoBehaviour
             }
         }
 
-        // ★ テスト用: Baking_Test は最初に S ミノを出す
-        if (sceneName == "Baking_Test")
+        if (sceneName == "SRS_SZ_1" || sceneName == "SRS_SZ_3" 
+        || sceneName == "SRS_SZ_5" || sceneName == "SRS_SZ_7" || sceneName == "SRS_SZ_9" 
+        || sceneName == "SRS_SZ_11" || sceneName == "SRS_SZ_13" || sceneName == "SRS_SZ_15")
         {
             spawnMode = SpawnMode.Sequence;
             EnqueueSequence('S');
+        }
+        if (sceneName == "SRS_SZ_2" || sceneName == "SRS_SZ_4" 
+        || sceneName == "SRS_SZ_6" || sceneName == "SRS_SZ_8" || sceneName == "SRS_SZ_10" 
+        || sceneName == "SRS_SZ_12" || sceneName == "SRS_SZ_14" || sceneName == "SRS_SZ_16")
+        {
+            spawnMode = SpawnMode.Sequence;
+            EnqueueSequence('Z');
         }
 
         // 将来 TST_B_* などを追加したい場合も、

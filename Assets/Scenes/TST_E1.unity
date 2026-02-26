@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 42720969}
   - component: {fileID: 42720968}
   - component: {fileID: 42720966}
-  - component: {fileID: 42720971}
+  - component: {fileID: 42720972}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -205,7 +205,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &42720971
+--- !u!114 &42720972
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -214,9 +214,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 42720965}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df82d489c75b45ec9d134b77388fbd3, type: 3}
+  m_Script: {fileID: 11500000, guid: 72cfd3949a287490f94995a5a4dfc949, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  practiceType: 1
   clearUIRoot: {fileID: 1576505623}
   stageSelectSceneName: TST_StageSelect
   nextStageSceneName: TST_E2
@@ -224,6 +225,8 @@ MonoBehaviour:
   clearFaridUI: {fileID: 865752884}
   clearMessageText: {fileID: 1034915136}
   timeText: {fileID: 479855442}
+  detectEasyLikeModeFromSceneName: 1
+  easySceneKeywords: []
 --- !u!1 &124016868
 GameObject:
   m_ObjectHideFlags: 0
@@ -2890,7 +2893,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 42720971}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TSpinTripleJudge, Assembly-CSharp
         m_MethodName: OnNextStageButton
         m_Mode: 1
@@ -3618,7 +3621,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 42720971}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TSpinTripleJudge, Assembly-CSharp
         m_MethodName: OnStageSelectButton
         m_Mode: 1
@@ -4039,7 +4042,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 42720971}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TSpinTripleJudge, Assembly-CSharp
         m_MethodName: OnRetryButton
         m_Mode: 1
