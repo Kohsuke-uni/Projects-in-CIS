@@ -8,9 +8,14 @@ public class PracticeJudge : MonoBehaviour
     {
         TSpinDouble,
         TSpinTriple,
+        SZSingle,
         SZDouble,
         SZTriple,
-        SZSingle
+        JLSingle,
+        JLDouble,
+        JLTriple,
+        ISingle,
+        IFull
     }
 
     [Header("Practice Type")]
@@ -79,21 +84,39 @@ public class PracticeJudge : MonoBehaviour
 
         if (practiceType == PracticeType.TSpinDouble || practiceType == PracticeType.TSpinTriple)
             return piece.typeIndex == 5; // T
-
-        return piece.typeIndex == 4 || piece.typeIndex == 6; // S or Z
+        if (practiceType == PracticeType.SZSingle || practiceType == PracticeType.SZDouble || practiceType == PracticeType.SZTriple)
+            return piece.typeIndex == 4 || piece.typeIndex == 6; // S or Z
+        if (practiceType == PracticeType.JLSingle || practiceType == PracticeType.JLDouble || practiceType == PracticeType.JLTriple)
+            return piece.typeIndex == 1 || piece.typeIndex == 2; // J or L
+        if (practiceType == PracticeType.ISingle || practiceType == PracticeType.IFull)
+            return piece.typeIndex == 0; // I
+        return piece.typeIndex == 5; // デフォルトは T
     }
 
     bool IsSuccessLineCount(int linesCleared)
     {
         switch (practiceType)
         {
-            case PracticeType.TSpinTriple:
-            case PracticeType.SZTriple:
-                return linesCleared == 3;
-            case PracticeType.SZDouble:
+            case PracticeType.TSpinDouble:
                 return linesCleared == 2;
+            case PracticeType.TSpinTriple:
+                return linesCleared == 3;
             case PracticeType.SZSingle:
                 return linesCleared == 1;
+            case PracticeType.SZDouble:
+                return linesCleared == 2;
+            case PracticeType.SZTriple:
+                return linesCleared == 3;
+            case PracticeType.JLSingle:
+                return linesCleared == 1;
+            case PracticeType.JLDouble:
+                return linesCleared == 2;
+            case PracticeType.JLTriple:
+                return linesCleared == 3;
+            case PracticeType.ISingle:
+                return linesCleared == 1;
+            case PracticeType.IFull:
+                return linesCleared == 4;
             default:
                 return linesCleared == 2;
         }
@@ -126,6 +149,12 @@ public class PracticeJudge : MonoBehaviour
             || practiceType == PracticeType.SZTriple 
             || practiceType == PracticeType.SZSingle)
             return new[] { "SRS_SZ" };
+        if (practiceType == PracticeType.JLSingle
+            || practiceType == PracticeType.JLDouble
+            || practiceType == PracticeType.JLTriple)
+            return new[] { "SRS_JL" };
+        if (practiceType == PracticeType.ISingle || practiceType == PracticeType.IFull)
+            return new[] { "SRS_I" };
 
         return new[] { "TSD_E", "TSD_B" };
     }
@@ -241,16 +270,17 @@ public class PracticeJudge : MonoBehaviour
 
     public void OnNextStageButton()
     {
-        if (string.IsNullOrEmpty(nextStageSceneName))
+        string targetSceneName = GetAutoNextSceneNameOrFallback();
+        if (string.IsNullOrEmpty(targetSceneName))
         {
-            Debug.LogWarning("PracticeJudge: nextStageSceneName が設定されていません。");
+            Debug.LogWarning("PracticeJudge: 次ステージ名を解決できませんでした。");
             return;
         }
 
         SoundManager.Instance?.PlaySE(SeType.ButtonClick);
 
         Time.timeScale = 1f;
-        SceneManager.LoadScene(nextStageSceneName);
+        SceneManager.LoadScene(targetSceneName);
     }
 
     public void OnStageSelectButton()
@@ -265,5 +295,51 @@ public class PracticeJudge : MonoBehaviour
 
         Time.timeScale = 1f;
         SceneManager.LoadScene(stageSelectSceneName);
+    }
+
+    string GetAutoNextSceneNameOrFallback()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        if (TryBuildNextSceneName(currentSceneName, out string autoNext)
+            && Application.CanStreamedLevelBeLoaded(autoNext))
+        {
+            return autoNext;
+        }
+
+        if (!string.IsNullOrEmpty(nextStageSceneName)
+            && Application.CanStreamedLevelBeLoaded(nextStageSceneName))
+        {
+            return nextStageSceneName;
+        }
+
+        const string titleSceneName = "Title";
+        if (Application.CanStreamedLevelBeLoaded(titleSceneName))
+            return titleSceneName;
+
+        return string.Empty;
+    }
+
+    bool TryBuildNextSceneName(string sceneName, out string nextSceneName)
+    {
+        nextSceneName = string.Empty;
+        if (string.IsNullOrEmpty(sceneName)) return false;
+
+        int end = sceneName.Length - 1;
+        int start = end;
+
+        while (start >= 0 && char.IsDigit(sceneName[start]))
+            start--;
+
+        start++;
+        if (start > end) return false;
+
+        string numberPart = sceneName.Substring(start, end - start + 1);
+        if (!int.TryParse(numberPart, out int currentNumber)) return false;
+
+        int nextNumber = currentNumber + 1;
+        string prefix = sceneName.Substring(0, start);
+        nextSceneName = prefix + nextNumber;
+        return true;
     }
 }

@@ -124,23 +124,41 @@ public class Spawner : MonoBehaviour
             }
         }
 
-        if (sceneName == "SRS_SZ_1" || sceneName == "SRS_SZ_3" 
-        || sceneName == "SRS_SZ_5" || sceneName == "SRS_SZ_7" || sceneName == "SRS_SZ_9" 
-        || sceneName == "SRS_SZ_11" || sceneName == "SRS_SZ_13" || sceneName == "SRS_SZ_15")
+        if (sceneName.StartsWith("SRS_SZ_") && TryGetSceneSuffixNumber(sceneName, out int szStageNumber))
         {
             spawnMode = SpawnMode.Sequence;
-            EnqueueSequence('S');
+            EnqueueSequence((szStageNumber % 2) == 1 ? 'S' : 'Z');
         }
-        if (sceneName == "SRS_SZ_2" || sceneName == "SRS_SZ_4" 
-        || sceneName == "SRS_SZ_6" || sceneName == "SRS_SZ_8" || sceneName == "SRS_SZ_10" 
-        || sceneName == "SRS_SZ_12" || sceneName == "SRS_SZ_14" || sceneName == "SRS_SZ_16")
+
+        if (sceneName.StartsWith("SRS_JL_") && TryGetSceneSuffixNumber(sceneName, out int jlStageNumber))
         {
             spawnMode = SpawnMode.Sequence;
-            EnqueueSequence('Z');
+            EnqueueSequence((jlStageNumber % 2) == 1 ? 'J' : 'L');
+        }
+
+        if (sceneName.Contains("SRS_I"))
+        {
+            spawnMode = SpawnMode.Sequence;
+            EnqueueSequence('I');
         }
 
         // 将来 TST_B_* などを追加したい場合も、
         // 同じように sceneName を見て sequenceQueue に積めばOK。
+    }
+
+    /// <summary>
+    /// シーン名の末尾番号（例: SRS_SZ_12 の 12）を取得する
+    /// </summary>
+    private bool TryGetSceneSuffixNumber(string sceneName, out int stageNumber)
+    {
+        stageNumber = 0;
+        if (string.IsNullOrEmpty(sceneName)) return false;
+
+        int lastUnderscore = sceneName.LastIndexOf('_');
+        if (lastUnderscore < 0 || lastUnderscore >= sceneName.Length - 1) return false;
+
+        string suffix = sceneName.Substring(lastUnderscore + 1);
+        return int.TryParse(suffix, out stageNumber);
     }
 
     /// <summary>

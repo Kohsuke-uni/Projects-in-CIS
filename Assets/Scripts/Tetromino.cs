@@ -574,7 +574,7 @@ public class Tetromino : MonoBehaviour
                     };
                 case 2: // 2 -> 1 (Down -> Right) = 2->R
                     return new[] {
-                        V(0, 0), V(+1, 0), V(+1, +1), V(0, -2), V(+1, -2)
+                        V(0, 0), V(-1, 0), V(-1, +1), V(0, -2), V(-1, -2)
                     };
                 case 1: // 1 -> 0 (Right -> Up)   = R->0
                     return new[] {
