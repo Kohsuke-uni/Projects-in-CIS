@@ -142,6 +142,12 @@ public class Spawner : MonoBehaviour
             EnqueueSequence('I');
         }
 
+        if (sceneName.Contains("SRS_T"))
+        {
+            spawnMode = SpawnMode.Sequence;
+            EnqueueSequence('T');
+        }
+
         // 将来 TST_B_* などを追加したい場合も、
         // 同じように sceneName を見て sequenceQueue に積めばOK。
     }

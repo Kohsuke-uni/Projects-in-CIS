@@ -15,7 +15,9 @@ public class PracticeJudge : MonoBehaviour
         JLDouble,
         JLTriple,
         ISingle,
-        IFull
+        IFull,
+        TSingle,
+        TDouble
     }
 
     [Header("Practice Type")]
@@ -90,6 +92,8 @@ public class PracticeJudge : MonoBehaviour
             return piece.typeIndex == 1 || piece.typeIndex == 2; // J or L
         if (practiceType == PracticeType.ISingle || practiceType == PracticeType.IFull)
             return piece.typeIndex == 0; // I
+        if (practiceType == PracticeType.TSingle || practiceType == PracticeType.TDouble)
+            return piece.typeIndex == 5; // T
         return piece.typeIndex == 5; // デフォルトは T
     }
 
@@ -117,6 +121,10 @@ public class PracticeJudge : MonoBehaviour
                 return linesCleared == 1;
             case PracticeType.IFull:
                 return linesCleared == 4;
+            case PracticeType.TSingle:
+                return linesCleared == 1;
+            case PracticeType.TDouble:
+                return linesCleared == 2;
             default:
                 return linesCleared == 2;
         }
@@ -155,6 +163,8 @@ public class PracticeJudge : MonoBehaviour
             return new[] { "SRS_JL" };
         if (practiceType == PracticeType.ISingle || practiceType == PracticeType.IFull)
             return new[] { "SRS_I" };
+        if (practiceType == PracticeType.TSingle || practiceType == PracticeType.TDouble)
+            return new[] { "SRS_T" };
 
         return new[] { "TSD_E", "TSD_B" };
     }
