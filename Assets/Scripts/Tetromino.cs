@@ -64,6 +64,20 @@ public class Tetromino : MonoBehaviour
     private float dasTimer = 0f;
     private float arrTimer = 0f;
 
+    public bool enablePlayerInput = true;
+
+    public int RotationIndex => rotationIndex;
+
+    public bool CpuTryMove(Vector3 delta) => TryMove(delta);
+
+    public bool CpuTryRotate(int dir) => TryRotateAndRecordWithSE(dir);
+
+    public void CpuHardDropAndLock()
+    {
+        while (TryMove(Vector3.down)) { }
+        Lock();
+    }
+
     private void Awake()
     {
         var list = new List<Transform>(4);
@@ -139,11 +153,16 @@ public class Tetromino : MonoBehaviour
 
         if (locked) return;
 
+        if (enablePlayerInput)
+        {
+            HandleInput();
+            HandleHorizontalAutoShift();
+        }
+
         UpdateGroundedState();
-        HandleInput();
-        HandleHorizontalAutoShift(); // ★ 長押し横移動
         HandleFalling();
         TryAutoLockIfNeeded();
+    
     }
 
     private void UpdateGroundedState()
@@ -183,7 +202,8 @@ public class Tetromino : MonoBehaviour
     private void HandleInput()
     {
         // Hold (C / LeftShift)
-        if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.LeftShift))
+        //コントローラーだとL1でホールド
+        if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.JoystickButton4))
         {
             var spawner = FindObjectOfType<Spawner>();
             if (spawner != null && spawner.RequestHold(this))
@@ -195,8 +215,9 @@ public class Tetromino : MonoBehaviour
         }
 
         // --- 横移動：押下/離し（初回1マス + オートシフト準備） ---
+        //コントローラーだとd-rightで右、d-leftで左
         // 左押下
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton16))
         {
             horizontalDir = -1;     // 最後に押した方向が勝つ
             dasTimer = 0f;
@@ -207,7 +228,7 @@ public class Tetromino : MonoBehaviour
             }
         }
         // 右押下
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.JoystickButton17))
         {
             horizontalDir = +1;
             dasTimer = 0f;
@@ -218,9 +239,9 @@ public class Tetromino : MonoBehaviour
             }
         }
         // 左離し
-        if (Input.GetKeyUp(KeyCode.LeftArrow))
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.JoystickButton16))
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.JoystickButton17))
             {
                 horizontalDir = +1;
                 dasTimer = 0f;
@@ -232,9 +253,9 @@ public class Tetromino : MonoBehaviour
             }
         }
         // 右離し
-        if (Input.GetKeyUp(KeyCode.RightArrow))
+        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.JoystickButton17))
         {
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.JoystickButton16))
             {
                 horizontalDir = -1;
                 dasTimer = 0f;
@@ -247,7 +268,8 @@ public class Tetromino : MonoBehaviour
         }
 
         // Move Up (only when allowed)
-        if (allowUpMove && Input.GetKeyDown(KeyCode.UpArrow))
+        //コントローラーはZLで上移動
+        if (allowUpMove && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.JoystickButton6)))
         {
             if (TryMove(Vector3.up))
             {
@@ -256,18 +278,20 @@ public class Tetromino : MonoBehaviour
             }
         }
 
-        // Rotate CW / CCW (D / A)
-        if (Input.GetKeyDown(KeyCode.D))
+        // Rotate CW / CCW (RightArrow / LeftArrow)
+        //コントローラーはAXで右回転、BYで左回転
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.JoystickButton1) || Input.GetKeyDown(KeyCode.JoystickButton3))
         {
             if (TryRotateAndRecordWithSE(+1)) { }
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.JoystickButton0) || Input.GetKeyDown(KeyCode.JoystickButton2))
         {
             if (TryRotateAndRecordWithSE(-1)) { }
         }
 
-        // Hard Drop (S)
-        if (Input.GetKeyDown(KeyCode.S))
+        // Hard Drop (W）
+        //コントローラーだとD-up
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.JoystickButton14))
         {
             while (TryMove(Vector3.down)) { }
             // ★ 追加：ハードドロップSE
@@ -276,7 +300,8 @@ public class Tetromino : MonoBehaviour
         }
 
         // Soft Drop (↓)
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        //コントローラーはD-downでソフトドロップ
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton15))
         {
             fastDropping = true;
 
@@ -287,7 +312,7 @@ public class Tetromino : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.DownArrow))
+        if (Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.JoystickButton15))
         {
             fastDropping = false;
         }
@@ -299,8 +324,8 @@ public class Tetromino : MonoBehaviour
         if (horizontalDir == 0) return;
 
         // キー実際状態チェック（セーフガード）
-        bool leftHeld = Input.GetKey(KeyCode.LeftArrow);
-        bool rightHeld = Input.GetKey(KeyCode.RightArrow);
+        bool leftHeld = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton16);
+        bool rightHeld = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.JoystickButton17);
         if (horizontalDir == -1 && !leftHeld)
         {
             horizontalDir = rightHeld ? +1 : 0; dasTimer = 0f; arrTimer = 0f;

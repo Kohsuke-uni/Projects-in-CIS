@@ -189,4 +189,10 @@ public class Board : MonoBehaviour
 
         return grid[cell.x, cell.y] != null;
     }
+
+    public bool IsOccupiedInBounds(int x, int y)
+    {
+        if (x < 0 || x >= size.x || y < 0 || y >= size.y) return true;
+        return grid[x, y] != null;
+    }
 }
