@@ -2,6 +2,24 @@ using UnityEngine;
 
 public class HoldPieceUI : MonoBehaviour
 {
+    public enum TetrominoType
+    {
+        I = 0,
+        J = 1,
+        L = 2,
+        O = 3,
+        S = 4,
+        T = 5,
+        Z = 6
+    }
+
+    [System.Serializable]
+    public struct PiecePositionOverride
+    {
+        public TetrominoType pieceType;
+        public Vector2 localPosition;
+    }
+
     [Header("References")]
     public Spawner spawner;                 // Spawnerを参照
     public Transform displayRoot;           // 表示位置の親Transform
@@ -10,6 +28,8 @@ public class HoldPieceUI : MonoBehaviour
     [Header("Layout")]
     public float itemScale = 0.5f;          // ミノの表示スケール
     public Vector3 itemOffset = Vector3.zero; // 表示位置の微調整
+    [Tooltip("特定ミノだけ個別の表示位置を指定（x,yローカル座標）")]
+    public PiecePositionOverride[] piecePositionOverrides;
 
     private GameObject currentPreview;
 
@@ -61,7 +81,7 @@ public class HoldPieceUI : MonoBehaviour
 
         Tetromino prefab = previewPrefabs[idx];
         currentPreview = Instantiate(prefab.gameObject, displayRoot != null ? displayRoot : transform);
-        currentPreview.transform.localPosition = itemOffset;
+        currentPreview.transform.localPosition = GetOffsetForPiece(idx);
         currentPreview.transform.localRotation = Quaternion.identity;
         currentPreview.transform.localScale = Vector3.one * itemScale;
 
@@ -74,5 +94,22 @@ public class HoldPieceUI : MonoBehaviour
 
         var ghost = currentPreview.GetComponentInChildren<GhostPiece>();
         if (ghost != null) Destroy(ghost.gameObject);
+    }
+
+    private Vector3 GetOffsetForPiece(int pieceIndex)
+    {
+        if (piecePositionOverrides != null)
+        {
+            for (int i = 0; i < piecePositionOverrides.Length; i++)
+            {
+                if ((int)piecePositionOverrides[i].pieceType == pieceIndex)
+                {
+                    Vector2 p = piecePositionOverrides[i].localPosition;
+                    return new Vector3(p.x, p.y, itemOffset.z);
+                }
+            }
+        }
+
+        return itemOffset;
     }
 }

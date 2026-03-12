@@ -81,9 +81,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalFallSpeed: 1
-  softDropSpeed: 6
+  fastDropSpeed: 12
+  groundedMoveAllowance: 14
+  groundedRotateAllowance: 15
+  inactivitySeconds: 0.9
+  dasDelay: 0.15
+  arrInterval: 0.03
   board: {fileID: 0}
   pivotOverride: {fileID: 8428061011249198391}
+  ghost: {fileID: 0}
+  typeIndex: 0
+  spawnedFromHold: 0
+  enablePlayerInput: 1
 --- !u!1 &4686074891260969826
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,8 +166,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 608475ed5d3f54eceaa2244d7ff4ab23, type: 3}
-  m_Color: {r: 0.11820006, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 91fecc8957e764aacaf866c0a5492246, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -241,8 +250,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 608475ed5d3f54eceaa2244d7ff4ab23, type: 3}
-  m_Color: {r: 0.11820006, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 91fecc8957e764aacaf866c0a5492246, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -325,8 +334,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 608475ed5d3f54eceaa2244d7ff4ab23, type: 3}
-  m_Color: {r: 0.11820006, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 91fecc8957e764aacaf866c0a5492246, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -409,8 +418,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 608475ed5d3f54eceaa2244d7ff4ab23, type: 3}
-  m_Color: {r: 0.11820006, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 91fecc8957e764aacaf866c0a5492246, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -55,7 +55,10 @@ public class NextQueueUI : MonoBehaviour
             Tetromino prefab = previewPrefabs[idx];
             var go = Instantiate(prefab.gameObject, listRoot != null ? listRoot : transform);
 
-            go.transform.localPosition = i * itemOffset;
+            Vector3 pos = i * itemOffset;
+            if (idx == 0 || idx == 3) // I or O
+                pos.x = -0.36f;
+            go.transform.localPosition = pos;
             go.transform.localRotation = Quaternion.identity;
             go.transform.localScale = Vector3.one * itemScale;
 
