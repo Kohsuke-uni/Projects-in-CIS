@@ -188,7 +188,7 @@ public class SoundManager : MonoBehaviour
         string sceneName = scene.name;
 
         // --- タイトル ---
-        if (sceneName.Contains("Title"))
+        if (sceneName.Contains("Title") || sceneName.Contains("SRS_Main") || sceneName.Contains("About"))
         {
             PlayBGM(BgmType.Title);
             return;
@@ -196,7 +196,14 @@ public class SoundManager : MonoBehaviour
 
         // --- メニュー系シーン (TechniqueSelect / StageSelect) ---
         if (sceneName.Contains("TechniqueSelect") ||
-            sceneName.Contains("StageSelect"))
+            sceneName.Contains("StageSelect") ||
+            sceneName.Contains("SRS_I_About") ||
+            sceneName.Contains("SRS_JL_About") ||
+            sceneName.Contains("SRS_SZ_About") ||
+            sceneName.Contains("SRS_T_About") ||
+            sceneName.Contains("TST_About") ||
+            sceneName.Contains("Intro") ||
+            sceneName.Contains("Intermediate"))
         {
             PlayBGM(BgmType.Menu);
             return;
@@ -212,14 +219,15 @@ public class SoundManager : MonoBehaviour
             sceneName.Contains("TSD_H") ||
             sceneName.Contains("TST_E") ||
             sceneName.Contains("TST_N") ||
-            sceneName.Contains("TST_H"))
+            sceneName.Contains("TST_H") ||
+            sceneName.Contains("40Lines"))
         {
             PlayBGM(BgmType.InGame);
             return;
         }
 
         // --- それ以外 ---
-        PlayBGM(BgmType.None);
+        PlayBGM(BgmType.InGame);
     }
 
     // ========================================================================

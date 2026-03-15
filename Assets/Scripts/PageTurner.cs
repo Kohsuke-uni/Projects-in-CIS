@@ -23,17 +23,22 @@ public class PageTurner : MonoBehaviour
 
     void Awake()
     {
-        int count = pagesParent.childCount;
-        pages = new GameObject[count];
-
-        for (int i = 0; i < count; i++)
-        {
-            pages[i] = pagesParent.GetChild(i).gameObject;
-        }
+        RebuildPages();
     }
 
     void OnEnable()
     {
+        if (pages == null || pages.Length == 0)
+            RebuildPages();
+
+        index = 0;
+        ShowPage(index);
+    }
+
+    public void SetPagesParent(Transform newPagesParent)
+    {
+        pagesParent = newPagesParent;
+        RebuildPages();
         index = 0;
         ShowPage(index);
     }
@@ -77,7 +82,7 @@ public class PageTurner : MonoBehaviour
             if (buttonText != null)
             {
                 if (i >= pages.Length - 1)
-                    buttonText.text = "Title";
+                    buttonText.text = "Return";
                 else
                     buttonText.text = "Next";
             }
@@ -88,5 +93,22 @@ public class PageTurner : MonoBehaviour
 
         if (nextButton != null)
             nextButton.gameObject.SetActive(true);
+    }
+
+    private void RebuildPages()
+    {
+        if (pagesParent == null)
+        {
+            pages = System.Array.Empty<GameObject>();
+            return;
+        }
+
+        int count = pagesParent.childCount;
+        pages = new GameObject[count];
+
+        for (int i = 0; i < count; i++)
+        {
+            pages[i] = pagesParent.GetChild(i).gameObject;
+        }
     }
 }

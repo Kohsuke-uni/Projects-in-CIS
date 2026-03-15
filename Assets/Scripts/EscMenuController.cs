@@ -18,7 +18,7 @@ public class EscMenuController : MonoBehaviour
     public string titleSceneName = "Title";
 
     private bool isMenuOpen = false;       // ESCメニューが開いているか
-    private bool isHowToOpen = false;      // 操作説明が開いているか
+    private bool wasHowToPanelActive = false;
 
     private void Start()
     {
@@ -27,10 +27,19 @@ public class EscMenuController : MonoBehaviour
 
         if (howToPlayPanel != null)
             howToPlayPanel.SetActive(false);
+
+        wasHowToPanelActive = howToPlayPanel != null && howToPlayPanel.activeInHierarchy;
     }
 
     private void Update()
     {
+        bool isHowToPanelActive = howToPlayPanel != null && howToPlayPanel.activeInHierarchy;
+        if (isHowToPanelActive && !wasHowToPanelActive)
+        {
+            SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+        }
+        wasHowToPanelActive = isHowToPanelActive;
+
         // ESCキーでメニューの開閉
         //コントローラーだとL1/R1でESCメニュー開閉
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton4) || Input.GetKeyDown(KeyCode.JoystickButton5))
@@ -38,7 +47,7 @@ public class EscMenuController : MonoBehaviour
             SoundManager.Instance?.PlaySE(SeType.ButtonClick);
 
             // ★ 操作説明表示中なら → 操作説明だけ閉じる
-            if (isHowToOpen)
+            if (howToPlayPanel != null && howToPlayPanel.activeInHierarchy)
             {
                 CloseHowToPlay();
                 return;
@@ -59,30 +68,11 @@ public class EscMenuController : MonoBehaviour
         Time.timeScale = isMenuOpen ? 0f : 1f;
     }
 
-    // =========================================================
-    //  操作説明パネルを開く
-    // =========================================================
-    public void OnOpenHowToPlayButton()
-    {
-        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
-
-        if (howToPlayPanel != null)
-            howToPlayPanel.SetActive(true);
-
-        if (escMenuPanel != null)
-            escMenuPanel.SetActive(false);
-
-        isHowToOpen = true;
-        isMenuOpen = false;
-    }
-
     // 操作説明パネルを閉じる
     private void CloseHowToPlay()
     {
         if (howToPlayPanel != null)
             howToPlayPanel.SetActive(false);
-
-        isHowToOpen = false;
 
         // メニューを開いたままに戻す
         if (escMenuPanel != null)

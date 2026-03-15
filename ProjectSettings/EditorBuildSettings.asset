@@ -320,4 +320,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SRS_Main.unity
     guid: 8815ee1916bfd46cf9a2385db0e14ede
+  - enabled: 1
+    path: Assets/Scenes/About.unity
+    guid: 46abcbb69cf0e4cecbc8ae884bb3715c
   m_configObjects: {}
