@@ -94,6 +94,14 @@ public class Tetromino : MonoBehaviour
         }
         Cells = list.ToArray();
 
+        // Active piece should render above ghost by default.
+        for (int i = 0; i < Cells.Length; i++)
+        {
+            if (Cells[i] == null) continue;
+            var sr = Cells[i].GetComponent<SpriteRenderer>();
+            if (sr != null) sr.sortingOrder += 1;
+        }
+
         _pivot = pivotOverride != null ? pivotOverride : transform;
 
         grounded = false;
@@ -112,7 +120,7 @@ public class Tetromino : MonoBehaviour
 
         if (board == null || !board.IsValidPosition(this, Vector3.zero))
         {
-            Debug.Log("Game Over (spawn invalid)");
+            Debug.Log("Game Over (spawn invalid), piece: " + name);
             var fortyJudge = FindObjectOfType<FortyLineJudge>();
             if (fortyJudge != null)
             {

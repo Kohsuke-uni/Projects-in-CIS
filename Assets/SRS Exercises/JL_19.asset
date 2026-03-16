@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd8f58f62a6045e38a2c074013bd6a8, type: 3}
+  m_Name: JL_19
+  m_EditorClassIdentifier: 
+  exerciseId: JL_19
+  displayName: JL_19
+  targetSceneName: Exercise_Scene
+  instructionText: Tuck the J in and rotate ccw to rotate it into the ground!
+  practiceType: 7
+  spawnPiece: 1
+  initialBlocks:
+  - cell: {x: 6, y: 4}
+    color: orange
+  - cell: {x: 7, y: 4}
+    color: orange
+  - cell: {x: 7, y: 3}
+    color: orange
+  - cell: {x: 0, y: 2}
+    color: dark blue
+  - cell: {x: 1, y: 2}
+    color: dark blue
+  - cell: {x: 2, y: 2}
+    color: orange
+  - cell: {x: 3, y: 2}
+    color: yellow
+  - cell: {x: 4, y: 2}
+    color: yellow
+  - cell: {x: 6, y: 2}
+    color: purple
+  - cell: {x: 7, y: 2}
+    color: orange
+  - cell: {x: 8, y: 2}
+    color: yellow
+  - cell: {x: 9, y: 2}
+    color: yellow
+  - cell: {x: 0, y: 1}
+    color: dark blue
+  - cell: {x: 1, y: 1}
+    color: light blue
+  - cell: {x: 2, y: 1}
+    color: orange
+  - cell: {x: 3, y: 1}
+    color: yellow
+  - cell: {x: 4, y: 1}
+    color: yellow
+  - cell: {x: 6, y: 1}
+    color: purple
+  - cell: {x: 7, y: 1}
+    color: purple
+  - cell: {x: 8, y: 1}
+    color: yellow
+  - cell: {x: 9, y: 1}
+    color: yellow
+  - cell: {x: 0, y: 0}
+    color: dark blue
+  - cell: {x: 1, y: 0}
+    color: light blue
+  - cell: {x: 2, y: 0}
+    color: orange
+  - cell: {x: 3, y: 0}
+    color: orange
+  - cell: {x: 6, y: 0}
+    color: purple
+  - cell: {x: 7, y: 0}
+    color: dark blue
+  - cell: {x: 8, y: 0}
+    color: dark blue
+  - cell: {x: 9, y: 0}
+    color: dark blue

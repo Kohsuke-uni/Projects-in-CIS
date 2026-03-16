@@ -4,6 +4,13 @@ using UnityEngine.UI;
 
 public class PracticeJudge : MonoBehaviour
 {
+    [System.Serializable]
+    public struct StageSelectRule
+    {
+        public string keyContains;
+        public string sceneName;
+    }
+
     public enum PracticeType
     {
         TSpinDouble,
@@ -28,6 +35,7 @@ public class PracticeJudge : MonoBehaviour
     public string stageSelectSceneName = "TechniqueSelect";
     public string nextStageSceneName = "";
     public bool stopTimeOnClear = true;
+    public StageSelectRule[] stageSelectRules;
 
     [Header("Clear Animation")]
     public ClearFaridUI clearFaridUI;
@@ -156,15 +164,15 @@ public class PracticeJudge : MonoBehaviour
         if (practiceType == PracticeType.SZDouble
             || practiceType == PracticeType.SZTriple 
             || practiceType == PracticeType.SZSingle)
-            return new[] { "SRS_SZ" };
+            return new[] { "SRS_SZ", "Exercise" };
         if (practiceType == PracticeType.JLSingle
             || practiceType == PracticeType.JLDouble
             || practiceType == PracticeType.JLTriple)
-            return new[] { "SRS_JL" };
+            return new[] { "SRS_JL", "Exercise" };
         if (practiceType == PracticeType.ISingle || practiceType == PracticeType.IFull)
-            return new[] { "SRS_I" };
+            return new[] { "SRS_I", "Exercise" };
         if (practiceType == PracticeType.TSingle || practiceType == PracticeType.TDouble)
-            return new[] { "SRS_T" };
+            return new[] { "SRS_T", "Exercise" };
 
         return new[] { "TSD_E", "TSD_B" };
     }
@@ -280,6 +288,14 @@ public class PracticeJudge : MonoBehaviour
 
     public void OnNextStageButton()
     {
+        var exerciseLoader = FindObjectOfType<ExerciseSceneLoader>();
+        if (exerciseLoader != null && exerciseLoader.TryLoadNextExerciseById())
+        {
+            SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+            Time.timeScale = 1f;
+            return;
+        }
+
         string targetSceneName = GetAutoNextSceneNameOrFallback();
         if (string.IsNullOrEmpty(targetSceneName))
         {
@@ -295,7 +311,8 @@ public class PracticeJudge : MonoBehaviour
 
     public void OnStageSelectButton()
     {
-        if (string.IsNullOrEmpty(stageSelectSceneName))
+        string targetScene = ResolveStageSelectSceneName();
+        if (string.IsNullOrEmpty(targetScene))
         {
             Debug.LogWarning("PracticeJudge: stageSelectSceneName が設定されていません。");
             return;
@@ -304,7 +321,45 @@ public class PracticeJudge : MonoBehaviour
         SoundManager.Instance?.PlaySE(SeType.ButtonClick);
 
         Time.timeScale = 1f;
-        SceneManager.LoadScene(stageSelectSceneName);
+        SceneManager.LoadScene(targetScene);
+    }
+
+    private string ResolveStageSelectSceneName()
+    {
+        string key = GetCurrentExerciseKey();
+
+        if (!string.IsNullOrWhiteSpace(key) && stageSelectRules != null)
+        {
+            for (int i = 0; i < stageSelectRules.Length; i++)
+            {
+                string token = stageSelectRules[i].keyContains;
+                string target = stageSelectRules[i].sceneName;
+                if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(target))
+                    continue;
+
+                if (key.IndexOf(token, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    return target;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(key) &&
+            key.IndexOf("SZ", System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return "SRS_SZ_Stage Select";
+        }
+
+        return stageSelectSceneName;
+    }
+
+    private string GetCurrentExerciseKey()
+    {
+        var loader = FindObjectOfType<ExerciseSceneLoader>();
+        if (loader == null || loader.exercise == null)
+            return string.Empty;
+
+        return !string.IsNullOrWhiteSpace(loader.exercise.exerciseId)
+            ? loader.exercise.exerciseId
+            : loader.exercise.name;
     }
 
     string GetAutoNextSceneNameOrFallback()

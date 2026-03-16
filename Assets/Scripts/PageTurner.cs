@@ -7,6 +7,13 @@ using UnityEngine.SceneManagement;
 
 public class PageTurner : MonoBehaviour
 {
+    [System.Serializable]
+    public struct ReturnSceneRule
+    {
+        public string nameContains;
+        public string sceneName;
+    }
+
     [Header("Pages Parent")]
     public Transform pagesParent;
 
@@ -17,6 +24,9 @@ public class PageTurner : MonoBehaviour
 
     [Header("Scene Settings")]
     public string titleSceneName = "Title";
+    public ReturnSceneRule[] returnSceneRules;
+    [Tooltip("ON なら最終ページで Return ボタンを表示しない")]
+    public bool hideReturnButtonOnLastPage = false;
 
     private GameObject[] pages;
     private int index = 0;
@@ -45,10 +55,10 @@ public class PageTurner : MonoBehaviour
 
     public void Next()
     {
-        // If we're on the last page, go to Title scene
+        // If we're on the last page, go to return scene
         if (index >= pages.Length - 1)
         {
-            SceneManager.LoadScene(titleSceneName);
+            SceneManager.LoadScene(GetReturnSceneName());
             return;
         }
 
@@ -92,7 +102,11 @@ public class PageTurner : MonoBehaviour
             prevButton.gameObject.SetActive(i > 0);
 
         if (nextButton != null)
-            nextButton.gameObject.SetActive(true);
+        {
+            bool isLastPage = i >= pages.Length - 1;
+            bool hideReturn = isLastPage && hideReturnButtonOnLastPage;
+            nextButton.gameObject.SetActive(!hideReturn);
+        }
     }
 
     private void RebuildPages()
@@ -110,5 +124,31 @@ public class PageTurner : MonoBehaviour
         {
             pages[i] = pagesParent.GetChild(i).gameObject;
         }
+    }
+
+    private string GetReturnSceneName()
+    {
+        string pagesName = pagesParent != null ? pagesParent.name : string.Empty;
+        if (!string.IsNullOrWhiteSpace(pagesName) && returnSceneRules != null)
+        {
+            for (int i = 0; i < returnSceneRules.Length; i++)
+            {
+                string token = returnSceneRules[i].nameContains;
+                string target = returnSceneRules[i].sceneName;
+                if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(target))
+                    continue;
+
+                if (pagesName.IndexOf(token, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    return target;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(pagesName) &&
+            pagesName.IndexOf("SZ", System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return "SRS_SZ_Stage Select";
+        }
+
+        return titleSceneName;
     }
 }

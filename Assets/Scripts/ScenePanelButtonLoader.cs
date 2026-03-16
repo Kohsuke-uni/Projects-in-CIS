@@ -3,12 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class ScenePanelButtonLoader : MonoBehaviour
 {
+    public string sceneName = "About";
+
     [Header("PageTurner Pages Object")]
     public GameObject pagesObject;
 
     public void LoadSceneWithPagesObject()
     {
-        string pagesName = pagesObject.name;
+        string pagesName = pagesObject != null ? pagesObject.name : string.Empty;
         if (pagesObject != null)
         {
             GameObject pagesCopy = Instantiate(pagesObject);
@@ -18,9 +20,9 @@ public class ScenePanelButtonLoader : MonoBehaviour
         }
         else
         {
-            ScenePageTurnerPayload.SetPagesObjectName(pagesName);
+            ScenePageTurnerPayload.Clear();
         }
 
-        SceneManager.LoadScene("About");
+        SceneManager.LoadScene(sceneName);
     }
 }

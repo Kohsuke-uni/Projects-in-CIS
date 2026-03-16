@@ -78,6 +78,18 @@ public class Board : MonoBehaviour
         }
     }
 
+    public bool TryPlaceBlockAt(Transform block, Vector2Int cell)
+    {
+        if (block == null) return false;
+        if (!IsInside(cell)) return false;
+        if (IsOccupied(cell)) return false;
+
+        grid[cell.x, cell.y] = block;
+        block.position = GridToWorld(cell);
+        block.SetParent(blockContainer, true);
+        return true;
+    }
+
     // 全てのラインをチェックし、揃っている行を削除する
     public void ClearLines()
     {
@@ -169,6 +181,14 @@ public class Board : MonoBehaviour
     // 盤面全体をリセットする
     public void ClearBoard()
     {
+        if (blockContainer != null)
+        {
+            for (int i = blockContainer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(blockContainer.GetChild(i).gameObject);
+            }
+        }
+
         for (int y = 0; y < size.y; y++)
         {
             for (int x = 0; x < size.x; x++)

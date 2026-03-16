@@ -16,6 +16,10 @@ public class Spawner : MonoBehaviour
     public Vector2Int spawnCell = new Vector2Int(5, 20);
     public bool spawnOnStart = true;
 
+    [Header("Exercise Settings")]
+    [Tooltip("Exercise_Scene 用の設定。未設定なら ExerciseSceneLoader から自動取得を試みる")]
+    public SRSExercise exerciseConfig;
+
     public enum SpawnMode
     {
         Normal,
@@ -151,8 +155,49 @@ public class Spawner : MonoBehaviour
             EnqueueSequence('T');
         }
 
+        if (sceneName.Contains("Exercise_Scene"))
+        {
+            SRSExercise config = ResolveExerciseConfig();
+            if (config != null)
+            {
+                spawnMode = SpawnMode.Sequence;
+                sequenceQueue.Clear();
+
+                int idx = GetIndexForExercisePiece(config.spawnPiece);
+                if (idx >= 0 && idx < tetrominoPrefabs.Length)
+                    sequenceQueue.Enqueue(idx);
+            }
+        }
+
         // 将来 TST_B_* などを追加したい場合も、
         // 同じように sceneName を見て sequenceQueue に積めばOK。
+    }
+
+    private SRSExercise ResolveExerciseConfig()
+    {
+        if (exerciseConfig != null) return exerciseConfig;
+
+        var loader = FindObjectOfType<ExerciseSceneLoader>();
+        if (loader != null && loader.exercise != null)
+            return loader.exercise;
+
+        return null;
+    }
+
+    private int GetIndexForExercisePiece(SRSExercise.SpawnPieceType piece)
+    {
+        switch (piece)
+        {
+            case SRSExercise.SpawnPieceType.I: return 0;
+            case SRSExercise.SpawnPieceType.J: return 1;
+            case SRSExercise.SpawnPieceType.L: return 2;
+            case SRSExercise.SpawnPieceType.O: return 3;
+            case SRSExercise.SpawnPieceType.S: return 4;
+            case SRSExercise.SpawnPieceType.T: return 5;
+            case SRSExercise.SpawnPieceType.Z: return 6;
+            default:
+                return Mathf.Clamp(tIndex, 0, tetrominoPrefabs.Length - 1);
+        }
     }
 
     /// <summary>

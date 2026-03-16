@@ -20,7 +20,15 @@ public class ScenePageTurnerPayloadApplier : MonoBehaviour
         Transform targetPagesParent = ResolvePagesParent();
         if (targetPagesParent != null)
         {
-            TryParentPagesUnderIntroPanel(targetPagesParent);
+            bool parentedToIntro = TryParentPagesUnderIntroPanel(targetPagesParent);
+            if (!parentedToIntro && fallbackPagesParent != null)
+            {
+                if (targetPagesParent.gameObject.scene != fallbackPagesParent.gameObject.scene)
+                    SceneManager.MoveGameObjectToScene(targetPagesParent.gameObject, fallbackPagesParent.gameObject.scene);
+
+                targetPagesParent.SetParent(fallbackPagesParent, false);
+                targetPagesParent.SetSiblingIndex(0);
+            }
             pageTurner.SetPagesParent(targetPagesParent);
         }
         else if (fallbackPagesParent != null)
@@ -57,16 +65,16 @@ public class ScenePageTurnerPayloadApplier : MonoBehaviour
         return pagesObject.transform;
     }
 
-    private void TryParentPagesUnderIntroPanel(Transform pagesTransform)
+    private bool TryParentPagesUnderIntroPanel(Transform pagesTransform)
     {
-        if (pagesTransform == null) return;
-        if (string.IsNullOrWhiteSpace(introPanelObjectName)) return;
+        if (pagesTransform == null) return false;
+        if (string.IsNullOrWhiteSpace(introPanelObjectName)) return false;
 
         GameObject introPanel = GameObject.Find(introPanelObjectName);
         if (introPanel == null)
         {
             Debug.LogWarning($"[ScenePageTurnerPayloadApplier] Could not find intro panel: {introPanelObjectName}");
-            return;
+            return false;
         }
 
         if (pagesTransform.gameObject.scene != introPanel.scene)
@@ -76,5 +84,6 @@ public class ScenePageTurnerPayloadApplier : MonoBehaviour
 
         pagesTransform.SetParent(introPanel.transform, false);
         pagesTransform.SetSiblingIndex(0);
+        return true;
     }
 }

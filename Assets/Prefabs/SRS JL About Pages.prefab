@@ -6190,7 +6190,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &4840300096931417971
@@ -11342,10 +11342,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Practice (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5031128943322142782, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadExerciseScene
+      objectReference: {fileID: 0}
     - target: {fileID: 7033127998569675588, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
       propertyPath: sceneName
-      value: SRS_JL_1
+      value: Exercise_Scene
       objectReference: {fileID: 0}
+    - target: {fileID: 7033127998569675588, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
+      propertyPath: targetExercise
+      value: 
+      objectReference: {fileID: 11400000, guid: 366a2c8732f4e43b99b19509733608d5, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
