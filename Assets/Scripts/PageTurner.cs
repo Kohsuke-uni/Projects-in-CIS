@@ -148,6 +148,21 @@ public class PageTurner : MonoBehaviour
         {
             return "SRS_SZ_Stage Select";
         }
+        if (!string.IsNullOrWhiteSpace(pagesName) &&
+            pagesName.IndexOf("JL", System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return "SRS_JL_Stage Select";
+        }
+        if (!string.IsNullOrWhiteSpace(pagesName) &&
+            pagesName.IndexOf("SRS I", System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return "SRS_I_Stage Select";
+        }
+        if (!string.IsNullOrWhiteSpace(pagesName) &&
+            pagesName.IndexOf("SRS T", System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return "SRS_T_Stage Select";
+        }
 
         return titleSceneName;
     }

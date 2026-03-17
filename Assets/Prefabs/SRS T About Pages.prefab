@@ -8520,10 +8520,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Practice (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5031128943322142782, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadExerciseScene
+      objectReference: {fileID: 0}
     - target: {fileID: 7033127998569675588, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
       propertyPath: sceneName
-      value: SRS_T_1
+      value: Exercise_Scene
       objectReference: {fileID: 0}
+    - target: {fileID: 7033127998569675588, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
+      propertyPath: targetExercise
+      value: 
+      objectReference: {fileID: 11400000, guid: a5e0892deb3bb4301ad59650178b6d99, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -2431,6 +2431,10 @@ MonoBehaviour:
     sceneName: SRS_SZ_Stage Select
   - keyContains: JL
     sceneName: SRS_JL_Stage Select
+  - keyContains: I
+    sceneName: SRS_I_Stage Select
+  - keyContains: T
+    sceneName: SRS_T_Stage Select
   clearFaridUI: {fileID: 1451352937}
   clearMessageText: {fileID: 1376991940}
   timeText: {fileID: 1238374699}
@@ -2448,7 +2452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad06abf9f816448fa1e984ba3a8eda3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exercise: {fileID: 11400000, guid: 1bcd4515935064c3d88b776f693fd2a8, type: 2}
+  exercise: {fileID: 11400000, guid: d4f2045e8b53244e1ba420cb9b00561a, type: 2}
   board: {fileID: 205784702}
   practiceJudge: {fileID: 1265424791}
   instructionTextUI: {fileID: 71373235}
@@ -2503,6 +2507,26 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aecae75365a034799a4d88c6ff71cb0e, type: 2}
   - {fileID: 11400000, guid: 3e4b3e0be59dc46fa807dadd1fa26c91, type: 2}
   - {fileID: 11400000, guid: 1bcd4515935064c3d88b776f693fd2a8, type: 2}
+  - {fileID: 11400000, guid: aaae6407eabf3426783161cae76a69e6, type: 2}
+  - {fileID: 11400000, guid: 983a0b17aa6f34ae389539d773e0d054, type: 2}
+  - {fileID: 11400000, guid: 0149e7cedb1ae46ef9cb08252bb233a8, type: 2}
+  - {fileID: 11400000, guid: e21b0ad7166284442891f13c3abe0326, type: 2}
+  - {fileID: 11400000, guid: 6a9d9de2c42924a1195a08a2d116c1e3, type: 2}
+  - {fileID: 11400000, guid: c63f873923f8247ba90edacef1ded622, type: 2}
+  - {fileID: 11400000, guid: a5e0892deb3bb4301ad59650178b6d99, type: 2}
+  - {fileID: 11400000, guid: 4d737db9bf90e4cd09eb3142cb228ec1, type: 2}
+  - {fileID: 11400000, guid: 8a1aa6d3e36314da1998d2bfa9c5c533, type: 2}
+  - {fileID: 11400000, guid: 945698971f4514686b66c10879362d72, type: 2}
+  - {fileID: 11400000, guid: 02bca40ffa08147bfacfa7890f8153d1, type: 2}
+  - {fileID: 11400000, guid: fc7f88b124e7a4a79a59169c31ef3c20, type: 2}
+  - {fileID: 11400000, guid: 5e6b6d2425bcc4cd09d9d0e23870bb52, type: 2}
+  - {fileID: 11400000, guid: 0074f2869e54742719b43eac6840eb14, type: 2}
+  - {fileID: 11400000, guid: 5de527641d8c5489e84799cd74ec460f, type: 2}
+  - {fileID: 11400000, guid: 70ba08bd188de40c08e8065269ec45b1, type: 2}
+  - {fileID: 11400000, guid: 3e09f6f82d783409bbb10ed5fc62d2c1, type: 2}
+  - {fileID: 11400000, guid: 7ccdb3f23cbec4cffa8d275c33431ca7, type: 2}
+  - {fileID: 11400000, guid: 2a1507053c38d4f1dbdcee5a6dfd1dd7, type: 2}
+  - {fileID: 11400000, guid: b759cac695e154ddab1f098134a6d68c, type: 2}
   clearBoardBeforePopulate: 0
   useRuntimeSelectedExercise: 1
   syncResolvedExerciseToRuntimeSelection: 1

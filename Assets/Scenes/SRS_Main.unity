@@ -208,8 +208,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 19651115}
-        m_TargetAssemblyTypeName: ScenePanelButtonLoader, Assembly-CSharp
-        m_MethodName: LoadSceneWithPagesObject
+        m_TargetAssemblyTypeName: SceneLoadButton, Assembly-CSharp
+        m_MethodName: LoadScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -266,11 +266,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 19651110}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2b376f7f792f423d9ad47aea0f369d0, type: 3}
+  m_Script: {fileID: 11500000, guid: f9c977429a2a443b0bf7c271769e9212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: About
-  pagesObject: {fileID: 8259849716300752474, guid: 5ec476ad93c4a4158bb1502d71e662c8, type: 3}
+  sceneName: SRS_T_Stage Select
+  targetExercise: {fileID: 0}
+  useExerciseTargetScene: 0
 --- !u!1 &186192331
 GameObject:
   m_ObjectHideFlags: 0
@@ -2215,8 +2216,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1722042235}
-        m_TargetAssemblyTypeName: ScenePanelButtonLoader, Assembly-CSharp
-        m_MethodName: LoadSceneWithPagesObject
+        m_TargetAssemblyTypeName: SceneLoadButton, Assembly-CSharp
+        m_MethodName: LoadScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2273,11 +2274,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1722042230}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2b376f7f792f423d9ad47aea0f369d0, type: 3}
+  m_Script: {fileID: 11500000, guid: f9c977429a2a443b0bf7c271769e9212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: About
-  pagesObject: {fileID: 7716620877491974326, guid: 15db1824563e84333a84a2fcb729e704, type: 3}
+  sceneName: SRS_I_Stage Select
+  targetExercise: {fileID: 0}
+  useExerciseTargetScene: 0
 --- !u!1 &2079628452
 GameObject:
   m_ObjectHideFlags: 0

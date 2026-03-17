@@ -142,6 +142,9 @@ public class PracticeJudge : MonoBehaviour
     {
         if (!detectEasyLikeModeFromSceneName) return false;
 
+        if (GetCurrentExerciseKey() == "TSD_H")
+            return false;
+
         string sceneName = SceneManager.GetActiveScene().name;
         string[] keywords = (easySceneKeywords != null && easySceneKeywords.Length > 0)
             ? easySceneKeywords
@@ -160,7 +163,7 @@ public class PracticeJudge : MonoBehaviour
     string[] GetDefaultEasyKeywords()
     {
         if (practiceType == PracticeType.TSpinTriple)
-            return new[] { "TST_E", "TST_B" };
+            return new[] { "TST_E", "TST_B", "Exercise" };
         if (practiceType == PracticeType.SZDouble
             || practiceType == PracticeType.SZTriple 
             || practiceType == PracticeType.SZSingle)
@@ -171,7 +174,8 @@ public class PracticeJudge : MonoBehaviour
             return new[] { "SRS_JL", "Exercise" };
         if (practiceType == PracticeType.ISingle || practiceType == PracticeType.IFull)
             return new[] { "SRS_I", "Exercise" };
-        if (practiceType == PracticeType.TSingle || practiceType == PracticeType.TDouble)
+        if (practiceType == PracticeType.TSingle || practiceType == PracticeType.TDouble 
+            || practiceType == PracticeType.TSpinDouble)
             return new[] { "SRS_T", "Exercise" };
 
         return new[] { "TSD_E", "TSD_B" };

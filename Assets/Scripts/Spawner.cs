@@ -131,30 +131,6 @@ public class Spawner : MonoBehaviour
             }
         }
 
-        if (sceneName.StartsWith("SRS_SZ_") && TryGetSceneSuffixNumber(sceneName, out int szStageNumber))
-        {
-            spawnMode = SpawnMode.Sequence;
-            EnqueueSequence((szStageNumber % 2) == 1 ? 'S' : 'Z');
-        }
-
-        if (sceneName.StartsWith("SRS_JL_") && TryGetSceneSuffixNumber(sceneName, out int jlStageNumber))
-        {
-            spawnMode = SpawnMode.Sequence;
-            EnqueueSequence((jlStageNumber % 2) == 1 ? 'J' : 'L');
-        }
-
-        if (sceneName.Contains("SRS_I"))
-        {
-            spawnMode = SpawnMode.Sequence;
-            EnqueueSequence('I');
-        }
-
-        if (sceneName.Contains("SRS_T"))
-        {
-            spawnMode = SpawnMode.Sequence;
-            EnqueueSequence('T');
-        }
-
         if (sceneName.Contains("Exercise_Scene"))
         {
             SRSExercise config = ResolveExerciseConfig();
@@ -163,9 +139,61 @@ public class Spawner : MonoBehaviour
                 spawnMode = SpawnMode.Sequence;
                 sequenceQueue.Clear();
 
-                int idx = GetIndexForExercisePiece(config.spawnPiece);
-                if (idx >= 0 && idx < tetrominoPrefabs.Length)
-                    sequenceQueue.Enqueue(idx);
+                if (config.exerciseId.Contains("TSD_B"))
+                {
+                    spawnMode = SpawnMode.Sequence;
+
+                    // 例: TSD_B_OT → O → T
+                    if (config.exerciseId.Contains("_IT"))
+                    {
+                        EnqueueSequence('I', 'T');
+                    }
+                    // 例: TSD_B_JT → J → T
+                    else if (config.exerciseId.Contains("_JT"))
+                    {
+                        EnqueueSequence('J', 'T');
+                    }
+                    // 例: TSD_B_LT → L → T
+                    else if (config.exerciseId.Contains("_LT"))
+                    {
+                        EnqueueSequence('L', 'T');
+                    }
+
+                    else if (config.exerciseId.Contains("_OT"))
+                    {
+                        EnqueueSequence('O', 'T');
+                    }
+                    else if (config.exerciseId.Contains("_ST"))
+                    {
+                        EnqueueSequence('S', 'T');
+                    }
+                    else if (config.exerciseId.Contains("_TT"))
+                    {
+                        EnqueueSequence('T', 'T');
+                    }
+                    else if (config.exerciseId.Contains("_ZT"))
+                    {
+                        EnqueueSequence('Z', 'T');
+                    }
+                    else
+                    {
+                        // デフォルト: T だけ1つ出す（必要に応じて拡張）
+                        EnqueueSequence('T');
+                    }
+                }
+                else
+                {
+                    if (!config.exerciseId.Contains("TSD"))
+                    {
+                        int idx = GetIndexForExercisePiece(config.spawnPiece);
+                        if (idx >= 0 && idx < tetrominoPrefabs.Length)
+                            sequenceQueue.Enqueue(idx);
+                    }
+                    else
+                    {
+                        spawnMode = SpawnMode.Normal;
+                    }
+                }
             }
         }
 
@@ -198,21 +226,6 @@ public class Spawner : MonoBehaviour
             default:
                 return Mathf.Clamp(tIndex, 0, tetrominoPrefabs.Length - 1);
         }
-    }
-
-    /// <summary>
-    /// シーン名の末尾番号（例: SRS_SZ_12 の 12）を取得する
-    /// </summary>
-    private bool TryGetSceneSuffixNumber(string sceneName, out int stageNumber)
-    {
-        stageNumber = 0;
-        if (string.IsNullOrEmpty(sceneName)) return false;
-
-        int lastUnderscore = sceneName.LastIndexOf('_');
-        if (lastUnderscore < 0 || lastUnderscore >= sceneName.Length - 1) return false;
-
-        string suffix = sceneName.Substring(lastUnderscore + 1);
-        return int.TryParse(suffix, out stageNumber);
     }
 
     /// <summary>
