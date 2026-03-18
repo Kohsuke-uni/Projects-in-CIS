@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class Tetromino : MonoBehaviour
 {
@@ -226,6 +227,24 @@ public class Tetromino : MonoBehaviour
 
     private void HandleInput()
     {
+        // Gamepadの入力を受ける
+        var pad = Gamepad.current;
+
+        // ↑はハードドロップ用なので、押した瞬間のみチェックする
+        bool gpLeftDown = pad != null && pad.dpad.left.wasPressedThisFrame;
+        bool gpRightDown = pad != null && pad.dpad.right.wasPressedThisFrame;
+        bool gpUpDown = pad != null && pad.dpad.up.wasPressedThisFrame;
+        bool gpDownDown = pad != null && pad.dpad.down.wasPressedThisFrame;
+        
+        
+        bool gpLeftUp = pad != null && pad.dpad.left.wasReleasedThisFrame;
+        bool gpRightUp = pad != null && pad.dpad.right.wasReleasedThisFrame;
+        bool gpDownUp = pad != null && pad.dpad.down.wasReleasedThisFrame;
+
+        bool gpLeftHeld = pad != null && pad.dpad.left.isPressed;
+        bool gpRightHeld = pad != null && pad.dpad.right.isPressed;
+        bool gpDownHeld = pad != null && pad.dpad.down.isPressed;
+    
         // Hold (C / LeftShift)
         //コントローラーだとL1でホールド
         if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.JoystickButton4))
@@ -242,7 +261,7 @@ public class Tetromino : MonoBehaviour
         // --- 横移動：押下/離し（初回1マス + オートシフト準備） ---
         //コントローラーだとd-rightで右、d-leftで左
         // 左押下
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton16))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton16) || gpLeftDown)
         {
             horizontalDir = -1;     // 最後に押した方向が勝つ
             dasTimer = 0f;
@@ -253,7 +272,7 @@ public class Tetromino : MonoBehaviour
             }
         }
         // 右押下
-        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.JoystickButton17))
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.JoystickButton17) || gpRightDown)
         {
             horizontalDir = +1;
             dasTimer = 0f;
@@ -264,9 +283,9 @@ public class Tetromino : MonoBehaviour
             }
         }
         // 左離し
-        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.JoystickButton16))
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.JoystickButton16) || gpLeftUp)
         {
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.JoystickButton17))
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.JoystickButton17) || gpRightHeld)
             {
                 horizontalDir = +1;
                 dasTimer = 0f;
@@ -278,9 +297,9 @@ public class Tetromino : MonoBehaviour
             }
         }
         // 右離し
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.JoystickButton17))
+        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.JoystickButton17) || gpRightUp)
         {
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.JoystickButton16))
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.JoystickButton16) || gpLeftHeld)
             {
                 horizontalDir = -1;
                 dasTimer = 0f;
@@ -316,7 +335,7 @@ public class Tetromino : MonoBehaviour
 
         // Hard Drop (W）
         //コントローラーだとD-up
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.JoystickButton14))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.JoystickButton14) || gpUpDown)
         {
             while (TryMove(Vector3.down)) { }
             // ★ 追加：ハードドロップSE
@@ -326,7 +345,7 @@ public class Tetromino : MonoBehaviour
 
         // Soft Drop (↓)
         //コントローラーはD-downでソフトドロップ
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton15))
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton15) || gpDownDown)
         {
             fastDropping = true;
 
@@ -346,11 +365,14 @@ public class Tetromino : MonoBehaviour
     // 横長押しの自動移動（DAS/ARR）
     private void HandleHorizontalAutoShift()
     {
+
         if (horizontalDir == 0) return;
 
+        var pad = Gamepad.current;
+        
         // キー実際状態チェック（セーフガード）
-        bool leftHeld = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton16);
-        bool rightHeld = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.JoystickButton17);
+        bool leftHeld = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton16) || (pad != null && pad.dpad.left.isPressed);
+        bool rightHeld = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.JoystickButton17) || (pad != null && pad.dpad.right.isPressed);
         if (horizontalDir == -1 && !leftHeld)
         {
             horizontalDir = rightHeld ? +1 : 0; dasTimer = 0f; arrTimer = 0f;
