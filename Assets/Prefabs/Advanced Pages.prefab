@@ -2898,7 +2898,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3087260982764418656}
   m_Layer: 5
-  m_Name: Intermediate Pages
+  m_Name: Advanced Pages
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4379,7 +4379,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7033127998569675588, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
       propertyPath: sceneName
-      value: TST_StageSelect
+      value: TST_Stage Select
+      objectReference: {fileID: 0}
+    - target: {fileID: 7033127998569675588, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
+      propertyPath: useExerciseTargetScene
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8516733250846512059, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
       propertyPath: m_SizeDelta.x
@@ -4493,11 +4497,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4851682194671237862, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
       propertyPath: m_Name
-      value: Practice
+      value: TSD
       objectReference: {fileID: 0}
     - target: {fileID: 7033127998569675588, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
       propertyPath: sceneName
-      value: TSD_StageSelect
+      value: TSD_Stage Select
+      objectReference: {fileID: 0}
+    - target: {fileID: 7033127998569675588, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
+      propertyPath: useExerciseTargetScene
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8516733250846512059, guid: fffd84321cb0141c9b9ebd4d6ad38d94, type: 3}
       propertyPath: m_SizeDelta.x

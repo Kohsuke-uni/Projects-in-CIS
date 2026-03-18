@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6385163735295318558}
   m_Layer: 0
   m_Name: Ghost (3)
-  m_TagString: Untagged
+  m_TagString: FixedBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1859340128441341451}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9e5d625fd23bd4f949a527db26be7ca4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 42b832069bf124c59b39173974dad88a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6781879519411661561}
   m_Layer: 0
   m_Name: Ghost (1)
-  m_TagString: Untagged
+  m_TagString: FixedBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,7 +111,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1859340128441341451}
@@ -157,7 +157,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9e5d625fd23bd4f949a527db26be7ca4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 42b832069bf124c59b39173974dad88a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 6587093569189078374}
   m_Layer: 0
   m_Name: Wall_I
-  m_TagString: Untagged
+  m_TagString: FixedBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -253,11 +253,14 @@ MonoBehaviour:
   groundedMoveAllowance: 14
   groundedRotateAllowance: 15
   inactivitySeconds: 0.9
+  dasDelay: 0.15
+  arrInterval: 0.03
   board: {fileID: 0}
   pivotOverride: {fileID: 3064985538119529233}
   ghost: {fileID: 0}
   typeIndex: 0
   spawnedFromHold: 0
+  enablePlayerInput: 1
 --- !u!1 &8200442777522390321
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,7 +273,7 @@ GameObject:
   - component: {fileID: 2076803815614779127}
   m_Layer: 0
   m_Name: Ghost (2)
-  m_TagString: Untagged
+  m_TagString: FixedBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -285,7 +288,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1859340128441341451}
@@ -331,7 +334,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9e5d625fd23bd4f949a527db26be7ca4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 42b832069bf124c59b39173974dad88a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -354,7 +357,7 @@ GameObject:
   - component: {fileID: 6786501198834344201}
   m_Layer: 0
   m_Name: Ghost
-  m_TagString: Untagged
+  m_TagString: FixedBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -369,7 +372,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1859340128441341451}
@@ -415,7 +418,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9e5d625fd23bd4f949a527db26be7ca4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 42b832069bf124c59b39173974dad88a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -121,6 +121,13 @@ public class Tetromino : MonoBehaviour
         if (board == null || !board.IsValidPosition(this, Vector3.zero))
         {
             Debug.Log("Game Over (spawn invalid), piece: " + name);
+
+            var practiceJudge = FindObjectOfType<PracticeJudge>();
+            if (practiceJudge != null)
+            {
+                practiceJudge.OnTopOut();
+            }
+
             var fortyJudge = FindObjectOfType<FortyLineJudge>();
             if (fortyJudge != null)
             {
@@ -135,7 +142,17 @@ public class Tetromino : MonoBehaviour
 
         // シーン名に応じた挙動
         string sceneName = SceneManager.GetActiveScene().name;
-        bool isNormalMode = sceneName.Contains("TSD_N") || sceneName.Contains("TST_N") || sceneName.Contains("REN_N") || sceneName.Contains("40Lines");
+        PracticeJudge judge = FindObjectOfType<PracticeJudge>();
+        RENJudge renJudge = FindObjectOfType<RENJudge>();
+        bool isRenNormalMode = renJudge != null
+        && renJudge.enabled
+        && renJudge.renMode == RENJudge.RENMode.Normal;
+        string displayKey = judge != null ? judge.GetCurrentDisplayName() : string.Empty;
+
+        bool isNormalMode = sceneName.Contains("TSD_N") || sceneName.Contains("TST_N") 
+        || sceneName.Contains("REN_N") || sceneName.Contains("40Lines")
+        || displayKey.Contains("TSD_N") || displayKey.Contains("TST_N")
+        || isRenNormalMode;
 
         if (isNormalMode)
         {
@@ -144,7 +161,7 @@ public class Tetromino : MonoBehaviour
             allowUpMove = true;
             hardDropOnlyLock = true;
         }
-        else if (sceneName.Contains("REN_E"))
+        else // if (sceneName.Contains("REN_E"))
         {
             // Easy(REN_E)：落下あり・↑移動なし
             disableAutoFall = false;
@@ -703,7 +720,7 @@ public class Tetromino : MonoBehaviour
         }
 
         var practiceJudge = FindObjectOfType<PracticeJudge>();
-        if (practiceJudge != null)
+        if (practiceJudge != null && practiceJudge.enabled)
         {
             practiceJudge.OnPieceLocked(this, linesCleared);
             if (practiceJudge.IsStageCleared)
@@ -714,36 +731,8 @@ public class Tetromino : MonoBehaviour
             }
         }
 
-        if (practiceJudge == null)
-        {
-            // (Optional) Legacy: T-Spin Double mode
-            var tsdJudge = FindObjectOfType<TSpinDoubleJudge>();
-            if (tsdJudge != null)
-            {
-                tsdJudge.OnPieceLocked(this, linesCleared);
-                if (tsdJudge.IsStageCleared)
-                {
-                    enabled = false;
-                    Destroy(gameObject);
-                    return;
-                }
-            }
-
-            var tstJudge = FindObjectOfType<TSpinTripleJudge>();
-            if (tstJudge != null)
-            {
-                tstJudge.OnPieceLocked(this, linesCleared);
-                if (tstJudge.IsStageCleared)
-                {
-                    enabled = false;
-                    Destroy(gameObject);
-                    return;
-                }
-            }
-        }
-
         var renJudge = FindObjectOfType<RENJudge>();
-        if (renJudge != null)
+        if (renJudge != null && renJudge.enabled)
         {
             renJudge.OnPieceLocked(this, linesCleared);
             if (renJudge.IsStageCleared)
@@ -753,6 +742,47 @@ public class Tetromino : MonoBehaviour
                 return;
             }
         }
+
+        // Legacy code
+        // if (practiceJudge == null)
+        // {
+        //     // (Optional) Legacy: T-Spin Double mode
+        //     var tsdJudge = FindObjectOfType<TSpinDoubleJudge>();
+        //     if (tsdJudge != null)
+        //     {
+        //         tsdJudge.OnPieceLocked(this, linesCleared);
+        //         if (tsdJudge.IsStageCleared)
+        //         {
+        //             enabled = false;
+        //             Destroy(gameObject);
+        //             return;
+        //         }
+        //     }
+
+        //     var tstJudge = FindObjectOfType<TSpinTripleJudge>();
+        //     if (tstJudge != null)
+        //     {
+        //         tstJudge.OnPieceLocked(this, linesCleared);
+        //         if (tstJudge.IsStageCleared)
+        //         {
+        //             enabled = false;
+        //             Destroy(gameObject);
+        //             return;
+        //         }
+        //     }
+        // }
+
+        // var renJudge = FindObjectOfType<RENJudge>();
+        // if (renJudge != null)
+        // {
+        //     renJudge.OnPieceLocked(this, linesCleared);
+        //     if (renJudge.IsStageCleared)
+        //     {
+        //         enabled = false;
+        //         Destroy(gameObject);
+        //         return;
+        //     }
+        // }
 
         // 次のミノを出す
         enabled = false;

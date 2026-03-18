@@ -1491,6 +1491,7 @@ GameObject:
   m_Component:
   - component: {fileID: 621408150}
   - component: {fileID: 621408149}
+  - component: {fileID: 621408151}
   m_Layer: 3
   m_Name: Tetris_Trainer_BG
   m_TagString: Untagged
@@ -1565,6 +1566,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &621408151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621408148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f7332d7acc24452497a8af4b5b26832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 0}
+  targetSpriteRenderer: {fileID: 621408149}
+  backgroundSprites:
+  - {fileID: 21300000, guid: 30c84392b4a604c29a48d5de0bc9df5c, type: 3}
+  - {fileID: 21300000, guid: 80ea8c9a985a5469580b009b9ad2a216, type: 3}
+  - {fileID: 21300000, guid: 8949c27cf89724b1ab79fb69ab840118, type: 3}
+  - {fileID: 21300000, guid: 47853dd6b511d4758a8794835c2ddac0, type: 3}
 --- !u!1 &630788458
 GameObject:
   m_ObjectHideFlags: 0
@@ -2642,6 +2662,7 @@ MonoBehaviour:
   board: {fileID: 2021606496}
   spawnCell: {x: 4, y: 18}
   spawnOnStart: 1
+  exerciseConfig: {fileID: 0}
   spawnMode: 0
   tIndex: 5
   spawnCpuControlled: 0

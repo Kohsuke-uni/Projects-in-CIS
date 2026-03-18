@@ -170,8 +170,11 @@ MonoBehaviour:
   board: {fileID: 266512058}
   spawnCell: {x: 4, y: 18}
   spawnOnStart: 1
+  exerciseConfig: {fileID: 0}
   spawnMode: 0
   tIndex: 5
+  spawnCpuControlled: 0
+  cpuDifficulty: 1
 --- !u!4 &98480899
 Transform:
   m_ObjectHideFlags: 0
@@ -860,6 +863,7 @@ MonoBehaviour:
   - {fileID: 1662429408361877596, guid: 92f2eebf4d2d84ead801e93dbac985b8, type: 3}
   itemScale: 1
   itemOffset: {x: 0, y: 0, z: 0}
+  piecePositionOverrides: []
 --- !u!1 &414323855
 GameObject:
   m_ObjectHideFlags: 0
@@ -2361,6 +2365,7 @@ MonoBehaviour:
   timeText: {fileID: 0}
   normalRequiredRen: 3
   hardRequiredRen: 3
+  renMode: 0
 --- !u!114 &1231178234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3100,7 +3105,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1726811630
 RectTransform:
   m_ObjectHideFlags: 0

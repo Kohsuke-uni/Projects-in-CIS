@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bd8f58f62a6045e38a2c074013bd6a8, type: 3}
   m_Name: TSD_E1
   m_EditorClassIdentifier: 
-  exerciseId: TSD_E1
+  exerciseId: TSD_1
   displayName: TSD_E1
   targetSceneName: Exercise_Scene
   instructionText: Execute a T-spin double!

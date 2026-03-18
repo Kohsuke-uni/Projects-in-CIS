@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class ExerciseSceneLoader : MonoBehaviour
 {
@@ -17,10 +18,26 @@ public class ExerciseSceneLoader : MonoBehaviour
         RuntimeSelectedExercise = null;
     }
 
+    public static bool RENMode { get; private set; }
+
+    public static void SetRENMode(bool ren)
+    {
+        RENMode = ren;
+    }
+
+    public static RENJudge.RENMode RuntimeRENMode { get; private set; }
+
+    public static void SetRuntimeRENMode(RENJudge.RENMode mode)
+    {
+        RuntimeRENMode = mode;
+    }
+
+
     [Header("References")]
     public SRSExercise exercise;
     public Board board;
     public PracticeJudge practiceJudge;
+    public RENJudge renJudge;
     public TMP_Text instructionTextUI;
     [Tooltip("color文字列と同名のPrefabをここから検索する")]
     public GameObject[] blockPrefabs;
@@ -34,6 +51,11 @@ public class ExerciseSceneLoader : MonoBehaviour
     [Tooltip("ON なら最終的に使った exercise をランタイム選択として保存")]
     public bool syncResolvedExerciseToRuntimeSelection = true;
 
+    [Header("REN Settings")]
+    public bool isREN = false;
+    public GameObject[] renPrefabs;
+    public GameObject RENWalls;
+
     private readonly Dictionary<string, GameObject> prefabByName = new Dictionary<string, GameObject>();
 
     private void Awake()
@@ -44,11 +66,28 @@ public class ExerciseSceneLoader : MonoBehaviour
         if (syncResolvedExerciseToRuntimeSelection && exercise != null)
             RuntimeSelectedExercise = exercise;
 
+        isREN = RENMode;
+
+        if (renJudge != null)
+            renJudge.renMode = RuntimeRENMode;
+
+        ApplyJudgeMode();
         ApplyPracticeTypeToJudge();
     }
 
     private void Start()
     {
+        if (isREN && RENWalls != null && RuntimeRENMode == RENJudge.RENMode.Easy)
+        {
+            RENWalls.SetActive(true);
+        }
+
+        if (isREN && renPrefabs != null && renPrefabs.Length > 0 && RuntimeRENMode == RENJudge.RENMode.Easy)
+        {
+            GameObject randomPrefab = Instantiate(renPrefabs[Random.Range(0, renPrefabs.Length)]);
+            randomPrefab.transform.SetParent(RENWalls.transform, false);
+        }
+        
         ApplyInstructionText();
 
         if (exercise == null || board == null || blockPrefabs == null || blockPrefabs.Length == 0)
@@ -85,6 +124,7 @@ public class ExerciseSceneLoader : MonoBehaviour
 
     private void ApplyPracticeTypeToJudge()
     {
+        if (isREN) return;
         if (exercise == null) return;
 
         if (practiceJudge == null)
@@ -94,10 +134,35 @@ public class ExerciseSceneLoader : MonoBehaviour
         practiceJudge.practiceType = exercise.practiceType;
     }
 
+    private void ApplyJudgeMode()
+    {
+        if (practiceJudge != null)
+            practiceJudge.enabled = !isREN;
+
+        if (renJudge != null)
+            renJudge.enabled = isREN;
+    }
+
+
     private void ApplyInstructionText()
     {
         if (instructionTextUI == null) return;
         instructionTextUI.text = exercise != null ? exercise.instructionText : string.Empty;
+        if (isREN)
+        {
+            switch (RuntimeRENMode)
+            {
+                case RENJudge.RENMode.Easy:
+                    instructionTextUI.text = "Achieve as many REN as you can!";
+                    break;
+                case RENJudge.RENMode.Normal:
+                    instructionTextUI.text = $"Achieve {renJudge.normalRequiredRen}+ REN to clear the stage. (No gravity)";
+                    break;
+                case RENJudge.RENMode.Hard:
+                    instructionTextUI.text = $"Achieve {renJudge.hardRequiredRen}+ REN to clear the stage.";
+                    break;
+            }
+        }
     }
 
     private void BuildPrefabLookup()

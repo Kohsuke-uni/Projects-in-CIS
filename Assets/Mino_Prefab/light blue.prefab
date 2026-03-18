@@ -93,7 +93,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2390372211059374909}
-  - component: {fileID: 916694666281848364}
   m_Layer: 0
   m_Name: light blue
   m_TagString: Untagged
@@ -117,28 +116,3 @@ Transform:
   - {fileID: 2035693752287071560}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &916694666281848364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8909812272818795980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b73ab5a9ddccb476ea5e6a9a92577af0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  normalFallSpeed: 1
-  fastDropSpeed: 12
-  groundedMoveAllowance: 14
-  groundedRotateAllowance: 15
-  inactivitySeconds: 0.9
-  dasDelay: 0.15
-  arrInterval: 0.03
-  board: {fileID: 0}
-  pivotOverride: {fileID: 0}
-  ghost: {fileID: 0}
-  typeIndex: 0
-  spawnedFromHold: 0
-  enablePlayerInput: 1

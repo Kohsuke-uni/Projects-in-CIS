@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd8f58f62a6045e38a2c074013bd6a8, type: 3}
+  m_Name: TST_E4
+  m_EditorClassIdentifier: 
+  exerciseId: TST_4
+  displayName: TST_E4
+  targetSceneName: Exercise_Scene
+  instructionText: Execute a T-spin triple!
+  practiceType: 1
+  spawnPiece: 5
+  initialBlocks:
+  - cell: {x: 0, y: 7}
+    color: light blue
+  - cell: {x: 0, y: 6}
+    color: light blue
+  - cell: {x: 0, y: 5}
+    color: light blue
+  - cell: {x: 0, y: 4}
+    color: light blue
+  - cell: {x: 6, y: 4}
+    color: dark blue
+  - cell: {x: 7, y: 4}
+    color: dark blue
+  - cell: {x: 0, y: 3}
+    color: green
+  - cell: {x: 2, y: 3}
+    color: yellow
+  - cell: {x: 3, y: 3}
+    color: yellow
+  - cell: {x: 5, y: 3}
+    color: red
+  - cell: {x: 6, y: 3}
+    color: dark blue
+  - cell: {x: 0, y: 2}
+    color: green
+  - cell: {x: 1, y: 2}
+    color: green
+  - cell: {x: 2, y: 2}
+    color: yellow
+  - cell: {x: 3, y: 2}
+    color: yellow
+  - cell: {x: 4, y: 2}
+    color: red
+  - cell: {x: 5, y: 2}
+    color: red
+  - cell: {x: 6, y: 2}
+    color: dark blue
+  - cell: {x: 8, y: 2}
+    color: orange
+  - cell: {x: 9, y: 2}
+    color: orange
+  - cell: {x: 0, y: 1}
+    color: dark blue
+  - cell: {x: 1, y: 1}
+    color: green
+  - cell: {x: 2, y: 1}
+    color: red
+  - cell: {x: 3, y: 1}
+    color: red
+  - cell: {x: 4, y: 1}
+    color: red
+  - cell: {x: 5, y: 1}
+    color: yellow
+  - cell: {x: 6, y: 1}
+    color: yellow
+  - cell: {x: 9, y: 1}
+    color: orange
+  - cell: {x: 0, y: 0}
+    color: dark blue
+  - cell: {x: 1, y: 0}
+    color: dark blue
+  - cell: {x: 2, y: 0}
+    color: dark blue
+  - cell: {x: 3, y: 0}
+    color: red
+  - cell: {x: 4, y: 0}
+    color: red
+  - cell: {x: 5, y: 0}
+    color: yellow
+  - cell: {x: 6, y: 0}
+    color: yellow
+  - cell: {x: 8, y: 0}
+    color: yellow
+  - cell: {x: 9, y: 0}
+    color: orange

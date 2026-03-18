@@ -556,6 +556,8 @@ MonoBehaviour:
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 0149e7cedb1ae46ef9cb08252bb233a8, type: 2}
   useExerciseTargetScene: 1
+  isREN: 0
+  renMode: 0
 --- !u!1 &180102779
 GameObject:
   m_ObjectHideFlags: 0
@@ -1498,6 +1500,8 @@ MonoBehaviour:
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: c63f873923f8247ba90edacef1ded622, type: 2}
   useExerciseTargetScene: 1
+  isREN: 0
+  renMode: 0
 --- !u!114 &506290360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1770,6 +1774,7 @@ GameObject:
   - component: {fileID: 774303454}
   - component: {fileID: 774303456}
   - component: {fileID: 774303455}
+  - component: {fileID: 774303457}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -1834,6 +1839,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 774303453}
   m_CullTransparentMesh: 1
+--- !u!114 &774303457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774303453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f7332d7acc24452497a8af4b5b26832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 774303455}
+  targetSpriteRenderer: {fileID: 0}
+  backgroundSprites:
+  - {fileID: 21300000, guid: 6cf8b7ce52c384449a5f673fdef15411, type: 3}
+  - {fileID: 21300000, guid: c4fc5b9aa7a99463ca8c7f676b259687, type: 3}
 --- !u!1 &807508501
 GameObject:
   m_ObjectHideFlags: 0
@@ -2421,6 +2443,8 @@ MonoBehaviour:
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: aaae6407eabf3426783161cae76a69e6, type: 2}
   useExerciseTargetScene: 1
+  isREN: 0
+  renMode: 0
 --- !u!1 &1329994060
 GameObject:
   m_ObjectHideFlags: 0
@@ -2571,6 +2595,8 @@ MonoBehaviour:
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 983a0b17aa6f34ae389539d773e0d054, type: 2}
   useExerciseTargetScene: 1
+  isREN: 0
+  renMode: 0
 --- !u!1 &1502424320
 GameObject:
   m_ObjectHideFlags: 0
@@ -3044,6 +3070,8 @@ MonoBehaviour:
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: e21b0ad7166284442891f13c3abe0326, type: 2}
   useExerciseTargetScene: 1
+  isREN: 0
+  renMode: 0
 --- !u!114 &1633651932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3686,6 +3714,8 @@ MonoBehaviour:
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 6a9d9de2c42924a1195a08a2d116c1e3, type: 2}
   useExerciseTargetScene: 1
+  isREN: 0
+  renMode: 0
 --- !u!114 &2137119213
 MonoBehaviour:
   m_ObjectHideFlags: 0

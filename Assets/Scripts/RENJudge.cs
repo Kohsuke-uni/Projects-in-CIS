@@ -30,17 +30,28 @@ public class RENJudge : MonoBehaviour
     int currentRen = 0;
     int maxRen = 0;
 
-    bool isEasyMode = false;
-    bool isNormalMode = false;
-    bool isHardMode = false;
+
+    public enum RENMode
+    {
+        Easy,
+        Normal,
+        Hard
+    }
+    public RENMode renMode = RENMode.Easy;
+
+    // Legacy mode detection flags
+    // bool isEasyMode = false;
+    // bool isNormalMode = false;
+    // bool isHardMode = false;
+
 
     void Start()
     {
-        string sceneName = SceneManager.GetActiveScene().name;
-
-        isEasyMode   = sceneName.Contains("REN_E");
-        isNormalMode = sceneName.Contains("REN_N");
-        isHardMode   = sceneName.Contains("REN_H");
+        // Legacy support for mode detection
+        // string sceneName = SceneManager.GetActiveScene().name;
+        // isEasyMode   = sceneName.Contains("REN_E");
+        // isNormalMode = sceneName.Contains("REN_N");
+        // isHardMode   = sceneName.Contains("REN_H");
 
         if (clearUIRoot != null) clearUIRoot.SetActive(false);
         if (renNowText != null) renNowText.text = "";
@@ -62,9 +73,9 @@ public class RENJudge : MonoBehaviour
 
         bool cleared = false;
 
-        if (isEasyMode) cleared = true;
-        else if (isNormalMode) cleared = (maxRen >= normalRequiredRen);
-        else if (isHardMode) cleared = (maxRen >= hardRequiredRen);
+        if (renMode == RENMode.Easy) cleared = true;
+        else if (renMode == RENMode.Normal) cleared = (maxRen >= normalRequiredRen);
+        else if (renMode == RENMode.Hard) cleared = (maxRen >= hardRequiredRen);
 
         currentRen = 0;
 
@@ -73,6 +84,7 @@ public class RENJudge : MonoBehaviour
 
     void HandleStageClear()
     {
+        Debug.Log("Stage cleared.");
         IsStageCleared = true;
 
         var controlUI = FindObjectOfType<GameControlUI>();
@@ -95,7 +107,7 @@ public class RENJudge : MonoBehaviour
 
     int GetSpriteIndexByRen(int ren)
     {
-        if (isEasyMode)
+        if (renMode == RENMode.Easy)
         {
             if (ren == 0) return 0;
             if (ren <= 3) return 1;
@@ -128,7 +140,7 @@ public class RENJudge : MonoBehaviour
 
         if (clearMessageText != null)
         {
-            if (isNormalMode || isHardMode)
+            if (renMode == RENMode.Normal || renMode == RENMode.Hard)
                 clearMessageText.text = "You are now pro at REN!";
             else
                 clearMessageText.text = GetRenComment(maxRen);

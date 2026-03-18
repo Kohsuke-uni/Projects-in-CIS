@@ -9,6 +9,9 @@ public class SceneLoadButton : MonoBehaviour
     [Header("Exercise Load (Optional)")]
     public SRSExercise targetExercise;
     public bool useExerciseTargetScene = true;
+    public bool isREN = false;
+    public RENJudge.RENMode renMode = RENJudge.RENMode.Easy;
+
 
     public void LoadScene()
     {
@@ -19,6 +22,8 @@ public class SceneLoadButton : MonoBehaviour
 
     public void LoadExerciseScene()
     {
+        ExerciseSceneLoader.SetRENMode(isREN);
+        ExerciseSceneLoader.SetRuntimeRENMode(renMode);
         if (targetExercise == null)
         {
             LoadScene();

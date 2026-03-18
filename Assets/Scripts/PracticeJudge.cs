@@ -88,6 +88,14 @@ public class PracticeJudge : MonoBehaviour
         }
     }
 
+    public void OnTopOut()
+    {
+        if (IsStageCleared) return;
+
+        SoundManager.Instance?.PlaySE(SeType.StageFail);
+        ForceRestartScene();
+    }
+
     bool IsTargetPiece(Tetromino piece)
     {
         if (piece == null) return false;
@@ -142,7 +150,8 @@ public class PracticeJudge : MonoBehaviour
     {
         if (!detectEasyLikeModeFromSceneName) return false;
 
-        if (GetCurrentExerciseKey() == "TSD_H")
+        if (GetCurrentDisplayName() == "TSD_H" || GetCurrentDisplayName() == "TSD_N"
+        || GetCurrentDisplayName() == "TST_H" || GetCurrentDisplayName() == "TST_N")
             return false;
 
         string sceneName = SceneManager.GetActiveScene().name;
@@ -330,7 +339,7 @@ public class PracticeJudge : MonoBehaviour
 
     private string ResolveStageSelectSceneName()
     {
-        string key = GetCurrentExerciseKey();
+        string key = GetCurrentDisplayName();
 
         if (!string.IsNullOrWhiteSpace(key) && stageSelectRules != null)
         {
@@ -355,14 +364,14 @@ public class PracticeJudge : MonoBehaviour
         return stageSelectSceneName;
     }
 
-    private string GetCurrentExerciseKey()
+    public string GetCurrentDisplayName()
     {
         var loader = FindObjectOfType<ExerciseSceneLoader>();
         if (loader == null || loader.exercise == null)
             return string.Empty;
 
-        return !string.IsNullOrWhiteSpace(loader.exercise.exerciseId)
-            ? loader.exercise.exerciseId
+        return !string.IsNullOrWhiteSpace(loader.exercise.displayName)
+            ? loader.exercise.displayName
             : loader.exercise.name;
     }
 

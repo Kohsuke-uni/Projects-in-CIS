@@ -139,39 +139,39 @@ public class Spawner : MonoBehaviour
                 spawnMode = SpawnMode.Sequence;
                 sequenceQueue.Clear();
 
-                if (config.exerciseId.Contains("TSD_B"))
+                if (config.displayName.Contains("TSD_B"))
                 {
                     spawnMode = SpawnMode.Sequence;
 
                     // 例: TSD_B_OT → O → T
-                    if (config.exerciseId.Contains("_IT"))
+                    if (config.displayName.Contains("_IT"))
                     {
                         EnqueueSequence('I', 'T');
                     }
                     // 例: TSD_B_JT → J → T
-                    else if (config.exerciseId.Contains("_JT"))
+                    else if (config.displayName.Contains("_JT"))
                     {
                         EnqueueSequence('J', 'T');
                     }
                     // 例: TSD_B_LT → L → T
-                    else if (config.exerciseId.Contains("_LT"))
+                    else if (config.displayName.Contains("_LT"))
                     {
                         EnqueueSequence('L', 'T');
                     }
 
-                    else if (config.exerciseId.Contains("_OT"))
+                    else if (config.displayName.Contains("_OT"))
                     {
                         EnqueueSequence('O', 'T');
                     }
-                    else if (config.exerciseId.Contains("_ST"))
+                    else if (config.displayName.Contains("_ST"))
                     {
                         EnqueueSequence('S', 'T');
                     }
-                    else if (config.exerciseId.Contains("_TT"))
+                    else if (config.displayName.Contains("_TT"))
                     {
                         EnqueueSequence('T', 'T');
                     }
-                    else if (config.exerciseId.Contains("_ZT"))
+                    else if (config.displayName.Contains("_ZT"))
                     {
                         EnqueueSequence('Z', 'T');
                     }
@@ -183,7 +183,7 @@ public class Spawner : MonoBehaviour
                 }
                 else
                 {
-                    if (!config.exerciseId.Contains("TSD"))
+                    if (!config.displayName.Contains("TSD") || !config.displayName.Contains("TST"))
                     {
                         int idx = GetIndexForExercisePiece(config.spawnPiece);
                         if (idx >= 0 && idx < tetrominoPrefabs.Length)
@@ -191,7 +191,9 @@ public class Spawner : MonoBehaviour
                     }
                     else
                     {
+                        // Behave normally
                         spawnMode = SpawnMode.Normal;
+                        sequenceQueue.Clear();
                     }
                 }
             }
