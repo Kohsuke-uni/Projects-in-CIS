@@ -11,6 +11,10 @@ public class GameControlUI : MonoBehaviour
     [Tooltip("ポーズ中にうっすら表示するオーバーレイ（なければ空でOK）")]
     public GameObject pauseOverlay;
 
+    [Header("Mobile UI")]
+    [Tooltip("モバイル操作ボタンをまとめた親オブジェクト")]
+    public GameObject mobileControlsRoot;
+
     [Header("Pause / Play Button")]
     [Tooltip("右側の一時停止ボタンの Image コンポーネント")]
     public Image pauseButtonImage;   // Pause_Button の Image
@@ -26,6 +30,8 @@ public class GameControlUI : MonoBehaviour
 
     private void Start()
     {
+        UpdateMobileControlsVisibility();
+
         // シーン開始時は必ず再生状態に戻す
         SetPause(false);
     }
@@ -44,6 +50,69 @@ public class GameControlUI : MonoBehaviour
     public void OnPauseButton()
     {
         SetPause(!isPaused);
+    }
+
+    public void OnRotateCWButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputRotateCW();
+    }
+
+    public void OnRotateCCWButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputRotateCCW();
+    }
+
+    public void OnMoveLeftButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputMoveLeft();
+    }
+
+    public void OnMoveRightButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputMoveRight();
+    }
+
+    public void OnStopHorizontalButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputStopHorizontal();
+    }
+
+    public void OnSoftDropStartButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputSoftDropStart();
+    }
+
+    public void OnSoftDropEndButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputSoftDropEnd();
+    }
+
+    public void OnHardDropButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputHardDrop();
+    }
+
+    public void OnHoldButton()
+    {
+        Tetromino activePiece = GetActiveTetromino();
+        if (activePiece != null)
+            activePiece.InputHold();
     }
 
     /// <summary>
@@ -98,6 +167,28 @@ public class GameControlUI : MonoBehaviour
 
         // 再生中 → 「||」、一時停止中 → 「▶」
         pauseButtonImage.sprite = isPaused ? playSprite : pauseSprite;
+    }
+
+    private Tetromino GetActiveTetromino()
+    {
+        var tetrominoes = FindObjectsOfType<Tetromino>();
+        for (int i = 0; i < tetrominoes.Length; i++)
+        {
+            Tetromino tetromino = tetrominoes[i];
+            if (tetromino == null || !tetromino.enabled || !tetromino.enablePlayerInput)
+                continue;
+
+            return tetromino;
+        }
+
+        return null;
+    }
+
+    private void UpdateMobileControlsVisibility()
+    {
+        if (mobileControlsRoot == null) return;
+
+        mobileControlsRoot.SetActive(Application.isMobilePlatform);
     }
 
     // クリアUIから呼ばれて、右側の操作UIを全部消したいとき用

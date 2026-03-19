@@ -58,7 +58,7 @@ public class EscMenuController : MonoBehaviour
         }
     }
 
-    private void ToggleMenu()
+    public void ToggleMenu()
     {
         isMenuOpen = !isMenuOpen;
 
@@ -69,7 +69,7 @@ public class EscMenuController : MonoBehaviour
     }
 
     // 操作説明パネルを閉じる
-    private void CloseHowToPlay()
+    public void CloseHowToPlay()
     {
         if (howToPlayPanel != null)
             howToPlayPanel.SetActive(false);

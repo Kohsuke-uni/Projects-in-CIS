@@ -79,6 +79,79 @@ public class Tetromino : MonoBehaviour
         Lock();
     }
 
+    public void InputRotateCW()
+    {
+        if (!enablePlayerInput || locked || GameControlUI.IsPaused) return;
+        TryRotateAndRecordWithSE(+1);
+    }
+
+    public void InputRotateCCW()
+    {
+        if (!enablePlayerInput || locked || GameControlUI.IsPaused) return;
+        TryRotateAndRecordWithSE(-1);
+    }
+
+    public void InputMoveLeft()
+    {
+        if (!enablePlayerInput || locked || GameControlUI.IsPaused) return;
+
+        horizontalDir = -1;
+        dasTimer = 0f;
+        arrTimer = 0f;
+        if (TryMoveHorizontalOnce(-1))
+            SoundManager.Instance?.PlaySE(SeType.Move);
+    }
+
+    public void InputMoveRight()
+    {
+        if (!enablePlayerInput || locked || GameControlUI.IsPaused) return;
+
+        horizontalDir = +1;
+        dasTimer = 0f;
+        arrTimer = 0f;
+        if (TryMoveHorizontalOnce(+1))
+            SoundManager.Instance?.PlaySE(SeType.Move);
+    }
+
+    public void InputStopHorizontal()
+    {
+        horizontalDir = 0;
+        dasTimer = 0f;
+        arrTimer = 0f;
+    }
+
+    public void InputSoftDropStart()
+    {
+        if (!enablePlayerInput || locked || GameControlUI.IsPaused) return;
+
+        fastDropping = true;
+        if (TryMove(Vector3.down))
+            SoundManager.Instance?.PlaySE(SeType.Move);
+    }
+
+    public void InputSoftDropEnd()
+    {
+        fastDropping = false;
+    }
+
+    public void InputHardDrop()
+    {
+        if (!enablePlayerInput || locked || GameControlUI.IsPaused) return;
+
+        while (TryMove(Vector3.down)) { }
+        SoundManager.Instance?.PlaySE(SeType.HardDrop);
+        Lock();
+    }
+
+    public void InputHold()
+    {
+        if (!enablePlayerInput || locked || GameControlUI.IsPaused) return;
+
+        var spawner = FindObjectOfType<Spawner>();
+        if (spawner != null && spawner.RequestHold(this))
+            SoundManager.Instance?.PlaySE(SeType.Hold);
+    }
+
     private void Awake()
     {
         var list = new List<Transform>(4);
@@ -249,13 +322,8 @@ public class Tetromino : MonoBehaviour
         //コントローラーだとL1でホールド
         if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.JoystickButton4))
         {
-            var spawner = FindObjectOfType<Spawner>();
-            if (spawner != null && spawner.RequestHold(this))
-            {
-                // ★ 追加：ホールド成功SE
-                SoundManager.Instance?.PlaySE(SeType.Hold);
-                return;
-            }
+            InputHold();
+            return;
         }
 
         // --- 横移動：押下/離し（初回1マス + オートシフト準備） ---
@@ -263,24 +331,12 @@ public class Tetromino : MonoBehaviour
         // 左押下
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton16) || gpLeftDown)
         {
-            horizontalDir = -1;     // 最後に押した方向が勝つ
-            dasTimer = 0f;
-            arrTimer = 0f;
-            if (TryMoveHorizontalOnce(-1))       // ★ ここで移動に成功したらSE
-            {
-                SoundManager.Instance?.PlaySE(SeType.Move);
-            }
+            InputMoveLeft();
         }
         // 右押下
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.JoystickButton17) || gpRightDown)
         {
-            horizontalDir = +1;
-            dasTimer = 0f;
-            arrTimer = 0f;
-            if (TryMoveHorizontalOnce(+1))
-            {
-                SoundManager.Instance?.PlaySE(SeType.Move);
-            }
+            InputMoveRight();
         }
         // 左離し
         if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.JoystickButton16) || gpLeftUp)
@@ -326,39 +382,30 @@ public class Tetromino : MonoBehaviour
         //コントローラーはAXで右回転、BYで左回転
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.JoystickButton1) || Input.GetKeyDown(KeyCode.JoystickButton3))
         {
-            if (TryRotateAndRecordWithSE(+1)) { }
+            InputRotateCW();
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.JoystickButton0) || Input.GetKeyDown(KeyCode.JoystickButton2))
         {
-            if (TryRotateAndRecordWithSE(-1)) { }
+            InputRotateCCW();
         }
 
         // Hard Drop (W）
         //コントローラーだとD-up
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.JoystickButton14) || gpUpDown)
         {
-            while (TryMove(Vector3.down)) { }
-            // ★ 追加：ハードドロップSE
-            SoundManager.Instance?.PlaySE(SeType.HardDrop);
-            Lock();
+            InputHardDrop();
         }
 
         // Soft Drop (↓)
         //コントローラーはD-downでソフトドロップ
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton15) || gpDownDown)
         {
-            fastDropping = true;
-
-            // ▼ 追加：下に1マス動けるなら Move SE
-            if (TryMove(Vector3.down))
-            {
-                SoundManager.Instance?.PlaySE(SeType.Move);
-            }
+            InputSoftDropStart();
         }
 
         if (Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.JoystickButton15))
         {
-            fastDropping = false;
+            InputSoftDropEnd();
         }
     }
 
