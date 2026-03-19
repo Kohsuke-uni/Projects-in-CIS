@@ -339,9 +339,9 @@ public class Tetromino : MonoBehaviour
             InputMoveRight();
         }
         // 左離し
-        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.JoystickButton16) || gpLeftUp)
+        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.JoystickButton16) || gpLeftUp)
         {
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.JoystickButton17) || gpRightHeld)
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.JoystickButton17) || gpRightHeld)
             {
                 horizontalDir = +1;
                 dasTimer = 0f;
@@ -353,9 +353,9 @@ public class Tetromino : MonoBehaviour
             }
         }
         // 右離し
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.JoystickButton17) || gpRightUp)
+        if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.JoystickButton17) || gpRightUp)
         {
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.JoystickButton16) || gpLeftHeld)
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton16) || gpLeftHeld)
             {
                 horizontalDir = -1;
                 dasTimer = 0f;

@@ -37,7 +37,7 @@ public class GameTimer : MonoBehaviour
     private void UpdateLabel()
     {
         if (timeLabel != null)
-            timeLabel.text = $"TIME: {elapsedTime:F2}s";
+            timeLabel.text = $"TIME:\n{FormatElapsedTime(elapsedTime)}";
     }
 
     public void StopTimer()
@@ -60,5 +60,12 @@ public class GameTimer : MonoBehaviour
     public float GetClearTime()
     {
         return elapsedTime;
+    }
+
+    private string FormatElapsedTime(float seconds)
+    {
+        int minutes = Mathf.FloorToInt(seconds / 60f);
+        float remainingSeconds = seconds % 60f;
+        return $"{minutes}:{remainingSeconds:00.00}";
     }
 }

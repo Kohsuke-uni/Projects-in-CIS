@@ -32,6 +32,8 @@ public class PracticeJudge : MonoBehaviour
 
     [Header("UI / Scene Settings")]
     public GameObject clearUIRoot;
+    public GameObject regularClearButtonsRoot;
+    public GameObject sessionClearButtonsRoot;
     public string stageSelectSceneName = "TechniqueSelect";
     public string nextStageSceneName = "";
     public bool stopTimeOnClear = true;
@@ -58,6 +60,8 @@ public class PracticeJudge : MonoBehaviour
 
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
+
+        UpdateClearButtonMode();
     }
 
     public void OnPieceLocked(Tetromino piece, int linesCleared)
@@ -202,8 +206,11 @@ public class PracticeJudge : MonoBehaviour
             GameTimer.Instance.StopTimer();
 
         float clearTime = GetClearTimeSeconds();
+        SaveManager.AddRecordedTime(clearTime);
+        SaveManager.RegisterExerciseClear(GetCurrentDisplayName(), clearTime);
         int spriteIndex = GetSpriteIndexByTime(clearTime, isEasyLikeMode);
         UpdateClearTexts(clearTime, spriteIndex);
+        UpdateClearButtonMode();
 
         if (clearFaridUI == null)
         {
@@ -221,6 +228,17 @@ public class PracticeJudge : MonoBehaviour
 
         if (stopTimeOnClear)
             Time.timeScale = 0f;
+    }
+
+    private void UpdateClearButtonMode()
+    {
+        bool isSession = ExerciseSessionManager.HasActiveSession;
+
+        if (regularClearButtonsRoot != null)
+            regularClearButtonsRoot.SetActive(!isSession);
+
+        if (sessionClearButtonsRoot != null)
+            sessionClearButtonsRoot.SetActive(isSession);
     }
 
     float GetClearTimeSeconds()
@@ -299,6 +317,22 @@ public class PracticeJudge : MonoBehaviour
         SceneManager.LoadScene(current.buildIndex);
     }
 
+    public void OnSessionMarkCorrectButton()
+    {
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+
+        ExerciseSessionManager.MarkCurrentCorrect();
+        LoadCurrentSessionExerciseOrExit();
+    }
+
+    public void OnSessionAddToEndButton()
+    {
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+
+        ExerciseSessionManager.MoveCurrentToEnd();
+        LoadCurrentSessionExerciseOrExit();
+    }
+
     public void OnNextStageButton()
     {
         var exerciseLoader = FindObjectOfType<ExerciseSceneLoader>();
@@ -334,6 +368,27 @@ public class PracticeJudge : MonoBehaviour
         SoundManager.Instance?.PlaySE(SeType.ButtonClick);
 
         Time.timeScale = 1f;
+        SceneManager.LoadScene(targetScene);
+    }
+
+    private void LoadCurrentSessionExerciseOrExit()
+    {
+        Time.timeScale = 1f;
+
+        SRSExercise currentExercise = ExerciseSessionManager.GetCurrentExercise();
+        if (currentExercise == null)
+        {
+            ExerciseSceneLoader.ClearRuntimeSelectedExercise();
+            SceneManager.LoadScene("SRS_Main");
+            return;
+        }
+
+        ExerciseSceneLoader.SetRuntimeSelectedExercise(currentExercise);
+
+        string targetScene = string.IsNullOrWhiteSpace(currentExercise.targetSceneName)
+            ? SceneManager.GetActiveScene().name
+            : currentExercise.targetSceneName;
+
         SceneManager.LoadScene(targetScene);
     }
 

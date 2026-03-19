@@ -43,13 +43,15 @@ public class MobileGestureInput : MonoBehaviour
     {
         if (GameControlUI.IsPaused)
         {
-            EndGesture();
+            if (activeFingerId >= 0)
+                EndGesture();
             return;
         }
 
         if (Input.touchCount == 0)
         {
-            EndGesture();
+            if (activeFingerId >= 0)
+                EndGesture();
             return;
         }
 

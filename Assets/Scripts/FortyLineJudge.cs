@@ -15,6 +15,8 @@ public class FortyLineJudge : MonoBehaviour
     [Header("Clear Texts")]
     public Text clearMessageText;
     public Text timeText;
+    public GameObject newRecordRoot;
+    public BestFortyLineTimeText bestTimeText;
 
     [Header("Line Counter UI")]
     public TMP_Text linesRemainingText;
@@ -29,11 +31,14 @@ public class FortyLineJudge : MonoBehaviour
     int totalPiecesLocked = 0;
 
     bool isEasyLikeMode = false;
+    bool lastClearWasNewRecord = false;
 
     void Start()
     {
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(false);
         UpdateLinesRemainingText();
         UpdatePpsText();
     }
@@ -53,14 +58,19 @@ public class FortyLineJudge : MonoBehaviour
 
         // 加算
         totalLinesCleared += linesCleared;
+        SaveManager.AddLinesCleared(linesCleared);
         Debug.Log($"[40L] Total Lines: {totalLinesCleared}/{targetLines}");
         UpdateLinesRemainingText();
         UpdatePpsText();
 
         if (totalLinesCleared >= targetLines)
         {
+            float clearTime = GetClearTimeSeconds();
+            SaveManager.AddRecordedTime(clearTime);
+            lastClearWasNewRecord = SaveManager.RegisterFortyLineTime(clearTime);
+
             SoundManager.Instance?.PlaySE(SeType.StageClear);
-            HandleStageClear();
+            HandleStageClear(clearTime);
         }
     }
 
@@ -106,7 +116,7 @@ public class FortyLineJudge : MonoBehaviour
         }
     }
 
-    void HandleStageClear()
+    void HandleStageClear(float clearTime)
     {
         Debug.Log("HandleStageClear START");
 
@@ -119,9 +129,11 @@ public class FortyLineJudge : MonoBehaviour
         if (GameTimer.Instance != null)
             GameTimer.Instance.StopTimer();
 
-        float clearTime = GetClearTimeSeconds();
         int spriteIndex = GetSpriteIndexByTime(clearTime, isEasyLikeMode);
         UpdatePpsText();
+        UpdateNewRecordUI();
+        if (bestTimeText != null)
+            bestTimeText.Refresh();
 
         // 先にテキストを更新
         UpdateClearTexts(clearTime, spriteIndex);
@@ -147,6 +159,12 @@ public class FortyLineJudge : MonoBehaviour
             Time.timeScale = 0f;
 
         Debug.Log("HandleStageClear END");
+    }
+
+    void UpdateNewRecordUI()
+    {
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(lastClearWasNewRecord);
     }
 
     float GetClearTimeSeconds()
@@ -219,6 +237,9 @@ public class FortyLineJudge : MonoBehaviour
 
         totalLinesCleared = 0;
         totalPiecesLocked = 0;
+        lastClearWasNewRecord = false;
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(false);
         UpdateLinesRemainingText();
         UpdatePpsText();
 

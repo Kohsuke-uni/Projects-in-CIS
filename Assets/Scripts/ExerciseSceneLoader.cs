@@ -39,6 +39,8 @@ public class ExerciseSceneLoader : MonoBehaviour
     public PracticeJudge practiceJudge;
     public RENJudge renJudge;
     public TMP_Text instructionTextUI;
+    public TMP_Text exerciseNameTextUI;
+    public TMP_Text exercisesRemainingTextUI;
     [Tooltip("color文字列と同名のPrefabをここから検索する")]
     public GameObject[] blockPrefabs;
     [Tooltip("Next Stage 用の候補一覧。exerciseId 末尾の番号で次を解決する")]
@@ -60,6 +62,9 @@ public class ExerciseSceneLoader : MonoBehaviour
 
     private void Awake()
     {
+        if (ExerciseSessionManager.HasActiveSession && ExerciseSessionManager.GetCurrentExercise() != null)
+            exercise = ExerciseSessionManager.GetCurrentExercise();
+
         if (useRuntimeSelectedExercise && RuntimeSelectedExercise != null)
             exercise = RuntimeSelectedExercise;
 
@@ -89,6 +94,7 @@ public class ExerciseSceneLoader : MonoBehaviour
         }
         
         ApplyInstructionText();
+        ApplyExerciseSessionTexts();
 
         if (exercise == null || board == null || blockPrefabs == null || blockPrefabs.Length == 0)
         {
@@ -163,6 +169,34 @@ public class ExerciseSceneLoader : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void ApplyExerciseSessionTexts()
+    {
+        if (exerciseNameTextUI != null)
+            exerciseNameTextUI.text = GetExerciseDisplayName();
+
+        if (exercisesRemainingTextUI != null)
+        {
+            if (ExerciseSessionManager.HasActiveSession)
+                exercisesRemainingTextUI.text = $"{ExerciseSessionManager.PendingCount}";
+            else
+                exercisesRemainingTextUI.text = string.Empty;
+        }
+    }
+
+    private string GetExerciseDisplayName()
+    {
+        if (exercise == null)
+            return string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(exercise.displayName))
+            return exercise.displayName;
+
+        if (!string.IsNullOrWhiteSpace(exercise.exerciseId))
+            return exercise.exerciseId;
+
+        return exercise.name;
     }
 
     private void BuildPrefabLookup()

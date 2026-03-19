@@ -10,6 +10,12 @@ public class EscMenuController : MonoBehaviour
     [Tooltip("操作方法パネル（Canvas配下のPanel）")]
     public GameObject howToPlayPanel;   // ★ 新しく追加！
 
+    [Tooltip("PC向け操作方法パネル（任意）")]
+    public GameObject desktopHowToPlayPanel;
+
+    [Tooltip("モバイル向け操作方法パネル（任意）")]
+    public GameObject mobileHowToPlayPanel;
+
     [Header("Scene Names")]
     [Tooltip("テクニック選択画面のシーン名")]
     public string stageSelectSceneName = "StageSelect";
@@ -25,15 +31,14 @@ public class EscMenuController : MonoBehaviour
         if (escMenuPanel != null)
             escMenuPanel.SetActive(false);
 
-        if (howToPlayPanel != null)
-            howToPlayPanel.SetActive(false);
+        SetHowToPlayPanelsActive(false);
 
-        wasHowToPanelActive = howToPlayPanel != null && howToPlayPanel.activeInHierarchy;
+        wasHowToPanelActive = IsAnyHowToPlayPanelActive();
     }
 
     private void Update()
     {
-        bool isHowToPanelActive = howToPlayPanel != null && howToPlayPanel.activeInHierarchy;
+        bool isHowToPanelActive = IsAnyHowToPlayPanelActive();
         if (isHowToPanelActive && !wasHowToPanelActive)
         {
             SoundManager.Instance?.PlaySE(SeType.ButtonClick);
@@ -47,7 +52,7 @@ public class EscMenuController : MonoBehaviour
             SoundManager.Instance?.PlaySE(SeType.ButtonClick);
 
             // ★ 操作説明表示中なら → 操作説明だけ閉じる
-            if (howToPlayPanel != null && howToPlayPanel.activeInHierarchy)
+            if (IsAnyHowToPlayPanelActive())
             {
                 CloseHowToPlay();
                 return;
@@ -71,13 +76,18 @@ public class EscMenuController : MonoBehaviour
     // 操作説明パネルを閉じる
     public void CloseHowToPlay()
     {
-        if (howToPlayPanel != null)
-            howToPlayPanel.SetActive(false);
+        SetHowToPlayPanelsActive(false);
 
         // メニューを開いたままに戻す
         if (escMenuPanel != null)
             escMenuPanel.SetActive(true);
 
+        isMenuOpen = true;
+    }
+
+    public void OpenHowToPlay()
+    {
+        SetHowToPlayPanelsActive(true);
         isMenuOpen = true;
     }
 
@@ -110,5 +120,32 @@ public class EscMenuController : MonoBehaviour
 
         SoundManager.Instance?.PlaySE(SeType.ButtonClick);
         ToggleMenu();
+    }
+
+    private bool IsAnyHowToPlayPanelActive()
+    {
+        return (desktopHowToPlayPanel != null && desktopHowToPlayPanel.activeInHierarchy)
+            || (mobileHowToPlayPanel != null && mobileHowToPlayPanel.activeInHierarchy);
+    }
+
+    private void SetHowToPlayPanelsActive(bool active)
+    {
+        if (desktopHowToPlayPanel == null && mobileHowToPlayPanel == null)
+        {
+            if (howToPlayPanel != null)
+                howToPlayPanel.SetActive(active);
+            return;
+        }
+
+        bool showMobile = Application.isMobilePlatform;
+
+        if (howToPlayPanel != null)
+            howToPlayPanel.SetActive(active);
+
+        if (desktopHowToPlayPanel != null)
+            desktopHowToPlayPanel.SetActive(active && !showMobile);
+
+        if (mobileHowToPlayPanel != null)
+            mobileHowToPlayPanel.SetActive(active && showMobile);
     }
 }
