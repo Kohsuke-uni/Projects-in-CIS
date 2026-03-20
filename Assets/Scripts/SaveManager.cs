@@ -57,9 +57,9 @@ public static class SaveManager
 
     public static void AddLinesCleared(int lines)
     {
-        if (lines <= 0) return;
+        if (lines == 0) return;
 
-        Data.totalLinesCleared += lines;
+        Data.totalLinesCleared = Mathf.Max(0, Data.totalLinesCleared + lines);
         Save();
     }
 

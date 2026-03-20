@@ -3,6 +3,20 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
+    [System.Serializable]
+    public struct BlockState
+    {
+        public int x;
+        public int y;
+        public string name;
+        public string tag;
+        public Sprite sprite;
+        public Color color;
+        public Vector3 localScale;
+        public int sortingLayerID;
+        public int sortingOrder;
+    }
+
     [Header("Board Settings")]
     public Vector2Int size = new Vector2Int(10, 22);
     public Vector2Int visibleSize = new Vector2Int(10, 20);
@@ -185,7 +199,9 @@ public class Board : MonoBehaviour
         {
             for (int i = blockContainer.childCount - 1; i >= 0; i--)
             {
-                Destroy(blockContainer.GetChild(i).gameObject);
+                var child = blockContainer.GetChild(i).gameObject;
+                child.SetActive(false);
+                Destroy(child);
             }
         }
 
@@ -195,9 +211,36 @@ public class Board : MonoBehaviour
             {
                 if (grid[x, y] != null)
                 {
+                    grid[x, y].gameObject.SetActive(false);
                     Destroy(grid[x, y].gameObject);
                     grid[x, y] = null;
                 }
+            }
+        }
+    }
+
+    public void ClearBoardImmediate()
+    {
+        if (blockContainer != null)
+        {
+            for (int i = blockContainer.childCount - 1; i >= 0; i--)
+            {
+                var child = blockContainer.GetChild(i).gameObject;
+                child.SetActive(false);
+                DestroyImmediate(child);
+            }
+        }
+
+        for (int y = 0; y < size.y; y++)
+        {
+            for (int x = 0; x < size.x; x++)
+            {
+                if (grid[x, y] == null)
+                    continue;
+
+                grid[x, y].gameObject.SetActive(false);
+                DestroyImmediate(grid[x, y].gameObject);
+                grid[x, y] = null;
             }
         }
     }
@@ -214,5 +257,62 @@ public class Board : MonoBehaviour
     {
         if (x < 0 || x >= size.x || y < 0 || y >= size.y) return true;
         return grid[x, y] != null;
+    }
+
+    public List<BlockState> CaptureBlockStates()
+    {
+        var result = new List<BlockState>();
+
+        for (int y = 0; y < size.y; y++)
+        {
+            for (int x = 0; x < size.x; x++)
+            {
+                Transform block = grid[x, y];
+                if (block == null)
+                    continue;
+
+                SpriteRenderer sr = block.GetComponent<SpriteRenderer>();
+                result.Add(new BlockState
+                {
+                    x = x,
+                    y = y,
+                    name = block.name,
+                    tag = block.tag,
+                    sprite = sr != null ? sr.sprite : null,
+                    color = sr != null ? sr.color : Color.white,
+                    localScale = block.localScale,
+                    sortingLayerID = sr != null ? sr.sortingLayerID : 0,
+                    sortingOrder = sr != null ? sr.sortingOrder : 0
+                });
+            }
+        }
+
+        return result;
+    }
+
+    public void RestoreBlockStates(List<BlockState> blockStates, bool clearExisting = true)
+    {
+        if (clearExisting)
+            ClearBoard();
+
+        if (blockStates == null)
+            return;
+
+        for (int i = 0; i < blockStates.Count; i++)
+        {
+            BlockState state = blockStates[i];
+            GameObject block = new GameObject(string.IsNullOrWhiteSpace(state.name) ? $"Block_{state.x}_{state.y}" : state.name);
+            if (!string.IsNullOrWhiteSpace(state.tag))
+                block.tag = state.tag;
+
+            SpriteRenderer sr = block.AddComponent<SpriteRenderer>();
+            sr.sprite = state.sprite;
+            sr.color = state.color;
+            sr.sortingLayerID = state.sortingLayerID;
+            sr.sortingOrder = state.sortingOrder;
+
+            block.transform.localScale = state.localScale;
+            TryPlaceBlockAt(block.transform, new Vector2Int(state.x, state.y));
+        }
     }
 }

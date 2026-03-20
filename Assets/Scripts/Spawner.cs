@@ -5,6 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class Spawner : MonoBehaviour
 {
+    [System.Serializable]
+    public struct RuntimeState
+    {
+        public SpawnMode spawnMode;
+        public int[] bagQueue;
+        public int[] sequenceQueue;
+        public int? heldIndex;
+        public bool canHold;
+        public bool nextHoldSpawn;
+    }
+
     [Header("Prefabs (I, J, L, O, S, T, Z の順で設定)")]
     public Tetromino[] tetrominoPrefabs;
     public GhostPiece[] ghostPrefabs;
@@ -43,6 +54,7 @@ public class Spawner : MonoBehaviour
 
     public event Action QueueChanged;
     public event Action OnHoldPieceReleased;
+    public event Action<Tetromino> PieceSpawned;
 
     private int? heldIndex = null;
     private bool canHold = true;
@@ -281,7 +293,9 @@ public class Spawner : MonoBehaviour
         }
 
         QueueChanged?.Invoke();
-        return SpawnByIndex(idx, fromHold: false);
+        Tetromino piece = SpawnByIndex(idx, fromHold: false);
+        PieceSpawned?.Invoke(piece);
+        return piece;
     }
 
     /// <summary>
@@ -383,6 +397,47 @@ public class Spawner : MonoBehaviour
 
     /// <summary>現在ホールド可能かどうかを返す</summary>
     public bool CanHoldNow() => canHold && !nextHoldSpawn;
+
+    public RuntimeState CaptureRuntimeState()
+    {
+        return new RuntimeState
+        {
+            spawnMode = spawnMode,
+            bagQueue = bagQueue.ToArray(),
+            sequenceQueue = sequenceQueue.ToArray(),
+            heldIndex = heldIndex,
+            canHold = canHold,
+            nextHoldSpawn = nextHoldSpawn
+        };
+    }
+
+    public Tetromino RestoreRuntimeStateAndSpawn(RuntimeState state, int activePieceIndex, bool spawnedFromHold)
+    {
+        spawnMode = state.spawnMode;
+
+        bagQueue.Clear();
+        if (state.bagQueue != null)
+        {
+            for (int i = 0; i < state.bagQueue.Length; i++)
+                bagQueue.Enqueue(state.bagQueue[i]);
+        }
+
+        sequenceQueue.Clear();
+        if (state.sequenceQueue != null)
+        {
+            for (int i = 0; i < state.sequenceQueue.Length; i++)
+                sequenceQueue.Enqueue(state.sequenceQueue[i]);
+        }
+
+        heldIndex = state.heldIndex;
+        canHold = state.canHold;
+        nextHoldSpawn = state.nextHoldSpawn;
+
+        QueueChanged?.Invoke();
+        Tetromino piece = SpawnByIndex(activePieceIndex, spawnedFromHold);
+        PieceSpawned?.Invoke(piece);
+        return piece;
+    }
 
     /// <summary>
     /// ルールに従って「次に出すべきミノ index」を決めて返す

@@ -62,6 +62,13 @@ public class GameTimer : MonoBehaviour
         return elapsedTime;
     }
 
+    public void SetElapsedTime(float seconds, bool running = true)
+    {
+        elapsedTime = Mathf.Max(0f, seconds);
+        isRunning = running;
+        UpdateLabel();
+    }
+
     private string FormatElapsedTime(float seconds)
     {
         int minutes = Mathf.FloorToInt(seconds / 60f);
