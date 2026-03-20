@@ -4499,7 +4499,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1204816307
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4865,6 +4865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clearUIRoot: {fileID: 1769750587}
+  clearButtonsRoot: {fileID: 1981588760}
   stageSelectSceneName: REN_StageSelect
   nextStageSceneName: 
   stopTimeOnClear: 1
@@ -7951,6 +7952,7 @@ MonoBehaviour:
   board: {fileID: 0}
   pivotOverride: {fileID: 6088895426028035151}
   ghost: {fileID: 0}
+  keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
   enablePlayerInput: 1
@@ -8160,6 +8162,7 @@ MonoBehaviour:
   board: {fileID: 0}
   pivotOverride: {fileID: 823610922288551749}
   ghost: {fileID: 0}
+  keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
   enablePlayerInput: 1
@@ -9062,6 +9065,7 @@ MonoBehaviour:
   board: {fileID: 0}
   pivotOverride: {fileID: 1629365579207967815}
   ghost: {fileID: 0}
+  keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
   enablePlayerInput: 1

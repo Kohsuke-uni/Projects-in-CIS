@@ -27,6 +27,7 @@ public class Tetromino : MonoBehaviour
     public Board board;
     public Transform pivotOverride;              // 回転の中心（任意）
     public GhostPiece ghost;
+    public bool keepCellSpritesUpright = true;
 
     [Header("Meta")]
     // Spawnerの並び: I(0),J(1),L(2),O(3),S(4),T(5),Z(6) を想定
@@ -213,6 +214,7 @@ public class Tetromino : MonoBehaviour
 
         // スポーン角度から rotationIndex を算出（Z軸 0/90/180/270 前提）
         rotationIndex = Mathf.RoundToInt((360f - transform.eulerAngles.z) / 90f) & 3;
+        KeepCellSpritesUpright();
 
         // シーン名に応じた挙動
         string sceneName = SceneManager.GetActiveScene().name;
@@ -628,6 +630,7 @@ public class Tetromino : MonoBehaviour
             {
                 transform.position += delta;
                 rotationIndex = to;
+                KeepCellSpritesUpright();
                 lastMoveWasRotation = true;
                 return true;
             }
@@ -636,6 +639,21 @@ public class Tetromino : MonoBehaviour
         // 失敗：元に戻す
         transform.RotateAround(_pivot.position, Vector3.forward, -angle);
         return false;
+    }
+
+    private void KeepCellSpritesUpright()
+    {
+        if (!keepCellSpritesUpright || Cells == null)
+            return;
+
+        for (int i = 0; i < Cells.Length; i++)
+        {
+            Transform cell = Cells[i];
+            if (cell == null)
+                continue;
+
+            cell.rotation = Quaternion.identity;
+        }
     }
 
     private Vector2Int[] GetSRSKicks(int tIndex, int from, int to, int dir)

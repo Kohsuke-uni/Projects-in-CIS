@@ -245,7 +245,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 67fa18655c99a48c799ee196b8c503d7, type: 2}
-  useExerciseTargetScene: 0
+  sessionExercises: []
+  useExerciseTargetScene: 1
+  shuffleExerciseSession: 0
   isREN: 1
   renMode: 0
 --- !u!114 &226686791
@@ -564,7 +566,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 67fa18655c99a48c799ee196b8c503d7, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 0
+  shuffleExerciseSession: 1
   isREN: 1
   renMode: 1
 --- !u!114 &411178749
@@ -1741,7 +1745,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 67fa18655c99a48c799ee196b8c503d7, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 0
+  shuffleExerciseSession: 1
   isREN: 1
   renMode: 2
 --- !u!114 &1670174340

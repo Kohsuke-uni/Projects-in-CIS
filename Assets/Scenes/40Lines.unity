@@ -1113,7 +1113,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 355, y: -34}
+  m_AnchoredPosition: {x: 385, y: -34}
   m_SizeDelta: {x: 254, y: 81}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &294065179
@@ -3530,6 +3530,8 @@ MonoBehaviour:
   linesRemainingText: {fileID: 962457107}
   ppsText: {fileID: 1959976080}
   linesRemainingRoot: {fileID: 962457105}
+  mobileUiRoot: {fileID: 1146652135}
+  undoButtonRoot: {fileID: 1129336198}
   reviewPanelRoot: {fileID: 259092343}
   reviewDetailText: {fileID: 2141186991}
   reviewPageText: {fileID: 1273788618}
@@ -6258,7 +6260,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -355, y: -34}
+  m_AnchoredPosition: {x: -385, y: -34}
   m_SizeDelta: {x: 254, y: 81}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2108623240

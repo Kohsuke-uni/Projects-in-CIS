@@ -9,6 +9,7 @@ public class GhostPiece : MonoBehaviour
     public Board board;
 
     private float ghostAlpha = 0.5f;
+    public bool keepCellSpritesUpright = true;
 
     [Tooltip("Ghost側のPivot（Prefab内のEmpty）。名前に \"Pivot\" を含めるとAwakeで自動検出")]
     public Transform pivotOverride;
@@ -74,6 +75,8 @@ public class GhostPiece : MonoBehaviour
         // Pivot位置も同期（両PrefabでPivotがある場合）
         if (target.pivotOverride != null && pivotOverride != null)
             pivotOverride.localPosition = target.pivotOverride.localPosition;
+
+        KeepCellSpritesUpright();
     }
 
     private void SnapToLanding()
@@ -88,5 +91,19 @@ public class GhostPiece : MonoBehaviour
         }
 
         transform.position = basePos + offset;
+    }
+
+    private void KeepCellSpritesUpright()
+    {
+        if (!keepCellSpritesUpright)
+            return;
+
+        for (int i = 0; i < cells.Length; i++)
+        {
+            if (cells[i] == null)
+                continue;
+
+            cells[i].rotation = Quaternion.identity;
+        }
     }
 }

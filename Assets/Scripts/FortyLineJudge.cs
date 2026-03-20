@@ -44,6 +44,8 @@ public class FortyLineJudge : MonoBehaviour
     public TMP_Text linesRemainingText;
     public TMP_Text ppsText;
     public GameObject linesRemainingRoot;
+    public GameObject mobileUiRoot;
+    public GameObject undoButtonRoot;
 
     [Header("Slow Decision Review")]
     public GameObject reviewPanelRoot;
@@ -582,6 +584,12 @@ public class FortyLineJudge : MonoBehaviour
     {
         if (linesRemainingRoot != null)
             linesRemainingRoot.SetActive(!inReview);
+
+        if (mobileUiRoot != null && Application.isMobilePlatform)
+            mobileUiRoot.SetActive(!inReview);
+
+        if (undoButtonRoot != null)
+            undoButtonRoot.SetActive(!inReview);
 
         if (clearUIRoot != null)
             clearUIRoot.SetActive(!inReview);

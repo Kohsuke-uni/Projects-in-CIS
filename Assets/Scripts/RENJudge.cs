@@ -6,6 +6,7 @@ public class RENJudge : MonoBehaviour
 {
     [Header("UI / Scene Settings")]
     public GameObject clearUIRoot;
+    public GameObject clearButtonsRoot;
     public string stageSelectSceneName = "REN_StageSelect";
     public string nextStageSceneName = "";
     public bool stopTimeOnClear = true;
@@ -101,6 +102,7 @@ public class RENJudge : MonoBehaviour
         }
 
         if (clearUIRoot != null) clearUIRoot.SetActive(true);
+        if (clearButtonsRoot != null) clearButtonsRoot.SetActive(true);
 
         if (stopTimeOnClear) Time.timeScale = 0f;
     }
