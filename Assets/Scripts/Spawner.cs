@@ -16,9 +16,16 @@ public class Spawner : MonoBehaviour
         public bool nextHoldSpawn;
     }
 
-    [Header("Prefabs (I, J, L, O, S, T, Z の順で設定)")]
+    [Header("Default Prefabs (I, J, L, O, S, T, Z の順で設定)")]
     public Tetromino[] tetrominoPrefabs;
     public GhostPiece[] ghostPrefabs;
+
+    [Header("Classic Prefabs (I, J, L, O, S, T, Z の順で設定)")]
+    public Tetromino[] classicTetrominoPrefabs;
+    public GhostPiece[] classicGhostPrefabs;
+
+    [Header("Shared Appearance")]
+    public MinoAppearanceCatalog appearanceCatalog;
 
     [Header("References")]
     public Board board;
@@ -51,6 +58,42 @@ public class Spawner : MonoBehaviour
     private readonly Queue<int> sequenceQueue = new Queue<int>();
 
     private System.Random rng;
+
+    private Tetromino[] ActiveTetrominoPrefabs
+    {
+        get
+        {
+            if (appearanceCatalog != null)
+                return appearanceCatalog.GetTetrominoPrefabs(SaveManager.GetUseClassicMinos());
+
+            if (SaveManager.GetUseClassicMinos() &&
+                classicTetrominoPrefabs != null &&
+                classicTetrominoPrefabs.Length > 0)
+            {
+                return classicTetrominoPrefabs;
+            }
+
+            return tetrominoPrefabs;
+        }
+    }
+
+    private GhostPiece[] ActiveGhostPrefabs
+    {
+        get
+        {
+            if (appearanceCatalog != null)
+                return appearanceCatalog.GetGhostPrefabs(SaveManager.GetUseClassicMinos());
+
+            if (SaveManager.GetUseClassicMinos() &&
+                classicGhostPrefabs != null &&
+                classicGhostPrefabs.Length > 0)
+            {
+                return classicGhostPrefabs;
+            }
+
+            return ghostPrefabs;
+        }
+    }
 
     public event Action QueueChanged;
     public event Action OnHoldPieceReleased;
@@ -198,7 +241,7 @@ public class Spawner : MonoBehaviour
                     if (!config.displayName.Contains("TSD") || !config.displayName.Contains("TST"))
                     {
                         int idx = GetIndexForExercisePiece(config.spawnPiece);
-                        if (idx >= 0 && idx < tetrominoPrefabs.Length)
+                        if (idx >= 0 && idx < ActiveTetrominoPrefabs.Length)
                             sequenceQueue.Enqueue(idx);
                     }
                     else
@@ -238,7 +281,7 @@ public class Spawner : MonoBehaviour
             case SRSExercise.SpawnPieceType.T: return 5;
             case SRSExercise.SpawnPieceType.Z: return 6;
             default:
-                return Mathf.Clamp(tIndex, 0, tetrominoPrefabs.Length - 1);
+                return Mathf.Clamp(tIndex, 0, ActiveTetrominoPrefabs.Length - 1);
         }
     }
 
@@ -250,7 +293,7 @@ public class Spawner : MonoBehaviour
         foreach (char c in letters)
         {
             int idx = GetIndexForLetter(c);
-            if (idx >= 0 && idx < tetrominoPrefabs.Length)
+            if (idx >= 0 && idx < ActiveTetrominoPrefabs.Length)
             {
                 sequenceQueue.Enqueue(idx);
             }
@@ -321,7 +364,7 @@ public class Spawner : MonoBehaviour
         // OnlyT モード
         if (spawnMode == SpawnMode.OnlyT && result.Count < count)
         {
-            int idxT = Mathf.Clamp(tIndex, 0, tetrominoPrefabs.Length - 1);
+            int idxT = Mathf.Clamp(tIndex, 0, ActiveTetrominoPrefabs.Length - 1);
             while (result.Count < count)
             {
                 result.Add(idxT);
@@ -395,6 +438,8 @@ public class Spawner : MonoBehaviour
     /// <summary>現在ホールド中のミノ index を返す（なければ null）</summary>
     public int? GetHeldIndex() => heldIndex;
 
+    public Tetromino[] GetActivePreviewPrefabs() => ActiveTetrominoPrefabs;
+
     /// <summary>現在ホールド可能かどうかを返す</summary>
     public bool CanHoldNow() => canHold && !nextHoldSpawn;
 
@@ -453,11 +498,11 @@ public class Spawner : MonoBehaviour
         // 2) OnlyT モード
         if (spawnMode == SpawnMode.OnlyT)
         {
-            return Mathf.Clamp(tIndex, 0, tetrominoPrefabs.Length - 1);
+            return Mathf.Clamp(tIndex, 0, ActiveTetrominoPrefabs.Length - 1);
         }
 
         // 3) 通常バッグから
-        if (bagQueue.Count <= Mathf.Max(1, tetrominoPrefabs != null ? tetrominoPrefabs.Length : 0))
+        if (bagQueue.Count <= Mathf.Max(1, ActiveTetrominoPrefabs != null ? ActiveTetrominoPrefabs.Length : 0))
         {
             RefillBag();
         }
@@ -475,13 +520,16 @@ public class Spawner : MonoBehaviour
     /// </summary>
     private Tetromino SpawnByIndex(int idx, bool fromHold)
     {
-        if (tetrominoPrefabs == null || idx < 0 || idx >= tetrominoPrefabs.Length)
+        Tetromino[] activeTetrominoPrefabs = ActiveTetrominoPrefabs;
+        GhostPiece[] activeGhostPrefabs = ActiveGhostPrefabs;
+
+        if (activeTetrominoPrefabs == null || idx < 0 || idx >= activeTetrominoPrefabs.Length)
         {
             Debug.LogError($"Spawner: 無効な index {idx}");
             return null;
         }
 
-        Tetromino prefab = tetrominoPrefabs[idx];
+        Tetromino prefab = activeTetrominoPrefabs[idx];
 
         Vector3 spawnPos;
         try
@@ -507,11 +555,11 @@ public class Spawner : MonoBehaviour
             agent.difficulty = cpuDifficulty;
         }
         // ゴーストの生成
-        if (ghostPrefabs != null &&
-            ghostPrefabs.Length > idx &&
-            ghostPrefabs[idx] != null)
+        if (activeGhostPrefabs != null &&
+            activeGhostPrefabs.Length > idx &&
+            activeGhostPrefabs[idx] != null)
         {
-            GhostPiece ghost = Instantiate(ghostPrefabs[idx], piece.transform.position, Quaternion.identity);
+            GhostPiece ghost = Instantiate(activeGhostPrefabs[idx], piece.transform.position, Quaternion.identity);
             ghost.target = piece;
             ghost.board = board;
             piece.ghost = ghost;
@@ -525,11 +573,12 @@ public class Spawner : MonoBehaviour
     /// </summary>
     private void RefillBag()
     {
-        if (tetrominoPrefabs == null || tetrominoPrefabs.Length == 0)
+        Tetromino[] activeTetrominoPrefabs = ActiveTetrominoPrefabs;
+        if (activeTetrominoPrefabs == null || activeTetrominoPrefabs.Length == 0)
             return;
 
-        List<int> list = new List<int>(tetrominoPrefabs.Length);
-        for (int i = 0; i < tetrominoPrefabs.Length; i++)
+        List<int> list = new List<int>(activeTetrominoPrefabs.Length);
+        for (int i = 0; i < activeTetrominoPrefabs.Length; i++)
             list.Add(i);
 
         // Fisher–Yates シャッフル
@@ -557,13 +606,16 @@ public class Spawner : MonoBehaviour
             Debug.LogError("Spawner: board が未設定です。");
             return false;
         }
-        if (tetrominoPrefabs == null || tetrominoPrefabs.Length == 0)
+        Tetromino[] activeTetrominoPrefabs = ActiveTetrominoPrefabs;
+        GhostPiece[] activeGhostPrefabs = ActiveGhostPrefabs;
+
+        if (activeTetrominoPrefabs == null || activeTetrominoPrefabs.Length == 0)
         {
             Debug.LogError("Spawner: tetrominoPrefabs が未設定です。");
             return false;
         }
-        if (ghostPrefabs != null && ghostPrefabs.Length > 0 &&
-            tetrominoPrefabs.Length != ghostPrefabs.Length)
+        if (activeGhostPrefabs != null && activeGhostPrefabs.Length > 0 &&
+            activeTetrominoPrefabs.Length != activeGhostPrefabs.Length)
         {
             Debug.LogError("Spawner: プレハブ数が一致していません。");
             return false;

@@ -245,10 +245,10 @@ public class FortyLineJudge : MonoBehaviour
     int GetSpriteIndexByTime(float seconds, bool easyMode)
     {
         // 40L スプリント基準
-        if (seconds >= 180f) return 0;  // 3分以上
-        if (seconds > 120f)  return 1;
-        if (seconds > 90f)   return 2;
-        if (seconds > 60f)   return 3;
+        if (seconds >= 220f) return 0;  // 3分以上
+        if (seconds > 190f)  return 1;
+        if (seconds > 160f)   return 2;
+        if (seconds > 90f)   return 3;
         return 4; // 1分以内
     }
 
@@ -277,7 +277,7 @@ public class FortyLineJudge : MonoBehaviour
             case 2:
                 return "Not bad, but could be better...";
             case 3:
-                return "Wow, you're pretty good at T-Spin!";
+                return "Wow, you're pretty good at this!";
             default:
                 return "You are a God Tier Tetris Player";
         }

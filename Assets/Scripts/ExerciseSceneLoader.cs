@@ -32,6 +32,20 @@ public class ExerciseSceneLoader : MonoBehaviour
         RuntimeRENMode = mode;
     }
 
+    private static readonly List<int> runtimeRenPrefabOrder = new List<int>();
+    private static int runtimeRenPrefabCursor = 0;
+    private static bool runtimeRenOrderUsesClassic = false;
+    private static int runtimeRenOrderPrefabCount = 0;
+
+    public static void ResetRenProgression()
+    {
+        runtimeRenPrefabOrder.Clear();
+        runtimeRenPrefabCursor = 0;
+        runtimeRenOrderUsesClassic = false;
+        runtimeRenOrderPrefabCount = 0;
+        RuntimeRENMode = RENJudge.RENMode.Easy;
+    }
+
 
     [Header("References")]
     public SRSExercise exercise;
@@ -41,8 +55,11 @@ public class ExerciseSceneLoader : MonoBehaviour
     public TMP_Text instructionTextUI;
     public TMP_Text exerciseNameTextUI;
     public TMP_Text exercisesRemainingTextUI;
-    [Tooltip("color文字列と同名のPrefabをここから検索する")]
+    public MinoAppearanceCatalog appearanceCatalog;
+    [Tooltip("デフォルト表示用。color文字列と同名のPrefabをここから検索する")]
     public GameObject[] blockPrefabs;
+    [Tooltip("クラシック表示用。color文字列と同名のPrefabをここから検索する")]
+    public GameObject[] classicBlockPrefabs;
     [Tooltip("Next Stage 用の候補一覧。exerciseId 末尾の番号で次を解決する")]
     public SRSExercise[] availableExercises;
 
@@ -56,9 +73,54 @@ public class ExerciseSceneLoader : MonoBehaviour
     [Header("REN Settings")]
     public bool isREN = false;
     public GameObject[] renPrefabs;
+    public GameObject[] classicRenPrefabs;
     public GameObject RENWalls;
+    public GameObject classicRENWalls;
 
     private readonly Dictionary<string, GameObject> prefabByName = new Dictionary<string, GameObject>();
+    private GameObject[] ActiveBlockPrefabs
+    {
+        get
+        {
+            if (appearanceCatalog != null)
+                return appearanceCatalog.GetBlockPrefabs(SaveManager.GetUseClassicMinos());
+
+            if (SaveManager.GetUseClassicMinos() &&
+                classicBlockPrefabs != null &&
+                classicBlockPrefabs.Length > 0)
+            {
+                return classicBlockPrefabs;
+            }
+
+            return blockPrefabs;
+        }
+    }
+
+    private GameObject[] ActiveRenPrefabs
+    {
+        get
+        {
+            if (SaveManager.GetUseClassicMinos() &&
+                classicRenPrefabs != null &&
+                classicRenPrefabs.Length > 0)
+            {
+                return classicRenPrefabs;
+            }
+
+            return renPrefabs;
+        }
+    }
+
+    private GameObject ActiveRenWalls
+    {
+        get
+        {
+            if (SaveManager.GetUseClassicMinos() && classicRENWalls != null)
+                return classicRENWalls;
+
+            return RENWalls;
+        }
+    }
 
     private void Awake()
     {
@@ -82,21 +144,34 @@ public class ExerciseSceneLoader : MonoBehaviour
 
     private void Start()
     {
-        if (isREN && RENWalls != null && RuntimeRENMode == RENJudge.RENMode.Easy)
+        GameObject activeRenWalls = ActiveRenWalls;
+        GameObject[] activeRenPrefabs = ActiveRenPrefabs;
+        bool useClassicMinos = SaveManager.GetUseClassicMinos();
+
+        if (RENWalls != null && RENWalls != activeRenWalls)
+            RENWalls.SetActive(false);
+        if (classicRENWalls != null && classicRENWalls != activeRenWalls)
+            classicRENWalls.SetActive(false);
+
+        if (isREN && activeRenWalls != null && RuntimeRENMode == RENJudge.RENMode.Easy)
         {
-            RENWalls.SetActive(true);
+            activeRenWalls.SetActive(true);
         }
 
-        if (isREN && renPrefabs != null && renPrefabs.Length > 0 && RuntimeRENMode == RENJudge.RENMode.Easy)
+        if (isREN && activeRenPrefabs != null && activeRenPrefabs.Length > 0 &&
+            activeRenWalls != null && RuntimeRENMode == RENJudge.RENMode.Easy)
         {
-            GameObject randomPrefab = Instantiate(renPrefabs[Random.Range(0, renPrefabs.Length)]);
-            randomPrefab.transform.SetParent(RENWalls.transform, false);
+            EnsureRenPrefabOrder(activeRenPrefabs.Length, useClassicMinos);
+            int prefabIndex = GetCurrentRenPrefabIndex(activeRenPrefabs.Length, useClassicMinos);
+            GameObject randomPrefab = Instantiate(activeRenPrefabs[prefabIndex]);
+            randomPrefab.transform.SetParent(activeRenWalls.transform, false);
         }
         
         ApplyInstructionText();
         ApplyExerciseSessionTexts();
 
-        if (exercise == null || board == null || blockPrefabs == null || blockPrefabs.Length == 0)
+        GameObject[] activeBlockPrefabs = ActiveBlockPrefabs;
+        if (exercise == null || board == null || activeBlockPrefabs == null || activeBlockPrefabs.Length == 0)
         {
             Debug.LogWarning("[ExerciseSceneLoader] Missing reference(s).");
             return;
@@ -174,7 +249,7 @@ public class ExerciseSceneLoader : MonoBehaviour
     private void ApplyExerciseSessionTexts()
     {
         if (exerciseNameTextUI != null)
-            exerciseNameTextUI.text = GetExerciseDisplayName();
+            exerciseNameTextUI.text = isREN ? string.Empty : GetExerciseDisplayName();
 
         if (exercisesRemainingTextUI != null)
         {
@@ -203,9 +278,13 @@ public class ExerciseSceneLoader : MonoBehaviour
     {
         prefabByName.Clear();
 
-        for (int i = 0; i < blockPrefabs.Length; i++)
+        GameObject[] activeBlockPrefabs = ActiveBlockPrefabs;
+        if (activeBlockPrefabs == null)
+            return;
+
+        for (int i = 0; i < activeBlockPrefabs.Length; i++)
         {
-            var prefab = blockPrefabs[i];
+            var prefab = activeBlockPrefabs[i];
             if (prefab == null) continue;
 
             string key = prefab.name;
@@ -219,13 +298,100 @@ public class ExerciseSceneLoader : MonoBehaviour
         prefab = null;
         if (string.IsNullOrWhiteSpace(colorKey)) return false;
 
-        string key = colorKey;
-        bool found = prefabByName.TryGetValue(key, out prefab);
-        if (!found)
+        string key = colorKey.Trim();
+        if (prefabByName.TryGetValue(key, out prefab))
+            return true;
+
+        foreach (var pair in prefabByName)
         {
-            Debug.LogWarning($"[ExerciseSceneLoader] No prefab match for '{colorKey}'. Available: {string.Join(", ", prefabByName.Keys)}");
+            if (pair.Key.IndexOf(key, System.StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                prefab = pair.Value;
+                return true;
+            }
         }
-        return found;
+
+        Debug.LogWarning($"[ExerciseSceneLoader] No prefab match for '{colorKey}'. Available: {string.Join(", ", prefabByName.Keys)}");
+        return false;
+    }
+
+    public bool TryAdvanceRenStage()
+    {
+        if (!isREN)
+            return false;
+
+        bool useClassicMinos = SaveManager.GetUseClassicMinos();
+        GameObject[] activeRenPrefabs = ActiveRenPrefabs;
+
+        if (RuntimeRENMode == RENJudge.RENMode.Easy)
+        {
+            EnsureRenPrefabOrder(activeRenPrefabs != null ? activeRenPrefabs.Length : 0, useClassicMinos);
+
+            if (runtimeRenPrefabCursor + 1 < runtimeRenPrefabOrder.Count)
+            {
+                runtimeRenPrefabCursor++;
+            }
+            else
+            {
+                runtimeRenPrefabOrder.Clear();
+                runtimeRenPrefabCursor = 0;
+                runtimeRenOrderPrefabCount = 0;
+                RuntimeRENMode = RENJudge.RENMode.Normal;
+            }
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            return true;
+        }
+
+        if (RuntimeRENMode == RENJudge.RENMode.Normal)
+        {
+            RuntimeRENMode = RENJudge.RENMode.Hard;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void EnsureRenPrefabOrder(int prefabCount, bool useClassicMinos)
+    {
+        if (prefabCount <= 0)
+            return;
+
+        bool needsRebuild =
+            runtimeRenPrefabOrder.Count == 0 ||
+            runtimeRenOrderPrefabCount != prefabCount ||
+            runtimeRenOrderUsesClassic != useClassicMinos;
+
+        if (!needsRebuild)
+            return;
+
+        runtimeRenPrefabOrder.Clear();
+        for (int i = 0; i < prefabCount; i++)
+            runtimeRenPrefabOrder.Add(i);
+
+        for (int i = runtimeRenPrefabOrder.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            int temp = runtimeRenPrefabOrder[i];
+            runtimeRenPrefabOrder[i] = runtimeRenPrefabOrder[j];
+            runtimeRenPrefabOrder[j] = temp;
+        }
+
+        runtimeRenPrefabCursor = 0;
+        runtimeRenOrderUsesClassic = useClassicMinos;
+        runtimeRenOrderPrefabCount = prefabCount;
+    }
+
+    private static int GetCurrentRenPrefabIndex(int prefabCount, bool useClassicMinos)
+    {
+        EnsureRenPrefabOrder(prefabCount, useClassicMinos);
+
+        if (runtimeRenPrefabOrder.Count == 0)
+            return 0;
+
+        runtimeRenPrefabCursor = Mathf.Clamp(runtimeRenPrefabCursor, 0, runtimeRenPrefabOrder.Count - 1);
+        return runtimeRenPrefabOrder[runtimeRenPrefabCursor];
     }
 
     public bool TryLoadNextExerciseById()
@@ -241,6 +407,26 @@ public class ExerciseSceneLoader : MonoBehaviour
 
         SceneManager.LoadScene(sceneName);
         return true;
+    }
+
+    public void OnNextStageButton()
+    {
+        if (isREN)
+        {
+            if (renJudge == null)
+                renJudge = FindObjectOfType<RENJudge>();
+
+            if (renJudge != null && renJudge.enabled)
+                renJudge.OnNextStageButton();
+
+            return;
+        }
+
+        if (practiceJudge == null)
+            practiceJudge = FindObjectOfType<PracticeJudge>();
+
+        if (practiceJudge != null && practiceJudge.enabled)
+            practiceJudge.OnNextStageButton();
     }
 
     private bool TryResolveNextExercise(out SRSExercise nextExercise)

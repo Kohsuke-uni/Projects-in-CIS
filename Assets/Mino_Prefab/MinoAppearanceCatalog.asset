@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87f3e02c3d86a4322951d9d805eab7c3, type: 3}
+  m_Name: MinoAppearanceCatalog
+  m_EditorClassIdentifier: 
+  defaultTetrominoPrefabs:
+  - {fileID: 916694666281848364, guid: 493e913ffa12b4bdd9c2729cc0e28ed7, type: 3}
+  - {fileID: 13052438195854216, guid: 701fe4a8a56844177904773f1511bf25, type: 3}
+  - {fileID: 8464754912213836813, guid: c33aedb5547404040a6cc8301fea6650, type: 3}
+  - {fileID: 7062420740115010494, guid: c9c9cf1b1ae1f44c09c5637fc271d919, type: 3}
+  - {fileID: 170887780755895397, guid: b1d54ea8e62ce499494cfa8c064569b3, type: 3}
+  - {fileID: 3395144791544223178, guid: 7f5a023f115aa49ff9ac4e7f08f10a94, type: 3}
+  - {fileID: 1662429408361877596, guid: 92f2eebf4d2d84ead801e93dbac985b8, type: 3}
+  defaultGhostPrefabs:
+  - {fileID: 3759161618386907648, guid: 8ee743d1f5c05477ea3aead40cf8501f, type: 3}
+  - {fileID: 5306953494725101928, guid: 201595b58be644dc1b0b31e103a22e13, type: 3}
+  - {fileID: 252303849413375981, guid: 28a8c1285a63c4d708a226520bcc4ebe, type: 3}
+  - {fileID: 1567995489921899324, guid: 1a395b6bc3b4940299b4cb9fa7a8df44, type: 3}
+  - {fileID: 971242268791934954, guid: b57cdf5856c834e878742c5a501c26e2, type: 3}
+  - {fileID: 1390968139530530993, guid: 841db6e51f1ab404cb724edaccbd505a, type: 3}
+  - {fileID: 8721682499307593571, guid: c7ae08b3706344463828d4b895a0616d, type: 3}
+  defaultBlockPrefabs:
+  - {fileID: 9120478865424023262, guid: 7f7578e317ccf4d22a2aa1eea78fa116, type: 3}
+  - {fileID: 2187749824589905727, guid: cd72b0bd758ba4336ba8e9eb7d33ea29, type: 3}
+  - {fileID: 8909812272818795980, guid: d264fb66bdd5c4ace809904aeb62ec0c, type: 3}
+  - {fileID: 751897081543481622, guid: 07ef5c6fec243472296400fbee106c53, type: 3}
+  - {fileID: 5313063575834121286, guid: 08609bf7c5d474612b72b1ef2415f920, type: 3}
+  - {fileID: 905187906369094846, guid: f47c3c498a8f548b48d71e779b849a56, type: 3}
+  - {fileID: 7369190443191178373, guid: ed96a3cf020914464807dfc17a0b1c57, type: 3}
+  classicTetrominoPrefabs:
+  - {fileID: 916694666281848364, guid: 431ce6ffdae2a4874aeb17d4e3672719, type: 3}
+  - {fileID: 13052438195854216, guid: 536d53746654e41f7aa2859b0f607762, type: 3}
+  - {fileID: 8464754912213836813, guid: b6de037e4e47a4909a5670f12cb6636b, type: 3}
+  - {fileID: 7062420740115010494, guid: 0cabdf904bb1e405da14ef3becd73430, type: 3}
+  - {fileID: 170887780755895397, guid: 4afe3ab3d4ab34ff4a18faa8917d5c9f, type: 3}
+  - {fileID: 3395144791544223178, guid: 142c01033c65d4be4bab9145b4eafbc2, type: 3}
+  - {fileID: 1662429408361877596, guid: a60d07f4bbb5345e0ab9aa33c73fa5c1, type: 3}
+  classicGhostPrefabs:
+  - {fileID: 3759161618386907648, guid: 12e030c5c64dc414a84ffea4c71b1225, type: 3}
+  - {fileID: 5306953494725101928, guid: 4b8d9594fc747429f8b3aadcb3686315, type: 3}
+  - {fileID: 252303849413375981, guid: a4f3a354581264d779571782fc083360, type: 3}
+  - {fileID: 1567995489921899324, guid: a855faeef5bad4d45880c7ea0f38103f, type: 3}
+  - {fileID: 971242268791934954, guid: 1695dad33e3fb4e989784a669d87c5aa, type: 3}
+  - {fileID: 1390968139530530993, guid: 96dedbc4ce8f54153af5c4bced36f4ce, type: 3}
+  - {fileID: 8721682499307593571, guid: fb2a18b98c4f545c3bd296f134ff86ba, type: 3}
+  classicBlockPrefabs:
+  - {fileID: 6469361070489227795, guid: 4602b408832204a8dbc6ad8d1ebc686c, type: 3}
+  - {fileID: 3024219605389168193, guid: f66db66e3711a4a449e6e5cd713b5c3f, type: 3}
+  - {fileID: 2702756596631520705, guid: e58dd7e2cf5064056ae8a825f9c35085, type: 3}
+  - {fileID: 2411095146002117210, guid: 64306d61fd20f465ab3fa1027cc62970, type: 3}
+  - {fileID: 3125457974946627531, guid: cd1d329f90da941cda88e19ec6828000, type: 3}
+  - {fileID: 7232123587188705975, guid: adfeb515cd8604090b06632655bbca55, type: 3}
+  - {fileID: 8953274284204434674, guid: b2fadbec2259c4aaba3d0f075dae9330, type: 3}

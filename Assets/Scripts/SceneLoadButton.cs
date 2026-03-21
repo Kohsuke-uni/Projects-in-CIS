@@ -27,7 +27,10 @@ public class SceneLoadButton : MonoBehaviour
     {
         ExerciseSessionManager.ClearSession();
         ExerciseSceneLoader.SetRENMode(isREN);
-        ExerciseSceneLoader.SetRuntimeRENMode(renMode);
+        if (isREN && renMode == RENJudge.RENMode.Easy)
+            ExerciseSceneLoader.ResetRenProgression();
+        else
+            ExerciseSceneLoader.SetRuntimeRENMode(renMode);
         if (targetExercise == null)
         {
             LoadScene();

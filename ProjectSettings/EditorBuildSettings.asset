@@ -143,4 +143,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TST_Stage Select.unity
     guid: 1912d2ab9d7b1445fb57e1d8207a0005
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 855ad2c828de243edb7dd5bffbbb7781
   m_configObjects: {}

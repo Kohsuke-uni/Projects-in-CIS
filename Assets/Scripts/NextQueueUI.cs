@@ -7,12 +7,35 @@ public class NextQueueUI : MonoBehaviour
     public Spawner spawner;
     public Transform listRoot;
     public Tetromino[] previewPrefabs;
+    public Tetromino[] classicPreviewPrefabs;
 
     [Header("Layout")]
     public Vector3 itemOffset = new Vector3(0, -1.1f, 0);
     public float itemScale = 0.5f;
 
     private readonly List<GameObject> previews = new List<GameObject>();
+
+    private Tetromino[] ActivePreviewPrefabs
+    {
+        get
+        {
+            if (spawner != null)
+            {
+                Tetromino[] spawnerPrefabs = spawner.GetActivePreviewPrefabs();
+                if (spawnerPrefabs != null && spawnerPrefabs.Length > 0)
+                    return spawnerPrefabs;
+            }
+
+            if (SaveManager.GetUseClassicMinos() &&
+                classicPreviewPrefabs != null &&
+                classicPreviewPrefabs.Length > 0)
+            {
+                return classicPreviewPrefabs;
+            }
+
+            return previewPrefabs;
+        }
+    }
 
     // 有効化時にSpawnerのイベント購読と初期描画
     private void OnEnable()
@@ -41,7 +64,8 @@ public class NextQueueUI : MonoBehaviour
     // Nextミノの一覧を再描画
     private void Refresh()
     {
-        if (spawner == null || previewPrefabs == null || previewPrefabs.Length == 0)
+        Tetromino[] activePreviewPrefabs = ActivePreviewPrefabs;
+        if (spawner == null || activePreviewPrefabs == null || activePreviewPrefabs.Length == 0)
             return;
 
         Clear();
@@ -50,9 +74,9 @@ public class NextQueueUI : MonoBehaviour
         for (int i = 0; i < next.Length; i++)
         {
             int idx = next[i];
-            if (idx < 0 || idx >= previewPrefabs.Length) continue;
+            if (idx < 0 || idx >= activePreviewPrefabs.Length) continue;
 
-            Tetromino prefab = previewPrefabs[idx];
+            Tetromino prefab = activePreviewPrefabs[idx];
             var go = Instantiate(prefab.gameObject, listRoot != null ? listRoot : transform);
 
             Vector3 pos = i * itemOffset;

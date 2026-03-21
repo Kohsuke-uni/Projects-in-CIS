@@ -90,6 +90,7 @@ MonoBehaviour:
   board: {fileID: 0}
   pivotOverride: {fileID: 8428061011249198391}
   ghost: {fileID: 0}
+  keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
   enablePlayerInput: 1

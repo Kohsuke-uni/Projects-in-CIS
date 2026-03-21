@@ -2644,6 +2644,7 @@ MonoBehaviour:
   - {fileID: 170887780755895397, guid: b1d54ea8e62ce499494cfa8c064569b3, type: 3}
   - {fileID: 3395144791544223178, guid: 7f5a023f115aa49ff9ac4e7f08f10a94, type: 3}
   - {fileID: 1662429408361877596, guid: 92f2eebf4d2d84ead801e93dbac985b8, type: 3}
+  classicPreviewPrefabs: []
   itemOffset: {x: 0, y: -2.7, z: 0}
   itemScale: 0.8
 --- !u!1001 &672672869
@@ -4208,6 +4209,23 @@ MonoBehaviour:
   - {fileID: 971242268791934954, guid: b57cdf5856c834e878742c5a501c26e2, type: 3}
   - {fileID: 1390968139530530993, guid: 841db6e51f1ab404cb724edaccbd505a, type: 3}
   - {fileID: 8721682499307593571, guid: c7ae08b3706344463828d4b895a0616d, type: 3}
+  classicTetrominoPrefabs:
+  - {fileID: 916694666281848364, guid: 431ce6ffdae2a4874aeb17d4e3672719, type: 3}
+  - {fileID: 13052438195854216, guid: 536d53746654e41f7aa2859b0f607762, type: 3}
+  - {fileID: 8464754912213836813, guid: b6de037e4e47a4909a5670f12cb6636b, type: 3}
+  - {fileID: 7062420740115010494, guid: 0cabdf904bb1e405da14ef3becd73430, type: 3}
+  - {fileID: 170887780755895397, guid: 4afe3ab3d4ab34ff4a18faa8917d5c9f, type: 3}
+  - {fileID: 3395144791544223178, guid: 142c01033c65d4be4bab9145b4eafbc2, type: 3}
+  - {fileID: 1662429408361877596, guid: a60d07f4bbb5345e0ab9aa33c73fa5c1, type: 3}
+  classicGhostPrefabs:
+  - {fileID: 3759161618386907648, guid: 12e030c5c64dc414a84ffea4c71b1225, type: 3}
+  - {fileID: 5306953494725101928, guid: 4b8d9594fc747429f8b3aadcb3686315, type: 3}
+  - {fileID: 252303849413375981, guid: a4f3a354581264d779571782fc083360, type: 3}
+  - {fileID: 1567995489921899324, guid: a855faeef5bad4d45880c7ea0f38103f, type: 3}
+  - {fileID: 971242268791934954, guid: 1695dad33e3fb4e989784a669d87c5aa, type: 3}
+  - {fileID: 1390968139530530993, guid: 96dedbc4ce8f54153af5c4bced36f4ce, type: 3}
+  - {fileID: 8721682499307593571, guid: fb2a18b98c4f545c3bd296f134ff86ba, type: 3}
+  appearanceCatalog: {fileID: 11400000, guid: a1918dca646b74d55b0d2ac08552098e, type: 2}
   board: {fileID: 2021606496}
   spawnCell: {x: 4, y: 18}
   spawnOnStart: 1
@@ -4419,6 +4437,7 @@ MonoBehaviour:
   - {fileID: 170887780755895397, guid: b1d54ea8e62ce499494cfa8c064569b3, type: 3}
   - {fileID: 3395144791544223178, guid: 7f5a023f115aa49ff9ac4e7f08f10a94, type: 3}
   - {fileID: 1662429408361877596, guid: 92f2eebf4d2d84ead801e93dbac985b8, type: 3}
+  classicPreviewPrefabs: []
   itemScale: 1
   itemOffset: {x: 0, y: 0, z: 0}
   piecePositionOverrides:

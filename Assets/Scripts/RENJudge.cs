@@ -91,7 +91,13 @@ public class RENJudge : MonoBehaviour
         var controlUI = FindObjectOfType<GameControlUI>();
         if (controlUI != null) controlUI.HideAllUI();
 
-        UpdateClearMessage();
+        if (GameTimer.Instance != null)
+            GameTimer.Instance.StopTimer();
+
+        float clearTime = GetClearTimeSeconds();
+        SaveManager.AddRecordedTime(clearTime);
+
+        UpdateClearMessage(clearTime);
 
         int spriteIndex = GetSpriteIndexByRen(maxRen);
 
@@ -136,7 +142,7 @@ public class RENJudge : MonoBehaviour
         return "You are a God Tier Tetris Player";
     }
 
-    void UpdateClearMessage()
+    void UpdateClearMessage(float clearTime)
     {
         if (renCountText != null) renCountText.text = $"You did {maxRen} REN";
 
@@ -151,6 +157,14 @@ public class RENJudge : MonoBehaviour
         if (timeText != null) timeText.text = "";
     }
 
+    float GetClearTimeSeconds()
+    {
+        if (GameTimer.Instance == null)
+            return 0f;
+
+        return GameTimer.Instance.GetClearTime();
+    }
+
     public void OnRetryButton()
     {
         Time.timeScale = 1f;
@@ -159,6 +173,13 @@ public class RENJudge : MonoBehaviour
 
     public void OnNextStageButton()
     {
+        ExerciseSceneLoader loader = FindObjectOfType<ExerciseSceneLoader>();
+        if (loader != null && loader.TryAdvanceRenStage())
+        {
+            Time.timeScale = 1f;
+            return;
+        }
+
         if (string.IsNullOrEmpty(nextStageSceneName)) return;
         Time.timeScale = 1f;
         SceneManager.LoadScene(nextStageSceneName);

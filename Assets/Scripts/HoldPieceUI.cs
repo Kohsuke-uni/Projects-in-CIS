@@ -24,6 +24,7 @@ public class HoldPieceUI : MonoBehaviour
     public Spawner spawner;                 // Spawnerを参照
     public Transform displayRoot;           // 表示位置の親Transform
     public Tetromino[] previewPrefabs;      // 表示に使うテトロミノのプレハブ群
+    public Tetromino[] classicPreviewPrefabs;
 
     [Header("Layout")]
     public float itemScale = 0.5f;          // ミノの表示スケール
@@ -32,6 +33,28 @@ public class HoldPieceUI : MonoBehaviour
     public PiecePositionOverride[] piecePositionOverrides;
 
     private GameObject currentPreview;
+
+    private Tetromino[] ActivePreviewPrefabs
+    {
+        get
+        {
+            if (spawner != null)
+            {
+                Tetromino[] spawnerPrefabs = spawner.GetActivePreviewPrefabs();
+                if (spawnerPrefabs != null && spawnerPrefabs.Length > 0)
+                    return spawnerPrefabs;
+            }
+
+            if (SaveManager.GetUseClassicMinos() &&
+                classicPreviewPrefabs != null &&
+                classicPreviewPrefabs.Length > 0)
+            {
+                return classicPreviewPrefabs;
+            }
+
+            return previewPrefabs;
+        }
+    }
 
     // 有効化時にSpawnerのイベント購読と初期描画
     private void OnEnable()
@@ -68,7 +91,8 @@ public class HoldPieceUI : MonoBehaviour
     // ホールドしているミノの表示を更新
     private void Refresh()
     {
-        if (spawner == null || previewPrefabs == null || previewPrefabs.Length == 0)
+        Tetromino[] activePreviewPrefabs = ActivePreviewPrefabs;
+        if (spawner == null || activePreviewPrefabs == null || activePreviewPrefabs.Length == 0)
             return;
 
         Clear();
@@ -77,9 +101,9 @@ public class HoldPieceUI : MonoBehaviour
         if (held == null) return;
 
         int idx = held.Value;
-        if (idx < 0 || idx >= previewPrefabs.Length) return;
+        if (idx < 0 || idx >= activePreviewPrefabs.Length) return;
 
-        Tetromino prefab = previewPrefabs[idx];
+        Tetromino prefab = activePreviewPrefabs[idx];
         currentPreview = Instantiate(prefab.gameObject, displayRoot != null ? displayRoot : transform);
         currentPreview.transform.localPosition = GetOffsetForPiece(idx);
         currentPreview.transform.localRotation = Quaternion.identity;

@@ -250,7 +250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   board: {fileID: 0}
-  ghostColor: {r: 1, g: 1, b: 1, a: 0.28}
+  keepCellSpritesUpright: 1
   pivotOverride: {fileID: 5848731908041872657}
 --- !u!1 &8234204570660608326
 GameObject:
