@@ -55,6 +55,28 @@ public static class SaveManager
         return Data.useClassicMinos;
     }
 
+    public static void SetHorizontalStepThreshold(float value)
+    {
+        Data.horizontalStepThreshold = Mathf.Max(1f, value);
+        Save();
+    }
+
+    public static float GetHorizontalStepThreshold(float fallback = 40f)
+    {
+        return Data.horizontalStepThreshold > 0f ? Data.horizontalStepThreshold : fallback;
+    }
+
+    public static void SetSoftDropThreshold(float value)
+    {
+        Data.softDropThreshold = Mathf.Max(1f, value);
+        Save();
+    }
+
+    public static float GetSoftDropThreshold(float fallback = 50f)
+    {
+        return Data.softDropThreshold > 0f ? Data.softDropThreshold : fallback;
+    }
+
     public static void AddLinesCleared(int lines)
     {
         if (lines == 0) return;

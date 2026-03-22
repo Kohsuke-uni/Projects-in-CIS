@@ -10,6 +10,8 @@ public class MobileGestureInput : MonoBehaviour
     public RectTransform gestureArea;
     public Slider horizontalThresholdSlider;
     public TMP_Text horizontalThresholdText;
+    public Slider softDropThresholdSlider;
+    public TMP_Text softDropThresholdText;
 
 
     [Header("Ignored UI")]
@@ -36,7 +38,8 @@ public class MobileGestureInput : MonoBehaviour
         if (gameControlUI == null)
             gameControlUI = FindObjectOfType<GameControlUI>();
 
-        UpdateHorizontalThresholdUI();
+        LoadSavedThresholds();
+        UpdateThresholdUI();
     }
 
     private void Update()
@@ -190,17 +193,36 @@ public class MobileGestureInput : MonoBehaviour
     public void SetHorizontalStepThreshold(float value)
     {
         horizontalStepThreshold = Mathf.Max(1f, value);
-        UpdateHorizontalThresholdUI();
+        SaveManager.SetHorizontalStepThreshold(horizontalStepThreshold);
+        UpdateThresholdUI();
     }
 
-    private void UpdateHorizontalThresholdUI()
+    public void SetSoftDropThreshold(float value)
+    {
+        softDropThreshold = Mathf.Max(1f, value);
+        SaveManager.SetSoftDropThreshold(softDropThreshold);
+        UpdateThresholdUI();
+    }
+
+    private void LoadSavedThresholds()
+    {
+        horizontalStepThreshold = SaveManager.GetHorizontalStepThreshold(horizontalStepThreshold);
+        softDropThreshold = SaveManager.GetSoftDropThreshold(softDropThreshold);
+    }
+
+    private void UpdateThresholdUI()
     {
         if (horizontalThresholdSlider != null)
             horizontalThresholdSlider.SetValueWithoutNotify(horizontalStepThreshold);
 
         if (horizontalThresholdText != null)
             horizontalThresholdText.text = horizontalStepThreshold.ToString("F0");
-    }
 
+        if (softDropThresholdSlider != null)
+            softDropThresholdSlider.SetValueWithoutNotify(softDropThreshold);
+
+        if (softDropThresholdText != null)
+            softDropThresholdText.text = softDropThreshold.ToString("F0");
+    }
 
 }

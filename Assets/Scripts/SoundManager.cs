@@ -205,7 +205,8 @@ public class SoundManager : MonoBehaviour
             sceneName.Contains("TST_Stage Select") ||
             sceneName.Contains("REN_Stage Select") ||
             sceneName.Contains("About") || 
-            sceneName.Contains("SRS_Main"))
+            sceneName.Contains("SRS_Main") ||
+            sceneName.Contains("Settings"))
         {
             PlayBGM(BgmType.Menu);
             return;

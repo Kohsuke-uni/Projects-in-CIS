@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class SaveData
 {
     public bool useClassicMinos;
+    public float horizontalStepThreshold = 40f;
+    public float softDropThreshold = 50f;
     public int totalLinesCleared;
     public float totalRecordedTimeSeconds;
     public float bestFortyLineTimeSeconds = -1f;
