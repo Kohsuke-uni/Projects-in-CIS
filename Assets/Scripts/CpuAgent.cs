@@ -34,25 +34,25 @@ public class CpuAgent : MonoBehaviour
         switch (difficulty)
         {
             case CpuDifficulty.Easy:
-                thinkDelay = 0.55f;
-                topK = 6;
+                thinkDelay = 0.3f;
+                topK = 3;
                 xStride = 2;
-                wLines = 1.0f; wHoles = 2.5f; wAggHeight = 0.35f; wBump = 0.25f; wMaxHeight = 0.8f;
+                wLines = 1.0f; wHoles = 3.5f; wAggHeight = 0.35f; wBump = 0.25f; wMaxHeight = 0.8f;
 
-                rotateStepDelay = 0.24f;
-                moveStepDelay = 0.12f;
-                hardDropDelay = 0.20f;
+                rotateStepDelay = 0.15f;
+                moveStepDelay = 0.1f;
+                hardDropDelay = 0.1f;
                 break;
 
             case CpuDifficulty.Normal:
-                thinkDelay = 0.25f;
-                topK = 3;
+                thinkDelay = 0.15f;
+                topK = 2;
                 xStride = 1;
                 wLines = 1.2f; wHoles = 4.0f; wAggHeight = 0.45f; wBump = 0.35f; wMaxHeight = 1.0f;
 
                 rotateStepDelay = 0.1f;
-                moveStepDelay = 0.04f;
-                hardDropDelay = 0.1f;
+                moveStepDelay = 0.05f;
+                hardDropDelay = 0.05f;
                 break;
 
             default: // Hard
@@ -62,7 +62,7 @@ public class CpuAgent : MonoBehaviour
                 wLines = 1.4f; wHoles = 6.0f; wAggHeight = 0.55f; wBump = 0.45f; wMaxHeight = 1.2f;
 
                 rotateStepDelay = 0.02f;
-                moveStepDelay = 0.01f;
+                moveStepDelay = 0.02f;
                 hardDropDelay = 0.02f;
                 break;
         }
