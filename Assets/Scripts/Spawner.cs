@@ -103,6 +103,10 @@ public class Spawner : MonoBehaviour
     private bool canHold = true;
     private bool nextHoldSpawn = false; // 互換性のために残しているが、現在は使用していない
 
+    [Header("Forced Piece")]
+    [Tooltip("0 以上のとき常にこの index のミノを出す（Make Shape Mode など）。-1 で無効")]
+    public int forcedPieceIndex = -1;
+
     [Header("CPU Mode")]
     public bool spawnCpuControlled = false;
     public CpuDifficulty cpuDifficulty = CpuDifficulty.Normal;
@@ -349,6 +353,14 @@ public class Spawner : MonoBehaviour
         if (!ValidateSetup() || count <= 0)
             return Array.Empty<int>();
 
+        // forcedPieceIndex が有効なら常にそれを返す
+        if (forcedPieceIndex >= 0 && forcedPieceIndex < ActiveTetrominoPrefabs.Length)
+        {
+            int[] forced = new int[count];
+            for (int i = 0; i < count; i++) forced[i] = forcedPieceIndex;
+            return forced;
+        }
+
         List<int> result = new List<int>(count);
 
         // 固定シーケンスを優先して表示（ただし消費はしない）
@@ -489,6 +501,13 @@ public class Spawner : MonoBehaviour
     /// </summary>
     private int GetNextSpawnIndex()
     {
+        // 0) 強制ピース（Make Shape Mode などで使用）
+        if (forcedPieceIndex >= 0 && ActiveTetrominoPrefabs != null &&
+            forcedPieceIndex < ActiveTetrominoPrefabs.Length)
+        {
+            return forcedPieceIndex;
+        }
+
         // 1) 固定シーケンスが残っていればそれを優先
         if (spawnMode == SpawnMode.Sequence && sequenceQueue.Count > 0)
         {

@@ -225,8 +225,9 @@ public class Tetromino : MonoBehaviour
         && renJudge.renMode == RENJudge.RENMode.Normal;
         string displayKey = judge != null ? judge.GetCurrentDisplayName() : string.Empty;
 
-        bool isNormalMode = sceneName.Contains("TSD_N") || sceneName.Contains("TST_N") 
+        bool isNormalMode = sceneName.Contains("TSD_N") || sceneName.Contains("TST_N")
         || sceneName.Contains("REN_N") || sceneName.Contains("40Lines")
+        || sceneName.Contains("MakeShape")
         || displayKey.Contains("TSD_N") || displayKey.Contains("TST_N")
         || isRenNormalMode;
 
@@ -823,6 +824,18 @@ public class Tetromino : MonoBehaviour
         {
             renJudge.OnPieceLocked(this, linesCleared);
             if (renJudge.IsStageCleared)
+            {
+                enabled = false;
+                Destroy(gameObject);
+                return;
+            }
+        }
+
+        var makeShapeJudge = FindObjectOfType<MakeShapeJudge>();
+        if (makeShapeJudge != null && makeShapeJudge.enabled)
+        {
+            makeShapeJudge.OnPieceLocked(this, linesCleared);
+            if (makeShapeJudge.IsStageCleared)
             {
                 enabled = false;
                 Destroy(gameObject);
