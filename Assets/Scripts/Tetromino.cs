@@ -776,8 +776,6 @@ public class Tetromino : MonoBehaviour
             }
         }
 
-<<<<<<< HEAD
-=======
         var makeShapeJudge = FindObjectOfType<MakeShapeJudge>();
         if (makeShapeJudge != null && makeShapeJudge.enabled)
         {
@@ -832,7 +830,6 @@ public class Tetromino : MonoBehaviour
         // }
 
         // 次のミノを出す
->>>>>>> 1a2b888c983c887be12fcaa5dba84003b7b2ecd6
         enabled = false;
         StartCoroutine(SpawnNextFrame());
     }

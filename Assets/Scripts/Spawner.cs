@@ -452,8 +452,6 @@ public class Spawner : MonoBehaviour
 
     private int GetNextSpawnIndex()
     {
-<<<<<<< HEAD
-=======
         // 0) 強制ピース（Make Shape Mode などで使用）
         if (forcedPieceIndex >= 0 && ActiveTetrominoPrefabs != null &&
             forcedPieceIndex < ActiveTetrominoPrefabs.Length)
@@ -462,7 +460,6 @@ public class Spawner : MonoBehaviour
         }
 
         // 1) 固定シーケンスが残っていればそれを優先
->>>>>>> 1a2b888c983c887be12fcaa5dba84003b7b2ecd6
         if (spawnMode == SpawnMode.Sequence && sequenceQueue.Count > 0)
         {
             return sequenceQueue.Dequeue();
