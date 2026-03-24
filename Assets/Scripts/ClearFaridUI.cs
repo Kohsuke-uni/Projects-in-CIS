@@ -4,15 +4,29 @@ using UnityEngine.UI;
 
 public class ClearFaridUI : MonoBehaviour
 {
+    [System.Serializable]
+    public struct SpriteRectOverride
+    {
+        public bool overrideRect;
+        public float x;
+        public float y;
+        public float startY;
+        public float endY;
+        public float width;
+        public float height;
+    }
+
     public RectTransform characterPanel;   // 動かすパネル
     public Image characterImage;           // Farid の画像
 
     public Sprite[] characterSprites;      // 0〜4 くらいで表情を入れる
+    public SpriteRectOverride[] spriteRectOverrides;
     public int currentSpriteIndex = 0;
 
     public float slideDuration = 0.5f;
-    public Vector2 hiddenPos = new Vector2(0f, -400f);
-    public Vector2 shownPos = new Vector2(0f, 200f);
+    public float xPosition = 0f;
+    public float startY = -400f;
+    public float endY = 200f;
 
     public bool usePopScale = true;
     public float popScale = 1.1f;
@@ -22,6 +36,10 @@ public class ClearFaridUI : MonoBehaviour
     public float panelDelay = 0.1f;
 
     bool isPlaying = false;
+    Vector2 defaultImageAnchoredPosition;
+    Vector2 defaultImageSizeDelta;
+    Vector2 currentHiddenPosition;
+    Vector2 currentShownPosition;
 
     void Awake()
     {
@@ -30,14 +48,23 @@ public class ClearFaridUI : MonoBehaviour
 
         if (characterPanel != null)
         {
-            characterPanel.anchoredPosition = hiddenPos;
+            RefreshPanelPositions();
+            characterPanel.anchoredPosition = currentHiddenPosition;
             characterPanel.localScale = Vector3.one;
+        }
+
+        if (characterImage != null)
+        {
+            RectTransform imageRect = characterImage.rectTransform;
+            defaultImageAnchoredPosition = imageRect.anchoredPosition;
+            defaultImageSizeDelta = imageRect.sizeDelta;
         }
 
         if (characterImage != null && characterSprites.Length > 0)
         {
             currentSpriteIndex = Mathf.Clamp(currentSpriteIndex, 0, characterSprites.Length - 1);
             characterImage.sprite = characterSprites[currentSpriteIndex];
+            ApplySpriteRectOverride(currentSpriteIndex);
         }
 
         gameObject.SetActive(false);
@@ -55,7 +82,10 @@ public class ClearFaridUI : MonoBehaviour
         currentSpriteIndex = index;
 
         if (characterImage != null)
+        {
             characterImage.sprite = characterSprites[currentSpriteIndex];
+            ApplySpriteRectOverride(currentSpriteIndex);
+        }
     }
 
     public void Play()
@@ -67,7 +97,8 @@ public class ClearFaridUI : MonoBehaviour
 
         if (characterPanel != null)
         {
-            characterPanel.anchoredPosition = hiddenPos;
+            RefreshPanelPositions();
+            characterPanel.anchoredPosition = currentHiddenPosition;
             characterPanel.localScale = Vector3.one;
         }
 
@@ -86,12 +117,12 @@ public class ClearFaridUI : MonoBehaviour
             float eased = 1f - Mathf.Pow(1f - ratio, 3f);
 
             characterPanel.anchoredPosition =
-                Vector2.Lerp(hiddenPos, shownPos, eased);
+                Vector2.Lerp(currentHiddenPosition, currentShownPosition, eased);
 
             yield return null;
         }
 
-        characterPanel.anchoredPosition = shownPos;
+        characterPanel.anchoredPosition = currentShownPosition;
 
         if (usePopScale)
         {
@@ -121,5 +152,46 @@ public class ClearFaridUI : MonoBehaviour
             stageClearPanel.SetActive(true);
 
         isPlaying = false;
+    }
+
+    void RefreshPanelPositions()
+    {
+        float targetX = xPosition;
+        float targetStartY = startY;
+        float targetEndY = endY;
+
+        if (spriteRectOverrides != null &&
+            currentSpriteIndex >= 0 &&
+            currentSpriteIndex < spriteRectOverrides.Length &&
+            spriteRectOverrides[currentSpriteIndex].overrideRect)
+        {
+            SpriteRectOverride rectOverride = spriteRectOverrides[currentSpriteIndex];
+            targetX = rectOverride.x;
+            targetStartY = rectOverride.startY;
+            targetEndY = rectOverride.endY;
+        }
+
+        currentHiddenPosition = new Vector2(targetX, targetStartY);
+        currentShownPosition = new Vector2(targetX, targetEndY);
+    }
+
+    void ApplySpriteRectOverride(int index)
+    {
+        if (characterImage == null)
+            return;
+
+        RectTransform imageRect = characterImage.rectTransform;
+        RefreshPanelPositions();
+
+        if (spriteRectOverrides == null || index < 0 || index >= spriteRectOverrides.Length || !spriteRectOverrides[index].overrideRect)
+        {
+            imageRect.anchoredPosition = defaultImageAnchoredPosition;
+            imageRect.sizeDelta = defaultImageSizeDelta;
+            return;
+        }
+
+        SpriteRectOverride rectOverride = spriteRectOverrides[index];
+        imageRect.anchoredPosition = new Vector2(rectOverride.x, rectOverride.y);
+        imageRect.sizeDelta = new Vector2(rectOverride.width, rectOverride.height);
     }
 }
