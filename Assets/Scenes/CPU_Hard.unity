@@ -988,6 +988,7 @@ MonoBehaviour:
   boardOffset: {x: 0, y: 0}
   gridVisual: {fileID: 0}
   moveGridVisualWithBoard: 1
+  garbagePrefab: {fileID: 0}
   fixedBlockTag: FixedBlock
 --- !u!4 &305957286
 Transform:
@@ -1018,13 +1019,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBoard: {fileID: 1696961649}
   cpuBoard: {fileID: 1095582109}
-  clearUIRoot: {fileID: 1002931729}
+  clearUIRoot: {fileID: 595496777}
+  clearMessageText: {fileID: 39082916}
+  timeText: {fileID: 0}
+  clearFaridUI: {fileID: 1002931733}
   retrySceneName: CPU_Hard
   stageSelectSceneName: StageSelect
   stopTimeOnFinish: 1
-  clearFaridUI: {fileID: 0}
-  clearMessageText: {fileID: 0}
-  timeText: {fileID: 0}
 --- !u!1 &313521724
 GameObject:
   m_ObjectHideFlags: 0
@@ -2921,6 +2922,7 @@ MonoBehaviour:
   boardOffset: {x: 13, y: 0}
   gridVisual: {fileID: 1811977524}
   moveGridVisualWithBoard: 1
+  garbagePrefab: {fileID: 5585992181458194974, guid: ac21f2fa86cb441febaa7ff9a55937f3, type: 3}
   fixedBlockTag: FixedBlock
 --- !u!4 &1095582110
 Transform:
@@ -3638,6 +3640,7 @@ MonoBehaviour:
   boardOffset: {x: -9, y: 0}
   gridVisual: {fileID: 805220003}
   moveGridVisualWithBoard: 1
+  garbagePrefab: {fileID: 5585992181458194974, guid: ac21f2fa86cb441febaa7ff9a55937f3, type: 3}
   fixedBlockTag: FixedBlock
 --- !u!4 &1696961650
 Transform:

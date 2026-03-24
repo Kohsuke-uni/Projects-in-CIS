@@ -10,6 +10,7 @@ public class VersusJudge : MonoBehaviour
 
     [Header("UI")]
     public GameObject clearUIRoot;
+    public Text resultMessageText;
     public Text clearMessageText;
     public Text timeText;
 
@@ -20,6 +21,14 @@ public class VersusJudge : MonoBehaviour
     public string retrySceneName = "";
     public string stageSelectSceneName = "StageSelect";
     public bool stopTimeOnFinish = true;
+
+    [Header("Win Messages")]
+    [TextArea(1, 3)] public string winResultMessage = "YOU WIN";
+    [TextArea(1, 3)] public string winClearMessage = "You defeated the CPU!";
+
+    [Header("Lose Messages")]
+    [TextArea(1, 3)] public string loseResultMessage = "YOU LOSE";
+    [TextArea(1, 3)] public string loseClearMessage = "You were topped out...";
 
     public bool IsStageCleared { get; private set; } = false;
     public bool PlayerWon { get; private set; } = false;
@@ -97,7 +106,6 @@ public class VersusJudge : MonoBehaviour
 
     private int CalculateGarbage(Tetromino piece, Board sender, int lines)
     {
-        bool isPlayer = sender == playerBoard;
         bool isTSpin = IsTSpin(piece, lines);
         bool isB2BAction = false;
         int baseGarbage = 0;
@@ -266,8 +274,11 @@ public class VersusJudge : MonoBehaviour
         if (timeText != null)
             timeText.text = $"You took {finishTime:F2} seconds";
 
+        if (resultMessageText != null)
+            resultMessageText.text = isWin ? winResultMessage : loseResultMessage;
+
         if (clearMessageText != null)
-            clearMessageText.text = isWin ? "You defeated the CPU!" : "You were topped out...";
+            clearMessageText.text = isWin ? winClearMessage : loseClearMessage;
     }
 
     public void OnRetryButton()

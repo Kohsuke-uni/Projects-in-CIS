@@ -18,7 +18,7 @@ public class Board : MonoBehaviour
     }
 
     [Header("Board Settings")]
-    public Vector2Int size = new Vector2Int(10, 22);
+    public Vector2Int size = new Vector2Int(10, 24);
     public Vector2Int visibleSize = new Vector2Int(10, 20);
     public Transform blockContainer;
     public Vector3 origin = Vector3.zero;
@@ -333,9 +333,30 @@ public class Board : MonoBehaviour
 
     public void AddGarbageLines(int count)
     {
+        if (count <= 0) return;
+
+        Tetromino activePiece = FindActiveTetrominoOnThisBoard();
+
         for (int i = 0; i < count; i++)
         {
             AddGarbageLine();
+
+            if (activePiece != null)
+            {
+                bool escaped = MoveActivePieceToLowestNonOverlappingHeight(activePiece);
+
+                if (!escaped)
+                {
+                    Debug.Log("Board: active piece overlapped after garbage, top out.");
+
+                    var versusJudge = FindObjectOfType<VersusJudge>();
+                    if (versusJudge != null)
+                    {
+                        versusJudge.OnTopOut(this);
+                    }
+                    return;
+                }
+            }
         }
     }
 
@@ -380,5 +401,48 @@ public class Board : MonoBehaviour
             block.transform.position = GridToWorld(cell);
             block.transform.SetParent(blockContainer, true);
         }
+    }
+
+    private bool MoveActivePieceToLowestNonOverlappingHeight(Tetromino activePiece)
+    {
+        if (activePiece == null)
+            return true;
+
+        if (IsValidPositionAtCurrentPlace(activePiece))
+            return true;
+
+        Vector3 originalPosition = activePiece.transform.position;
+
+        for (int lift = 1; lift <= size.y; lift++)
+        {
+            Vector3 targetPosition = originalPosition + Vector3.up * lift;
+            Vector3 move = targetPosition - activePiece.transform.position;
+
+            if (IsValidPosition(activePiece, move))
+            {
+                activePiece.transform.position = targetPosition;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsValidPositionAtCurrentPlace(Tetromino activePiece)
+    {
+        return IsValidPosition(activePiece, Vector3.zero);
+    }
+
+    private Tetromino FindActiveTetrominoOnThisBoard()
+    {
+        Tetromino[] all = FindObjectsOfType<Tetromino>();
+
+        for (int i = 0; i < all.Length; i++)
+        {
+            if (all[i] != null && all[i].board == this && all[i].enabled)
+                return all[i];
+        }
+
+        return null;
     }
 }
