@@ -23,19 +23,43 @@ public class Board : MonoBehaviour
     public Transform blockContainer;
     public Vector3 origin = Vector3.zero;
 
+    [Header("Board Position")]
+    public Vector2 boardOffset = Vector2.zero;
+    public Transform gridVisual;
+    public bool moveGridVisualWithBoard = true;
+
+    [Header("Garbage Settings")]
+    public GameObject garbagePrefab;
+
     [Header("Special Blocks")]
     [Tooltip("このタグが付いているブロックはラインが消えても残し、下にも動かさない（壁などに使用）")]
     public string fixedBlockTag = "FixedBlock";
 
     private Transform[,] grid;
 
-    // ボード初期化（グリッド生成）
     private void Awake()
     {
+        ApplyBoardPosition();
         grid = new Transform[size.x, size.y];
     }
 
-    // ワールド座標からグリッド座標に変換する
+    private void OnValidate()
+    {
+        ApplyBoardPosition();
+    }
+
+    private void ApplyBoardPosition()
+    {
+        origin = new Vector3(boardOffset.x, boardOffset.y, 0f);
+
+        if (moveGridVisualWithBoard && gridVisual != null)
+        {
+            float centerX = origin.x + (visibleSize.x - 1) * 0.5f;
+            float centerY = origin.y + (visibleSize.y - 1) * 0.5f;
+            gridVisual.position = new Vector3(centerX, centerY, gridVisual.position.z);
+        }
+    }
+
     public Vector2Int WorldToGrid(Vector3 position)
     {
         int x = Mathf.RoundToInt(position.x - origin.x);
@@ -43,7 +67,6 @@ public class Board : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    // グリッド座標からワールド座標に変換する
     public Vector3 GridToWorld(Vector2Int cell)
     {
         float x = cell.x + origin.x;
@@ -51,7 +74,6 @@ public class Board : MonoBehaviour
         return new Vector3(x, y, 0f);
     }
 
-    // ミノの現在位置が有効（範囲内かつ衝突なし）かどうかを判定する
     public bool IsValidPosition(Tetromino tetromino, Vector3 move)
     {
         foreach (Transform block in tetromino.Cells)
@@ -68,25 +90,31 @@ public class Board : MonoBehaviour
         return true;
     }
 
-    // 指定されたセルが盤面の範囲内にあるかを確認する
     private bool IsInside(Vector2Int cell)
     {
         return cell.x >= 0 && cell.x < size.x && cell.y >= 0 && cell.y < size.y;
     }
 
-    // 指定されたセルにブロックがあるかどうかを確認する
     private bool IsOccupied(Vector2Int cell)
     {
         return grid[cell.x, cell.y] != null;
     }
 
-    // ミノを盤面に固定する
     public void SetPiece(Tetromino tetromino)
     {
         foreach (Transform block in tetromino.Cells)
         {
             Vector2Int cell = WorldToGrid(block.position);
-            if (cell.y >= size.y) continue;
+
+            if (cell.y >= size.y)
+                continue;
+
+            if (cell.x < 0 || cell.x >= size.x || cell.y < 0)
+            {
+                Debug.LogWarning($"Board.SetPiece: out of bounds cell={cell}, world={block.position}");
+                continue;
+            }
+
             grid[cell.x, cell.y] = block;
             block.SetParent(blockContainer, true);
         }
@@ -104,7 +132,6 @@ public class Board : MonoBehaviour
         return true;
     }
 
-    // 全てのラインをチェックし、揃っている行を削除する
     public void ClearLines()
     {
         for (int y = 0; y < size.y; y++)
@@ -118,7 +145,6 @@ public class Board : MonoBehaviour
         }
     }
 
-    // 指定された行がすべて埋まっているかを判定する
     private bool IsLineFull(int y)
     {
         for (int x = 0; x < size.x; x++)
@@ -129,20 +155,14 @@ public class Board : MonoBehaviour
         return true;
     }
 
-    // 指定された行を削除する
-    // （fixedBlockTag が付いているブロックは消さず、そのまま残す）
     private void ClearLine(int y)
     {
         for (int x = 0; x < size.x; x++)
         {
             if (grid[x, y] != null)
             {
-                // 固定ブロックなら消さない
-                if (!string.IsNullOrEmpty(fixedBlockTag) &&
-                    grid[x, y].CompareTag(fixedBlockTag))
-                {
+                if (!string.IsNullOrEmpty(fixedBlockTag) && grid[x, y].CompareTag(fixedBlockTag))
                     continue;
-                }
 
                 Destroy(grid[x, y].gameObject);
                 grid[x, y] = null;
@@ -150,10 +170,10 @@ public class Board : MonoBehaviour
         }
     }
 
-    // 追加：消えたライン数を返すバージョン
     public int ClearLinesAndGetCount()
     {
         int cleared = 0;
+
         for (int y = 0; y < size.y; y++)
         {
             if (IsLineFull(y))
@@ -164,11 +184,10 @@ public class Board : MonoBehaviour
                 cleared++;
             }
         }
+
         return cleared;
     }
 
-    // 指定行より上のすべての行を1段下に移動する
-    // （fixedBlockTag が付いているブロックは動かさない）
     private void ShiftLinesDown(int startY)
     {
         for (int y = startY; y < size.y; y++)
@@ -177,12 +196,8 @@ public class Board : MonoBehaviour
             {
                 if (grid[x, y] != null)
                 {
-                    // 固定ブロックはその場に残す
-                    if (!string.IsNullOrEmpty(fixedBlockTag) &&
-                        grid[x, y].CompareTag(fixedBlockTag))
-                    {
+                    if (!string.IsNullOrEmpty(fixedBlockTag) && grid[x, y].CompareTag(fixedBlockTag))
                         continue;
-                    }
 
                     grid[x, y - 1] = grid[x, y];
                     grid[x, y] = null;
@@ -192,7 +207,6 @@ public class Board : MonoBehaviour
         }
     }
 
-    // 盤面全体をリセットする
     public void ClearBoard()
     {
         if (blockContainer != null)
@@ -248,7 +262,7 @@ public class Board : MonoBehaviour
     public bool IsCellOccupiedOrOutOfBounds(Vector2Int cell)
     {
         if (cell.x < 0 || cell.x >= size.x || cell.y < 0 || cell.y >= size.y)
-            return true; // 盤外は「埋まっている」とみなす
+            return true;
 
         return grid[cell.x, cell.y] != null;
     }
@@ -302,6 +316,7 @@ public class Board : MonoBehaviour
         {
             BlockState state = blockStates[i];
             GameObject block = new GameObject(string.IsNullOrWhiteSpace(state.name) ? $"Block_{state.x}_{state.y}" : state.name);
+
             if (!string.IsNullOrWhiteSpace(state.tag))
                 block.tag = state.tag;
 
@@ -313,6 +328,57 @@ public class Board : MonoBehaviour
 
             block.transform.localScale = state.localScale;
             TryPlaceBlockAt(block.transform, new Vector2Int(state.x, state.y));
+        }
+    }
+
+    public void AddGarbageLines(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            AddGarbageLine();
+        }
+    }
+
+    private void AddGarbageLine()
+    {
+        for (int y = size.y - 2; y >= 0; y--)
+        {
+            for (int x = 0; x < size.x; x++)
+            {
+                if (grid[x, y] != null)
+                {
+                    grid[x, y + 1] = grid[x, y];
+                    grid[x, y] = null;
+                    grid[x, y + 1].position += Vector3.up;
+                }
+            }
+        }
+
+        int hole = Random.Range(0, size.x);
+
+        for (int x = 0; x < size.x; x++)
+        {
+            if (x == hole) continue;
+
+            GameObject block;
+            if (garbagePrefab != null)
+            {
+                block = Instantiate(garbagePrefab);
+                block.name = "Garbage";
+            }
+            else
+            {
+                Debug.LogWarning("Board: garbagePrefab が未設定です。");
+                block = new GameObject("Garbage");
+                block.AddComponent<SpriteRenderer>();
+            }
+
+            block.tag = fixedBlockTag;
+
+            Vector2Int cell = new Vector2Int(x, 0);
+            grid[x, 0] = block.transform;
+            block.transform.position = GridToWorld(cell);
+            block.transform.SetParent(blockContainer, true);
         }
     }
 }
