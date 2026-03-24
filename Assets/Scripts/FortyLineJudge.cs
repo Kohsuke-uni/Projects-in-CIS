@@ -271,9 +271,9 @@ public class FortyLineJudge : MonoBehaviour
         switch (index)
         {
             case 0:
-                return ".....Well, unfortunately the reality is cruel";
+                return "You can do better than that! Try again!";
             case 1:
-                return "Sigh... You better try harder than that...";
+                return "Kind of disappointing tbh...";
             case 2:
                 return "Not bad, but could be better...";
             case 3:

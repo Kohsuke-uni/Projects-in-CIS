@@ -135,8 +135,8 @@ public class RENJudge : MonoBehaviour
 
     string GetRenComment(int ren)
     {
-        if (ren == 0) return ".....Well, unfortunately the reality is cruel";
-        if (ren <= 3) return "Sigh... You better try harder than that...";
+        if (ren == 0) return "You can do better than that! Try again!";
+        if (ren <= 3) return "Kind of disappointing tbh...";
         if (ren <= 5) return "Not bad, but could be better...";
         if (ren <= 10) return "Wow, you're pretty good at REN";
         return "You are a God Tier Tetris Player";
