@@ -225,6 +225,7 @@ public class Tetromino : MonoBehaviour
 
         bool isNormalMode = sceneName.Contains("TSD_N") || sceneName.Contains("TST_N")
         || sceneName.Contains("REN_N") || sceneName.Contains("40Lines")
+        || sceneName.Contains("MakeShape")
         || displayKey.Contains("TSD_N") || displayKey.Contains("TST_N")
         || isRenNormalMode;
 
@@ -775,6 +776,63 @@ public class Tetromino : MonoBehaviour
             }
         }
 
+<<<<<<< HEAD
+=======
+        var makeShapeJudge = FindObjectOfType<MakeShapeJudge>();
+        if (makeShapeJudge != null && makeShapeJudge.enabled)
+        {
+            makeShapeJudge.OnPieceLocked(this, linesCleared);
+            if (makeShapeJudge.IsStageCleared)
+            {
+                enabled = false;
+                Destroy(gameObject);
+                return;
+            }
+        }
+
+        // Legacy code
+        // if (practiceJudge == null)
+        // {
+        //     // (Optional) Legacy: T-Spin Double mode
+        //     var tsdJudge = FindObjectOfType<TSpinDoubleJudge>();
+        //     if (tsdJudge != null)
+        //     {
+        //         tsdJudge.OnPieceLocked(this, linesCleared);
+        //         if (tsdJudge.IsStageCleared)
+        //         {
+        //             enabled = false;
+        //             Destroy(gameObject);
+        //             return;
+        //         }
+        //     }
+
+        //     var tstJudge = FindObjectOfType<TSpinTripleJudge>();
+        //     if (tstJudge != null)
+        //     {
+        //         tstJudge.OnPieceLocked(this, linesCleared);
+        //         if (tstJudge.IsStageCleared)
+        //         {
+        //             enabled = false;
+        //             Destroy(gameObject);
+        //             return;
+        //         }
+        //     }
+        // }
+
+        // var renJudge = FindObjectOfType<RENJudge>();
+        // if (renJudge != null)
+        // {
+        //     renJudge.OnPieceLocked(this, linesCleared);
+        //     if (renJudge.IsStageCleared)
+        //     {
+        //         enabled = false;
+        //         Destroy(gameObject);
+        //         return;
+        //     }
+        // }
+
+        // 次のミノを出す
+>>>>>>> 1a2b888c983c887be12fcaa5dba84003b7b2ecd6
         enabled = false;
         StartCoroutine(SpawnNextFrame());
     }

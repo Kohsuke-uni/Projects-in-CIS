@@ -144,6 +144,12 @@ EditorBuildSettings:
     path: Assets/Scenes/TST_Stage Select.unity
     guid: 1912d2ab9d7b1445fb57e1d8207a0005
   - enabled: 1
+    path: Assets/Scenes/MakeShape_Stage Select.unity
+    guid: 95bd1dc5a9c3e1d44b171a6f8b35f54e
+  - enabled: 1
+    path: Assets/Scenes/MakeShape_Heart.unity
+    guid: 75969c23747d20b4eb4d5953e5c98328
+  - enabled: 1
     path: Assets/Scenes/Settings.unity
     guid: 855ad2c828de243edb7dd5bffbbb7781
   m_configObjects: {}

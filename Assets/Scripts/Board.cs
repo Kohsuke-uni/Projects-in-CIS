@@ -35,6 +35,10 @@ public class Board : MonoBehaviour
     [Tooltip("このタグが付いているブロックはラインが消えても残し、下にも動かさない（壁などに使用）")]
     public string fixedBlockTag = "FixedBlock";
 
+    [Header("Line Clear")]
+    [Tooltip("true にするとライン消去を無効化する（Make Shape Mode などで使用）")]
+    public bool disableLineClear = false;
+
     private Transform[,] grid;
 
     private void Awake()
@@ -134,6 +138,8 @@ public class Board : MonoBehaviour
 
     public void ClearLines()
     {
+        if (disableLineClear) return;
+
         for (int y = 0; y < size.y; y++)
         {
             if (IsLineFull(y))
@@ -172,6 +178,8 @@ public class Board : MonoBehaviour
 
     public int ClearLinesAndGetCount()
     {
+        if (disableLineClear) return 0;
+
         int cleared = 0;
 
         for (int y = 0; y < size.y; y++)
