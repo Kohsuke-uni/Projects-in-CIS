@@ -99,4 +99,4 @@ Mashiro Yamada
 
 Ayaka Nakajima
 
-Aditya Kedar Kulkarni
+Nathaniel Garrett Davis
