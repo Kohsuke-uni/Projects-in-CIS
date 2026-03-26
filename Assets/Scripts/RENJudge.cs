@@ -1,12 +1,28 @@
+using System.Collections.Generic;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RENJudge : MonoBehaviour
 {
+    [System.Serializable]
+    private struct SnapshotState
+    {
+        public List<Board.BlockState> boardBlocks;
+        public Spawner.RuntimeState spawnerState;
+        public float timerSeconds;
+        public int currentRen;
+        public int maxRen;
+        public int activePieceIndex;
+        public bool activePieceSpawnedFromHold;
+    }
+
     [Header("UI / Scene Settings")]
     public GameObject clearUIRoot;
     public GameObject clearButtonsRoot;
+    public GameObject newRecordRoot;
     public string stageSelectSceneName = "REN_StageSelect";
     public string nextStageSceneName = "";
     public bool stopTimeOnClear = true;
@@ -16,6 +32,8 @@ public class RENJudge : MonoBehaviour
 
     [Header("UI (In-Game REN)")]
     public Text renNowText;
+    public TMP_Text bestRenText;
+    public GameObject undoButtonRoot;
 
     [Header("UI (Result)")]
     public Text renCountText;
@@ -30,6 +48,12 @@ public class RENJudge : MonoBehaviour
 
     int currentRen = 0;
     int maxRen = 0;
+    bool lastRunWasNewRecord = false;
+    readonly List<SnapshotState> snapshotHistory = new List<SnapshotState>();
+    Spawner spawner;
+    Board board;
+    bool suppressSnapshotCapture = false;
+    int lastSnapshottedPieceInstanceId = -1;
 
 
     public enum RENMode
@@ -45,9 +69,26 @@ public class RENJudge : MonoBehaviour
     // bool isNormalMode = false;
     // bool isHardMode = false;
 
+    void OnEnable()
+    {
+        SetBestRenTextVisible(true);
+        SetUndoButtonVisible(true);
+        RefreshBestRenText();
+    }
+
+    void OnDisable()
+    {
+        SetBestRenTextVisible(false);
+        SetUndoButtonVisible(false);
+    }
 
     void Start()
     {
+        spawner = FindObjectOfType<Spawner>();
+        board = spawner != null && spawner.board != null
+            ? spawner.board
+            : FindObjectOfType<Board>();
+
         // Legacy support for mode detection
         // string sceneName = SceneManager.GetActiveScene().name;
         // isEasyMode   = sceneName.Contains("REN_E");
@@ -55,7 +96,32 @@ public class RENJudge : MonoBehaviour
         // isHardMode   = sceneName.Contains("REN_H");
 
         if (clearUIRoot != null) clearUIRoot.SetActive(false);
+        if (newRecordRoot != null) newRecordRoot.SetActive(false);
         if (renNowText != null) renNowText.text = "";
+        RefreshBestRenText();
+
+        if (spawner != null)
+            spawner.PieceSpawned += OnPieceSpawned;
+
+        StartCoroutine(CaptureInitialSnapshotNextFrame());
+    }
+
+    void OnDestroy()
+    {
+        if (spawner != null)
+            spawner.PieceSpawned -= OnPieceSpawned;
+    }
+
+    IEnumerator CaptureInitialSnapshotNextFrame()
+    {
+        yield return null;
+
+        if (!isActiveAndEnabled || IsStageCleared)
+            yield break;
+
+        Tetromino activePiece = FindObjectOfType<Tetromino>();
+        if (activePiece != null)
+            CaptureSnapshotForPiece(activePiece);
     }
 
     public void OnPieceLocked(Tetromino piece, int linesCleared)
@@ -65,8 +131,17 @@ public class RENJudge : MonoBehaviour
         if (linesCleared > 0)
         {
             currentRen++;
-            if (currentRen > maxRen) maxRen = currentRen;
-            if (renNowText != null) renNowText.text = $"{currentRen} REN";
+            int displayedRen = Mathf.Max(0, currentRen - 1);
+            if (displayedRen > maxRen)
+                maxRen = displayedRen;
+
+            if (SaveManager.RegisterBestRen(displayedRen))
+            {
+                lastRunWasNewRecord = true;
+                RefreshBestRenText();
+            }
+
+            if (renNowText != null) renNowText.text = displayedRen > 0 ? $"{displayedRen} REN" : "";
             return;
         }
 
@@ -96,6 +171,8 @@ public class RENJudge : MonoBehaviour
 
         float clearTime = GetClearTimeSeconds();
         SaveManager.AddRecordedTime(clearTime);
+        RefreshBestRenText();
+        UpdateNewRecordUI();
 
         UpdateClearMessage(clearTime);
 
@@ -165,6 +242,52 @@ public class RENJudge : MonoBehaviour
         return GameTimer.Instance.GetClearTime();
     }
 
+    void RefreshBestRenText()
+    {
+        if (bestRenText == null)
+            return;
+
+        int bestRen = SaveManager.GetBestRen();
+        bestRenText.text = bestRen >= 0 ? $"Best REN: {bestRen}" : "Best REN: 0";
+    }
+
+    void SetBestRenTextVisible(bool isVisible)
+    {
+        if (bestRenText == null)
+            return;
+
+        bestRenText.gameObject.SetActive(isVisible);
+    }
+
+    void SetUndoButtonVisible(bool isVisible)
+    {
+        if (undoButtonRoot == null)
+            return;
+
+        undoButtonRoot.SetActive(isVisible);
+    }
+
+    void UpdateNewRecordUI()
+    {
+        if (newRecordRoot == null)
+            return;
+
+        newRecordRoot.SetActive(lastRunWasNewRecord);
+    }
+
+    public void OnUndoButton()
+    {
+        if (IsStageCleared) return;
+        if (snapshotHistory.Count < 2) return;
+        if (board == null || spawner == null) return;
+
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+
+        snapshotHistory.RemoveAt(snapshotHistory.Count - 1);
+        SnapshotState snapshot = snapshotHistory[snapshotHistory.Count - 1];
+        RestoreSnapshot(snapshot);
+    }
+
     public void OnRetryButton()
     {
         Time.timeScale = 1f;
@@ -190,5 +313,101 @@ public class RENJudge : MonoBehaviour
         if (string.IsNullOrEmpty(stageSelectSceneName)) return;
         Time.timeScale = 1f;
         SceneManager.LoadScene(stageSelectSceneName);
+    }
+
+    void OnPieceSpawned(Tetromino piece)
+    {
+        if (suppressSnapshotCapture) return;
+        if (piece == null || IsStageCleared) return;
+
+        CaptureSnapshotForPiece(piece);
+    }
+
+    void CaptureSnapshotForPiece(Tetromino piece)
+    {
+        if (piece == null || spawner == null)
+            return;
+
+        if (piece.board != null)
+            board = piece.board;
+
+        if (board == null)
+            return;
+
+        int pieceInstanceId = piece.GetInstanceID();
+        if (pieceInstanceId == lastSnapshottedPieceInstanceId)
+            return;
+
+        snapshotHistory.Add(new SnapshotState
+        {
+            boardBlocks = board.CaptureBlockStates(),
+            spawnerState = spawner.CaptureRuntimeState(),
+            timerSeconds = GetClearTimeSeconds(),
+            currentRen = currentRen,
+            maxRen = maxRen,
+            activePieceIndex = piece.typeIndex,
+            activePieceSpawnedFromHold = piece.spawnedFromHold
+        });
+        lastSnapshottedPieceInstanceId = pieceInstanceId;
+    }
+
+    void RemoveActiveGameplayObjects()
+    {
+        Tetromino[] activePieces = FindObjectsOfType<Tetromino>();
+        for (int i = 0; i < activePieces.Length; i++)
+        {
+            Tetromino activePiece = activePieces[i];
+            if (activePiece == null)
+                continue;
+
+            if (activePiece.ghost != null)
+            {
+                activePiece.ghost.gameObject.SetActive(false);
+                Destroy(activePiece.ghost.gameObject);
+            }
+
+            activePiece.gameObject.SetActive(false);
+            Destroy(activePiece.gameObject);
+        }
+
+        GhostPiece[] ghosts = FindObjectsOfType<GhostPiece>();
+        for (int i = 0; i < ghosts.Length; i++)
+        {
+            GhostPiece ghost = ghosts[i];
+            if (ghost == null)
+                continue;
+
+            ghost.gameObject.SetActive(false);
+            Destroy(ghost.gameObject);
+        }
+    }
+
+    void RestoreSnapshot(SnapshotState snapshot)
+    {
+        suppressSnapshotCapture = true;
+
+        RemoveActiveGameplayObjects();
+        board.ClearBoardImmediate();
+
+        board.RestoreBlockStates(snapshot.boardBlocks, clearExisting: false);
+        Tetromino restoredPiece = spawner.RestoreRuntimeStateAndSpawn(
+            snapshot.spawnerState,
+            snapshot.activePieceIndex,
+            snapshot.activePieceSpawnedFromHold);
+        lastSnapshottedPieceInstanceId = restoredPiece != null ? restoredPiece.GetInstanceID() : -1;
+
+        currentRen = snapshot.currentRen;
+        maxRen = snapshot.maxRen;
+
+        if (GameTimer.Instance != null)
+            GameTimer.Instance.SetElapsedTime(snapshot.timerSeconds, true);
+
+        if (renNowText != null)
+        {
+            int displayedRen = Mathf.Max(0, currentRen - 1);
+            renNowText.text = displayedRen > 0 ? $"{displayedRen} REN" : "";
+        }
+
+        suppressSnapshotCapture = false;
     }
 }

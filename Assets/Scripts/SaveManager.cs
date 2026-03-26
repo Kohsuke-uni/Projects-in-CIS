@@ -122,6 +122,25 @@ public static class SaveManager
         return Data.bestFortyLineTimeSeconds;
     }
 
+    public static bool RegisterBestRen(int ren)
+    {
+        if (ren < 0) return false;
+
+        bool isBest = ren > Data.bestRen;
+        if (isBest)
+        {
+            Data.bestRen = ren;
+            Save();
+        }
+
+        return isBest;
+    }
+
+    public static int GetBestRen()
+    {
+        return Data.bestRen;
+    }
+
     public static void RegisterExerciseClear(string exerciseId, float clearTimeSeconds)
     {
         if (string.IsNullOrWhiteSpace(exerciseId))

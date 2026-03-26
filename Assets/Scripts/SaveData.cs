@@ -10,6 +10,7 @@ public class SaveData
     public int totalLinesCleared;
     public float totalRecordedTimeSeconds;
     public float bestFortyLineTimeSeconds = -1f;
+    public int bestRen = -1;
     public List<ExercisePerformanceData> exercisePerformance = new List<ExercisePerformanceData>();
 }
 
