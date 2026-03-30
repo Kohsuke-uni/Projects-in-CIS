@@ -271,7 +271,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 02bca40ffa08147bfacfa7890f8153d1, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &19598312
@@ -573,7 +575,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 7ccdb3f23cbec4cffa8d275c33431ca7, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &164844199
@@ -934,7 +938,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 8a1aa6d3e36314da1998d2bfa9c5c533, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &181283816
@@ -1179,10 +1185,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1515522218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -736.9667, y: 374.57898}
-  m_SizeDelta: {x: 360.0392, y: 133.8665}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -100}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &307497709
 MonoBehaviour:
@@ -1260,7 +1266,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e7a1b7f9edb9b4a3fa20e9803f554b78, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dad4cce72b27f4d259e1876a2f9e7756, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2289,7 +2295,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 0074f2869e54742719b43eac6840eb14, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &714120354
@@ -2441,7 +2449,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 3e09f6f82d783409bbb10ed5fc62d2c1, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &720794302
@@ -2531,13 +2541,14 @@ GameObject:
   - component: {fileID: 774303456}
   - component: {fileID: 774303455}
   - component: {fileID: 774303457}
+  - component: {fileID: 774303458}
   m_Layer: 5
-  m_Name: Background
+  m_Name: Mobile Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &774303454
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2554,8 +2565,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 9.303589, y: -50}
-  m_SizeDelta: {x: 190.7375, y: 224.6378}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 528, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &774303455
 MonoBehaviour:
@@ -2577,7 +2588,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3aad47a848fd14b2cb7e0c9ba6304d1b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8bd6801a7fe02426d8df944accbb1740, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2610,12 +2621,27 @@ MonoBehaviour:
   targetImage: {fileID: 774303455}
   targetSpriteRenderer: {fileID: 0}
   backgroundSprites:
-  - {fileID: 21300000, guid: 3aad47a848fd14b2cb7e0c9ba6304d1b, type: 3}
-  - {fileID: 21300000, guid: 54fba7ee68dcd49ae89eb7a919d9605e, type: 3}
-  - {fileID: 21300000, guid: d443fefc2c35149deadd45f1f3e98b40, type: 3}
-  - {fileID: 21300000, guid: e1ff841468a5d4c7ba778a63e41e3e32, type: 3}
-  - {fileID: 21300000, guid: f083fdc23aeee4fb9887ab20c493397a, type: 3}
-  - {fileID: 21300000, guid: 0444a0098fa4047cfb72ef66fa3c9fa0, type: 3}
+  - {fileID: 21300000, guid: 8bd6801a7fe02426d8df944accbb1740, type: 3}
+  - {fileID: 21300000, guid: 5bfb6a2ab9ce64345833e331cc85a4c4, type: 3}
+  - {fileID: 21300000, guid: 433d79bb746954fc5ac07df7ca5d23bd, type: 3}
+  - {fileID: 21300000, guid: fb0c7fb432ddb4e01904e97d46a0b3ef, type: 3}
+  - {fileID: 21300000, guid: b7b34e820530d4ce3a0ec16bc2fa35b1, type: 3}
+  - {fileID: 21300000, guid: e7748f094e7e140fc9da0c7825f5c488, type: 3}
+--- !u!114 &774303458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774303453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9393004a316514bcbbfb63867a4a1d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobileOnlyRoot: {fileID: 774303453}
+  desktopOnlyRoot: {fileID: 1164049311}
+  showMobileInEditor: 0
 --- !u!1 &795998386
 GameObject:
   m_ObjectHideFlags: 0
@@ -2767,6 +2793,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   escMenuPanel: {fileID: 0}
   howToPlayPanel: {fileID: 0}
+  desktopHowToPlayPanel: {fileID: 0}
+  mobileHowToPlayPanel: {fileID: 0}
   stageSelectSceneName: Title
   titleSceneName: Title
 --- !u!1 &807746718
@@ -3320,7 +3348,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 2a1507053c38d4f1dbdcee5a6dfd1dd7, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &989127730
@@ -3606,7 +3636,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 5e6b6d2425bcc4cd09d9d0e23870bb52, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1012370724
@@ -3758,7 +3790,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: b759cac695e154ddab1f098134a6d68c, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1065304059
@@ -3911,6 +3945,119 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071534837}
   m_CullTransparentMesh: 1
+--- !u!1 &1164049311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1164049312}
+  - component: {fileID: 1164049316}
+  - component: {fileID: 1164049315}
+  - component: {fileID: 1164049314}
+  - component: {fileID: 1164049313}
+  m_Layer: 5
+  m_Name: Platform Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1164049312
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164049311}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1515522218}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 9.303589, y: -50}
+  m_SizeDelta: {x: 190.7375, y: 224.6378}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1164049313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164049311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9393004a316514bcbbfb63867a4a1d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobileOnlyRoot: {fileID: 774303453}
+  desktopOnlyRoot: {fileID: 1164049311}
+  showMobileInEditor: 0
+--- !u!114 &1164049314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164049311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f7332d7acc24452497a8af4b5b26832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 1164049315}
+  targetSpriteRenderer: {fileID: 0}
+  backgroundSprites:
+  - {fileID: 21300000, guid: 3aad47a848fd14b2cb7e0c9ba6304d1b, type: 3}
+  - {fileID: 21300000, guid: 54fba7ee68dcd49ae89eb7a919d9605e, type: 3}
+  - {fileID: 21300000, guid: d443fefc2c35149deadd45f1f3e98b40, type: 3}
+  - {fileID: 21300000, guid: e1ff841468a5d4c7ba778a63e41e3e32, type: 3}
+  - {fileID: 21300000, guid: f083fdc23aeee4fb9887ab20c493397a, type: 3}
+  - {fileID: 21300000, guid: 0444a0098fa4047cfb72ef66fa3c9fa0, type: 3}
+--- !u!114 &1164049315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164049311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.7686275, g: 0.7686275, b: 0.7686275, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 3aad47a848fd14b2cb7e0c9ba6304d1b, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1164049316
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164049311}
+  m_CullTransparentMesh: 1
 --- !u!1 &1194332510
 GameObject:
   m_ObjectHideFlags: 0
@@ -4060,7 +4207,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: a5e0892deb3bb4301ad59650178b6d99, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1329994060
@@ -4212,7 +4361,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 4d737db9bf90e4cd09eb3142cb228ec1, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1385951246
@@ -4994,6 +5145,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 774303454}
+  - {fileID: 1164049312}
   - {fileID: 1194332511}
   - {fileID: 1329994061}
   - {fileID: 178208725}
@@ -5207,7 +5359,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 945698971f4514686b66c10879362d72, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1704687222
@@ -5568,7 +5722,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: fc7f88b124e7a4a79a59169c31ef3c20, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1745051238
@@ -6153,7 +6309,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 5de527641d8c5489e84799cd74ec460f, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &2002263526
@@ -6573,7 +6731,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 70ba08bd188de40c08e8065269ec45b1, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &2079628452

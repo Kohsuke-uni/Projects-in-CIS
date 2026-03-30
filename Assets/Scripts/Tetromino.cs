@@ -737,6 +737,7 @@ public class Tetromino : MonoBehaviour
         if (linesCleared > 0)
         {
             SoundManager.Instance?.PlaySE(SeType.LineClear);
+            PlaySpecialClearAnimation(linesCleared);
         }
 
         // 👇 既存Judge（そのままでOK）
@@ -832,6 +833,28 @@ public class Tetromino : MonoBehaviour
         // 次のミノを出す
         enabled = false;
         StartCoroutine(SpawnNextFrame());
+    }
+
+    private void PlaySpecialClearAnimation(int linesCleared)
+    {
+        SpecialClearAnimationUI animationUI = FindObjectOfType<SpecialClearAnimationUI>();
+        if (animationUI == null)
+            return;
+
+        bool isTSpin = typeIndex == 5 && lastMoveWasRotation;
+
+        if (isTSpin)
+        {
+            if (linesCleared == 2)
+                animationUI.PlayTSpinDouble();
+            else if (linesCleared == 3)
+                animationUI.PlayTSpinTriple();
+
+            return;
+        }
+
+        if (linesCleared == 4)
+            animationUI.PlayTetris();
     }
 
     private IEnumerator SpawnNextFrame()
