@@ -271,7 +271,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 442180412aaee47308f47553e0950d0f, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &19598312
@@ -573,7 +575,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 28b89a50debdb46598bebe8be9d95c29, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &164844199
@@ -934,7 +938,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 89b7b639fa29d48b2b1c2c2c7e1de359, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &181283816
@@ -1161,7 +1167,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: a9138fa3f32ee45448177365a4905765, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &260209799
@@ -1331,10 +1339,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1515522218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -736.9667, y: 374.57898}
-  m_SizeDelta: {x: 360.0392, y: 133.8665}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -100}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &307497709
 MonoBehaviour:
@@ -1412,7 +1420,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e7a1b7f9edb9b4a3fa20e9803f554b78, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dad4cce72b27f4d259e1876a2f9e7756, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2441,7 +2449,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 191b0f363af3040f6ae74506f3a662c5, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &714120354
@@ -2593,7 +2603,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 5b5b6d011e8a24cc2a91352c86bf4e04, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &720794302
@@ -2683,13 +2695,14 @@ GameObject:
   - component: {fileID: 774303456}
   - component: {fileID: 774303455}
   - component: {fileID: 774303457}
+  - component: {fileID: 774303458}
   m_Layer: 5
-  m_Name: Background
+  m_Name: Mobile Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &774303454
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2706,8 +2719,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 10.203491, y: -50}
-  m_SizeDelta: {x: 151.72696, y: 224.6378}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 500, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &774303455
 MonoBehaviour:
@@ -2729,7 +2742,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 47853dd6b511d4758a8794835c2ddac0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3dfe88eb33ac2411095377c170d558f6, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2762,9 +2775,25 @@ MonoBehaviour:
   targetImage: {fileID: 774303455}
   targetSpriteRenderer: {fileID: 0}
   backgroundSprites:
-  - {fileID: 21300000, guid: 30c84392b4a604c29a48d5de0bc9df5c, type: 3}
-  - {fileID: 21300000, guid: 80ea8c9a985a5469580b009b9ad2a216, type: 3}
-  - {fileID: 21300000, guid: 8949c27cf89724b1ab79fb69ab840118, type: 3}
+  - {fileID: 21300000, guid: d9b623641b4b14b188654c68767665a4, type: 3}
+  - {fileID: 21300000, guid: 9c4ae76061e9344318d082c05186d965, type: 3}
+  - {fileID: 21300000, guid: 6ef105187fa304d339105b65b79ec85a, type: 3}
+  - {fileID: 21300000, guid: 3dfe88eb33ac2411095377c170d558f6, type: 3}
+--- !u!114 &774303458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774303453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9393004a316514bcbbfb63867a4a1d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobileOnlyRoot: {fileID: 774303453}
+  desktopOnlyRoot: {fileID: 1326316778}
+  showMobileInEditor: 0
 --- !u!1 &795998386
 GameObject:
   m_ObjectHideFlags: 0
@@ -2916,6 +2945,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   escMenuPanel: {fileID: 0}
   howToPlayPanel: {fileID: 0}
+  desktopHowToPlayPanel: {fileID: 0}
+  mobileHowToPlayPanel: {fileID: 0}
   stageSelectSceneName: Title
   titleSceneName: Title
 --- !u!1 &807746718
@@ -3201,7 +3232,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: a75ae29b2b0484e43b82be056411869a, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &861373555
@@ -3621,7 +3654,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: de8109896f9b74c0b9939440b1a36b83, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &989127730
@@ -3907,7 +3942,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: a2f62760cb21644aca013fb8da599147, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1012370724
@@ -4059,7 +4096,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: f82329538467d41c2994be7a562757f1, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1065304059
@@ -4436,9 +4475,122 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: dfe0cdb943f3b4c1fad130325e8e5128, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
+--- !u!1 &1326316778
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1326316779}
+  - component: {fileID: 1326316783}
+  - component: {fileID: 1326316782}
+  - component: {fileID: 1326316781}
+  - component: {fileID: 1326316780}
+  m_Layer: 5
+  m_Name: Platform Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1326316779
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326316778}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1515522218}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 10.203491, y: -38.659454}
+  m_SizeDelta: {x: 151.72696, y: 247.31891}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1326316780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326316778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9393004a316514bcbbfb63867a4a1d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobileOnlyRoot: {fileID: 774303453}
+  desktopOnlyRoot: {fileID: 1326316778}
+  showMobileInEditor: 0
+--- !u!114 &1326316781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326316778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f7332d7acc24452497a8af4b5b26832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 1326316782}
+  targetSpriteRenderer: {fileID: 0}
+  backgroundSprites:
+  - {fileID: 21300000, guid: 30c84392b4a604c29a48d5de0bc9df5c, type: 3}
+  - {fileID: 21300000, guid: 80ea8c9a985a5469580b009b9ad2a216, type: 3}
+  - {fileID: 21300000, guid: 8949c27cf89724b1ab79fb69ab840118, type: 3}
+  - {fileID: 21300000, guid: 47853dd6b511d4758a8794835c2ddac0, type: 3}
+--- !u!114 &1326316782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326316778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.7686275, g: 0.7686275, b: 0.7686275, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 47853dd6b511d4758a8794835c2ddac0, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1326316783
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326316778}
+  m_CullTransparentMesh: 1
 --- !u!1 &1329994060
 GameObject:
   m_ObjectHideFlags: 0
@@ -4588,7 +4740,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 3a14faf31e6494297beca7d6c01e077f, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1385951246
@@ -5370,6 +5524,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 774303454}
+  - {fileID: 1326316779}
   - {fileID: 1194332511}
   - {fileID: 1329994061}
   - {fileID: 178208725}
@@ -5585,7 +5740,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 8abec66575b5a47f991df8e4dc075a13, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1704687222
@@ -5946,7 +6103,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 5f473b157362c4ec8a2f2b767080f947, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &1745051238
@@ -6740,7 +6899,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 3b8446c9b322e47809ab478ebee6d438, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &2002263526
@@ -7160,7 +7321,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
   targetExercise: {fileID: 11400000, guid: 40161d07b36e448beb93366d1b49b3fa, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!1 &2079628452

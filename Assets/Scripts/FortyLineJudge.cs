@@ -23,6 +23,8 @@ public class FortyLineJudge : MonoBehaviour
         public float timerSeconds;
         public int totalLinesCleared;
         public int totalPiecesLocked;
+        public int currentRen;
+        public int maxRen;
         public int activePieceIndex;
         public bool activePieceSpawnedFromHold;
     }
@@ -43,6 +45,7 @@ public class FortyLineJudge : MonoBehaviour
     [Header("Line Counter UI")]
     public TMP_Text linesRemainingText;
     public TMP_Text ppsText;
+    public TMP_Text renText;
     public GameObject linesRemainingRoot;
     public GameObject mobileUiRoot;
     public GameObject undoButtonRoot;
@@ -61,6 +64,8 @@ public class FortyLineJudge : MonoBehaviour
     public int targetLines = 40;
     int totalLinesCleared = 0;
     int totalPiecesLocked = 0;
+    int currentRen = 0;
+    int maxRen = 0;
 
     bool isEasyLikeMode = false;
     bool lastClearWasNewRecord = false;
@@ -90,6 +95,7 @@ public class FortyLineJudge : MonoBehaviour
             reviewPanelRoot.SetActive(false);
         UpdateLinesRemainingText();
         UpdatePpsText();
+        UpdateRenText();
 
         if (spawner != null)
             spawner.PieceSpawned += OnPieceSpawned;
@@ -118,6 +124,18 @@ public class FortyLineJudge : MonoBehaviour
 
         totalPiecesLocked++;
 
+        if (linesCleared > 0)
+        {
+            currentRen++;
+            int displayedRen = Mathf.Max(0, currentRen - 1);
+            if (displayedRen > maxRen)
+                maxRen = displayedRen;
+        }
+        else
+        {
+            currentRen = 0;
+        }
+
         // 加算
         totalLinesCleared += linesCleared;
         SaveManager.AddLinesCleared(linesCleared);
@@ -125,6 +143,7 @@ public class FortyLineJudge : MonoBehaviour
         Debug.Log($"[40L] Total Lines: {totalLinesCleared}/{targetLines}");
         UpdateLinesRemainingText();
         UpdatePpsText();
+        UpdateRenText();
 
         if (totalLinesCleared >= targetLines)
         {
@@ -271,9 +290,9 @@ public class FortyLineJudge : MonoBehaviour
         switch (index)
         {
             case 0:
-                return ".....Well, unfortunately the reality is cruel";
+                return "You can do better than that! Try again!";
             case 1:
-                return "Sigh... You better try harder than that...";
+                return "Kind of disappointing tbh...";
             case 2:
                 return "Not bad, but could be better...";
             case 3:
@@ -304,6 +323,8 @@ public class FortyLineJudge : MonoBehaviour
 
         totalLinesCleared = 0;
         totalPiecesLocked = 0;
+        currentRen = 0;
+        maxRen = 0;
         lastClearWasNewRecord = false;
         snapshotHistory.Clear();
         decisionHistory.Clear();
@@ -317,6 +338,7 @@ public class FortyLineJudge : MonoBehaviour
             reviewPanelRoot.SetActive(false);
         UpdateLinesRemainingText();
         UpdatePpsText();
+        UpdateRenText();
 
         Time.timeScale = 1f;
         Scene current = SceneManager.GetActiveScene();
@@ -417,6 +439,14 @@ public class FortyLineJudge : MonoBehaviour
         ppsText.text = $"PPS: {pps:F2}";
     }
 
+    void UpdateRenText()
+    {
+        if (renText == null) return;
+
+        int displayedRen = Mathf.Max(0, currentRen - 1);
+        renText.text = displayedRen > 0 ? $"{displayedRen} REN" : string.Empty;
+    }
+
     void OnPieceSpawned(Tetromino piece)
     {
         if (suppressSnapshotCapture) return;
@@ -447,6 +477,8 @@ public class FortyLineJudge : MonoBehaviour
             timerSeconds = GetClearTimeSeconds(),
             totalLinesCleared = totalLinesCleared,
             totalPiecesLocked = totalPiecesLocked,
+            currentRen = currentRen,
+            maxRen = maxRen,
             activePieceIndex = piece.typeIndex,
             activePieceSpawnedFromHold = piece.spawnedFromHold
         });
@@ -645,12 +677,15 @@ public class FortyLineJudge : MonoBehaviour
 
         totalLinesCleared = snapshot.totalLinesCleared;
         totalPiecesLocked = snapshot.totalPiecesLocked;
+        currentRen = snapshot.currentRen;
+        maxRen = snapshot.maxRen;
 
         if (GameTimer.Instance != null)
             GameTimer.Instance.SetElapsedTime(snapshot.timerSeconds, true);
 
         UpdateLinesRemainingText();
         UpdatePpsText();
+        UpdateRenText();
 
         suppressSnapshotCapture = false;
     }
