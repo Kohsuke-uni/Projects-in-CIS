@@ -453,4 +453,17 @@ public class Board : MonoBehaviour
 
         return null;
     }
+
+    public bool IsBoardEmpty()
+    {
+        for (int y = 0; y < size.y; y++)
+        {
+            for (int x = 0; x < size.x; x++)
+            {
+                if (grid[x, y] != null)
+                    return false;
+            }
+        }
+        return true;
+    }
 }

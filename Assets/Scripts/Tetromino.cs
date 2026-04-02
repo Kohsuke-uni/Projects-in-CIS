@@ -60,6 +60,8 @@ public class Tetromino : MonoBehaviour
     private float dasTimer = 0f;
     private float arrTimer = 0f;
 
+    public bool isMini; // TSpin Mini 判定用（TSpinDoubleJudge から参照される）
+
     public bool enablePlayerInput = true;
 
     public int RotationIndex => rotationIndex;
