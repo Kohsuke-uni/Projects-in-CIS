@@ -47,7 +47,7 @@ public class EscMenuController : MonoBehaviour
 
         // ESCキーでメニューの開閉
         //コントローラーだとL1/R1でESCメニュー開閉
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton4) || Input.GetKeyDown(KeyCode.JoystickButton5))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton5))
         {
             SoundManager.Instance?.PlaySE(SeType.ButtonClick);
 
