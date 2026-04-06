@@ -23,6 +23,7 @@ public class ScenePanelButtonLoader : MonoBehaviour
             ScenePageTurnerPayload.Clear();
         }
 
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
         SceneManager.LoadScene(sceneName);
     }
 }

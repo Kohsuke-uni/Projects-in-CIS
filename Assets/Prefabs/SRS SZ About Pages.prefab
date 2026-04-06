@@ -7161,10 +7161,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "When doing T-spins we saw that the T-piece could rotate in unexpected
-    ways. \n\nModern Tetris has some interesting rotation mechanics called the Super
-    Rotation System, or SRS.\n\nAll the pieces except the O piece have special rotation
-    mechanics. \n\nKnowing them can help if you're not sure what to do with a piece!\n\nLet's
-    explore them!"
+    ways. \n\nModern stacking games have some interesting rotation mechanics called
+    the Super Rotation System, or SRS.\n\nAll the pieces except the O piece have
+    special rotation mechanics. \n\nKnowing them can help if you're not sure what
+    to do with a piece!\n\nLet's explore them!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
   m_sharedMaterial: {fileID: -2504890859898317026, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}

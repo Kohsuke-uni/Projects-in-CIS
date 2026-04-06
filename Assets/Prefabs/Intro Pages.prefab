@@ -552,7 +552,7 @@ GameObject:
   - component: {fileID: 1661521769118437950}
   - component: {fileID: 8579832509235993019}
   m_Layer: 5
-  m_Name: Welcome
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -605,7 +605,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Welcome to Tetris Trainer!
+  m_text: Welcome to Block Trainer!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 87ab40617510d46f7a20733795f26923, type: 2}
   m_sharedMaterial: {fileID: -7201399160472464817, guid: 87ab40617510d46f7a20733795f26923, type: 2}
@@ -1040,9 +1040,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: A pit is a hole at least two blocks deep. You want to pay attention to
-    what is coming up in the next queue to make sure if you create a pit you can
-    fill it. Be very careful about creating I dependencies. You might end up waiting
-    a long time for an I piece!
+    what is coming up in the queue to make sure if you create a pit you can fill
+    it. Be very careful about creating I dependencies. You might end up waiting a
+    long time for an I piece!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
   m_sharedMaterial: {fileID: -2504890859898317026, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
@@ -4754,7 +4754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4576825640526679125
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6960,12 +6960,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "A great way to start is a stacking pattern called 9\u20131.\n\nStack pieces
-    in the left 9 columns and keep the rightmost column open as your \u201Cwell.\u201D\n\nOnly
-    fill the well with an I piece when it lets you clear four lines at once (a Tetris).\n\nWhy
-    it\u2019s called 9\u20131:\nYou use 9 columns for stacking and 1 column as the
-    well.\n\nLater, we'll learn 6\u20133, a more advanced pattern that supports T-spins
-    and other setups."
+  m_text: "A great place to start is a stacking pattern called 9\u20131.\n\nStack
+    pieces in the left 9 columns and keep the rightmost column open as your \u201Cwell.\u201D\n\nOnly
+    fill the well with an I piece when you can clear four lines at once (a Quad Clear).\n\nLater,
+    we'll learn 6\u20133, a more advanced pattern that supports T-spins and other
+    setups."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
   m_sharedMaterial: {fileID: -2504890859898317026, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
@@ -8953,7 +8952,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 150}
+  m_AnchoredPosition: {x: 0, y: 280.45}
   m_SizeDelta: {x: 1657, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3683158380721009109
@@ -8984,10 +8983,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tetris is a game about stacking falling blocks and clearing lines.\n\nIt
-    looks simple \u2014 but the real skill comes from staying calm, building clean
-    stacks, and thinking one move ahead.\n\nThis trainer will help you go from beginner
-    to dangerous \u2014 one piece at a time.\n\nLet\u2019s get started."
+  m_text: "Stacking games are incredibly fun, and dangerously addictive.\n\nBut improving
+    isn\u2019t always straightforward. Tips are scattered. Explanations are vague.
+    And there\u2019s more going on than just stacking blocks and clearing lines.\n\nThere
+    are rotation rules you won\u2019t find in basic tutorials. Stacking patterns
+    and chaining mechanics that experienced players just seem to know.\n\nSo where
+    do you actually learn and practice them? \n\nRight here.\n\nThis trainer will
+    take you from beginner to dangerous \u2014 one piece at a time.\n\nLet\u2019s
+    get started."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
   m_sharedMaterial: {fileID: -2504890859898317026, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
@@ -9028,7 +9031,7 @@ MonoBehaviour:
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
+  m_paragraphSpacing: -24.3
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
@@ -9296,7 +9299,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2801569209668801462
 RectTransform:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class TotalLinesClearedText : MonoBehaviour
     public Text uiText;
 
     [Header("Format")]
-    public string prefix = "Total Lines Cleared:\n";
+    private string prefix = "Total Lines Cleared:\n";
 
     private void Awake()
     {

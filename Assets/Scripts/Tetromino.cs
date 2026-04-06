@@ -55,6 +55,7 @@ public class Tetromino : MonoBehaviour
 
     private int rotationIndex = 0;
     public bool lastMoveWasRotation { get; private set; } = false;
+    public bool lastLockWasTSpin { get; private set; } = false;
 
     private int horizontalDir = 0;
     private float dasTimer = 0f;
@@ -551,6 +552,7 @@ public class Tetromino : MonoBehaviour
         if (!board.IsValidPosition(this, delta)) return false;
 
         transform.position += delta;
+        lastMoveWasRotation = false;
         return true;
     }
 
@@ -706,6 +708,7 @@ public class Tetromino : MonoBehaviour
     {
         if (locked) return;
         locked = true;
+        lastLockWasTSpin = false;
 
         SoundManager.Instance?.PlaySE(SeType.Lock);
 
@@ -722,6 +725,7 @@ public class Tetromino : MonoBehaviour
 
         // 👇 まず盤面に置く
         board.SetPiece(this);
+        lastLockWasTSpin = EvaluateTSpinAtCurrentPosition();
 
         // 👇 ★ここを追加（超重要）
         int linesCleared = board.ClearLinesAndGetCount();
@@ -736,7 +740,7 @@ public class Tetromino : MonoBehaviour
         // 👇 SE
         if (linesCleared > 0)
         {
-            SoundManager.Instance?.PlaySE(SeType.LineClear);
+            PlayLineClearSE(linesCleared);
             PlaySpecialClearAnimation(linesCleared);
         }
 
@@ -841,9 +845,7 @@ public class Tetromino : MonoBehaviour
         if (animationUI == null)
             return;
 
-        bool isTSpin = typeIndex == 5 && lastMoveWasRotation;
-
-        if (isTSpin)
+        if (lastLockWasTSpin)
         {
             if (linesCleared == 2)
                 animationUI.PlayTSpinDouble();
@@ -855,6 +857,64 @@ public class Tetromino : MonoBehaviour
 
         if (linesCleared == 4)
             animationUI.PlayTetris();
+    }
+
+    private void PlayLineClearSE(int linesCleared)
+    {
+        if (SoundManager.Instance == null)
+            return;
+
+        if (lastLockWasTSpin)
+        {
+            if (linesCleared == 2)
+            {
+                SoundManager.Instance.PlaySE(SeType.TSpinDouble);
+                return;
+            }
+
+            if (linesCleared == 3)
+            {
+                SoundManager.Instance.PlaySE(SeType.TSpinTriple);
+                return;
+            }
+        }
+
+        if (linesCleared == 4)
+        {
+            SoundManager.Instance.PlaySE(SeType.QuadClear);
+            return;
+        }
+
+        SoundManager.Instance.PlaySE(SeType.LineClear);
+    }
+
+    private bool EvaluateTSpinAtCurrentPosition()
+    {
+        if (board == null)
+            return false;
+        if (typeIndex != 5)
+            return false;
+        if (!lastMoveWasRotation)
+            return false;
+
+        Vector2Int pivotCell = board.WorldToGrid(_pivot.position);
+        int occupiedCorners = 0;
+
+        Vector2Int[] corners =
+        {
+            new Vector2Int(pivotCell.x - 1, pivotCell.y + 1),
+            new Vector2Int(pivotCell.x + 1, pivotCell.y + 1),
+            new Vector2Int(pivotCell.x - 1, pivotCell.y - 1),
+            new Vector2Int(pivotCell.x + 1, pivotCell.y - 1)
+        };
+
+        for (int i = 0; i < corners.Length; i++)
+        {
+            if (board.IsCellOccupiedOrOutOfBounds(corners[i]))
+                occupiedCorners++;
+        }
+
+        return occupiedCorners >= 3;
     }
 
     private IEnumerator SpawnNextFrame()

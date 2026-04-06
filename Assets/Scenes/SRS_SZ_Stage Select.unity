@@ -2658,7 +2658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.70980394}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.98039216}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2735,7 +2735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7686275, g: 0.7686275, b: 0.7686275, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4516,8 +4516,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 10.203491, y: -38.659454}
-  m_SizeDelta: {x: 151.72696, y: 247.31891}
+  m_AnchoredPosition: {x: 10.203491, y: -13.273621}
+  m_SizeDelta: {x: 151.7269, y: 298.0906}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1326316780
 MonoBehaviour:
@@ -4566,14 +4566,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7686275, g: 0.7686275, b: 0.7686275, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 47853dd6b511d4758a8794835c2ddac0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 80ea8c9a985a5469580b009b9ad2a216, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -5399,6 +5399,9 @@ MonoBehaviour:
   hardDropSE: {fileID: 8300000, guid: e3382891c1edc456999eab9deb53bac1, type: 3}
   lockSE: {fileID: 8300000, guid: 1585d1e9d0bc74ee7b75ce9dd75292f9, type: 3}
   lineClearSE: {fileID: 8300000, guid: 468dc6797504e46aab541ed967d2fbc8, type: 3}
+  tSpinDoubleSE: {fileID: 0}
+  tSpinTripleSE: {fileID: 0}
+  quadClearSEs: []
   stageClearSE: {fileID: 8300000, guid: 4ff98dd2297264424961fb4938740e67, type: 3}
   stageFailSE: {fileID: 8300000, guid: 0ae0bc170034449e8896085b2351118c, type: 3}
   holdSE: {fileID: 8300000, guid: 934b2f8177822401a8e7f26fa2032b66, type: 3}
@@ -5408,6 +5411,9 @@ MonoBehaviour:
   hardDropSEVolume: 0.02
   lockSEVolume: 0.15
   lineClearSEVolume: 1
+  tSpinDoubleSEVolume: 1
+  tSpinTripleSEVolume: 1
+  quadClearSEVolume: 1
   stageClearSEVolume: 1
   stageFailSEVolume: 1
   holdSEVolume: 0.3

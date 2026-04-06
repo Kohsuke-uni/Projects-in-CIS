@@ -55,6 +55,7 @@ public class PageTurner : MonoBehaviour
 
     public void Next()
     {
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
         // If we're on the last page, go to return scene
         if (index >= pages.Length - 1)
         {
@@ -68,6 +69,7 @@ public class PageTurner : MonoBehaviour
 
     public void Prev()
     {
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
         index = Mathf.Max(index - 1, 0);
         ShowPage(index);
     }

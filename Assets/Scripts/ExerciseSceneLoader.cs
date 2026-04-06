@@ -55,6 +55,7 @@ public class ExerciseSceneLoader : MonoBehaviour
     public TMP_Text instructionTextUI;
     public TMP_Text exerciseNameTextUI;
     public TMP_Text exercisesRemainingTextUI;
+    public TMP_Text bestTimeTextUI;
     public MinoAppearanceCatalog appearanceCatalog;
     [Tooltip("デフォルト表示用。color文字列と同名のPrefabをここから検索する")]
     public GameObject[] blockPrefabs;
@@ -168,7 +169,7 @@ public class ExerciseSceneLoader : MonoBehaviour
         }
         
         ApplyInstructionText();
-        ApplyExerciseSessionTexts();
+        RefreshExerciseHud();
 
         GameObject[] activeBlockPrefabs = ActiveBlockPrefabs;
         if (exercise == null || board == null || activeBlockPrefabs == null || activeBlockPrefabs.Length == 0)
@@ -246,7 +247,7 @@ public class ExerciseSceneLoader : MonoBehaviour
         }
     }
 
-    private void ApplyExerciseSessionTexts()
+    public void RefreshExerciseHud()
     {
         if (exerciseNameTextUI != null)
             exerciseNameTextUI.text = isREN ? string.Empty : GetExerciseDisplayName();
@@ -258,6 +259,9 @@ public class ExerciseSceneLoader : MonoBehaviour
             else
                 exercisesRemainingTextUI.text = string.Empty;
         }
+
+        if (bestTimeTextUI != null)
+            bestTimeTextUI.text = GetBestTimeLabel();
     }
 
     private string GetExerciseDisplayName()
@@ -272,6 +276,37 @@ public class ExerciseSceneLoader : MonoBehaviour
             return exercise.exerciseId;
 
         return exercise.name;
+    }
+
+    public string GetExercisePerformanceKey()
+    {
+        if (exercise == null)
+            return string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(exercise.displayName))
+            return exercise.displayName;
+
+        return exercise.name;
+    }
+
+    private string GetBestTimeLabel()
+    {
+        if (isREN)
+            return string.Empty;
+
+        ExercisePerformanceData performance = SaveManager.GetExercisePerformance(GetExercisePerformanceKey());
+        float bestTimeSeconds = performance != null ? performance.bestTimeSeconds : -1f;
+        return $"BEST\n{FormatElapsedTime(bestTimeSeconds)}";
+    }
+
+    private string FormatElapsedTime(float seconds)
+    {
+        if (seconds < 0f)
+            return "--:--";
+
+        int minutes = Mathf.FloorToInt(seconds / 60f);
+        float remainingSeconds = seconds % 60f;
+        return $"{minutes}:{remainingSeconds:00.00}";
     }
 
     private void BuildPrefabLookup()

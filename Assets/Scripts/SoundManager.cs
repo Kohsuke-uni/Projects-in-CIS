@@ -8,6 +8,9 @@ public enum SeType
     HardDrop,
     Lock,
     LineClear,
+    TSpinDouble,
+    TSpinTriple,
+    QuadClear,
     StageClear,
     StageFail,
     Hold,
@@ -46,6 +49,9 @@ public class SoundManager : MonoBehaviour
     public AudioClip hardDropSE;
     public AudioClip lockSE;
     public AudioClip lineClearSE;
+    public AudioClip tSpinDoubleSE;
+    public AudioClip tSpinTripleSE;
+    public AudioClip[] quadClearSEs;
     public AudioClip stageClearSE;
     public AudioClip stageFailSE;
     public AudioClip holdSE;
@@ -57,6 +63,9 @@ public class SoundManager : MonoBehaviour
     public float hardDropSEVolume = 1f;
     public float lockSEVolume = 1f;
     public float lineClearSEVolume = 1f;
+    public float tSpinDoubleSEVolume = 1f;
+    public float tSpinTripleSEVolume = 1f;
+    public float quadClearSEVolume = 1f;
     public float stageClearSEVolume = 1f;
     public float stageFailSEVolume = 1f;
     public float holdSEVolume = 1f;
@@ -120,6 +129,9 @@ public class SoundManager : MonoBehaviour
             case SeType.HardDrop:    clip = hardDropSE;    volumeScale = hardDropSEVolume; break;
             case SeType.Lock:        clip = lockSE;        volumeScale = lockSEVolume; break;
             case SeType.LineClear:   clip = lineClearSE;   volumeScale = lineClearSEVolume; break;
+            case SeType.TSpinDouble: clip = tSpinDoubleSE != null ? tSpinDoubleSE : lineClearSE; volumeScale = tSpinDoubleSE != null ? tSpinDoubleSEVolume : lineClearSEVolume; break;
+            case SeType.TSpinTriple: clip = tSpinTripleSE != null ? tSpinTripleSE : lineClearSE; volumeScale = tSpinTripleSE != null ? tSpinTripleSEVolume : lineClearSEVolume; break;
+            case SeType.QuadClear:   clip = GetRandomQuadClearClip(); volumeScale = quadClearSEVolume; if (clip == null) { clip = lineClearSE; volumeScale = lineClearSEVolume; } break;
             case SeType.StageClear:  clip = stageClearSE;  volumeScale = stageClearSEVolume; break;
             case SeType.StageFail:   clip = stageFailSE;   volumeScale = stageFailSEVolume; break;
             case SeType.Hold:        clip = holdSE;        volumeScale = holdSEVolume; break;
@@ -130,6 +142,36 @@ public class SoundManager : MonoBehaviour
         {
             seSource.PlayOneShot(clip, volumeScale);
         }
+    }
+
+    private AudioClip GetRandomQuadClearClip()
+    {
+        if (quadClearSEs == null || quadClearSEs.Length == 0)
+            return null;
+
+        int validClipCount = 0;
+        for (int i = 0; i < quadClearSEs.Length; i++)
+        {
+            if (quadClearSEs[i] != null)
+                validClipCount++;
+        }
+
+        if (validClipCount == 0)
+            return null;
+
+        int selectedIndex = Random.Range(0, validClipCount);
+        for (int i = 0; i < quadClearSEs.Length; i++)
+        {
+            if (quadClearSEs[i] == null)
+                continue;
+
+            if (selectedIndex == 0)
+                return quadClearSEs[i];
+
+            selectedIndex--;
+        }
+
+        return null;
     }
 
     // ========================================================================

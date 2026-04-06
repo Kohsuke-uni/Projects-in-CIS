@@ -13,6 +13,10 @@ public class NextQueueUI : MonoBehaviour
     public Vector3 itemOffset = new Vector3(0, -1.1f, 0);
     public float itemScale = 0.5f;
 
+    [Header("Rendering")]
+    public bool overrideSortingOrder = true;
+    public int previewSortingOrder = 2;
+
     private readonly List<GameObject> previews = new List<GameObject>();
 
     private Tetromino[] ActivePreviewPrefabs
@@ -85,6 +89,13 @@ public class NextQueueUI : MonoBehaviour
             go.transform.localPosition = pos;
             go.transform.localRotation = Quaternion.identity;
             go.transform.localScale = Vector3.one * itemScale;
+
+            if (overrideSortingOrder)
+            {
+                SpriteRenderer[] renderers = go.GetComponentsInChildren<SpriteRenderer>(true);
+                for (int r = 0; r < renderers.Length; r++)
+                    renderers[r].sortingOrder = previewSortingOrder;
+            }
 
             foreach (var mb in go.GetComponentsInChildren<MonoBehaviour>())
                 mb.enabled = false;
