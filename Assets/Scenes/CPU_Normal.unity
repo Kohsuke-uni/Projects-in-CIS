@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 301, y: -159}
+  m_AnchoredPosition: {x: 300, y: -253}
   m_SizeDelta: {x: 317, y: 102.0222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &18401070
@@ -293,6 +293,7 @@ MonoBehaviour:
   moveGridVisualWithBoard: 1
   garbagePrefab: {fileID: 5585992181458194974, guid: ac21f2fa86cb441febaa7ff9a55937f3, type: 3}
   fixedBlockTag: FixedBlock
+  disableLineClear: 0
 --- !u!4 &30002280
 Transform:
   m_ObjectHideFlags: 0
@@ -423,7 +424,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 664, y: -159}
+  m_AnchoredPosition: {x: 649, y: -174}
   m_SizeDelta: {x: 317, y: 102.0222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &149015891
@@ -1065,6 +1066,7 @@ MonoBehaviour:
   exerciseConfig: {fileID: 0}
   spawnMode: 0
   tIndex: 5
+  forcedPieceIndex: -1
   spawnCpuControlled: 1
   cpuDifficulty: 0
 --- !u!4 &425324618
@@ -1519,7 +1521,7 @@ Transform:
   m_GameObject: {fileID: 747013948}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.6, y: 12.8287, z: 1}
+  m_LocalPosition: {x: -3.5, y: 12.8287, z: 1}
   m_LocalScale: {x: 0.29042912, y: 0.3493161, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1676,7 +1678,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 807739080}
-  - component: {fileID: 807739079}
   - component: {fileID: 807739078}
   - component: {fileID: 807739077}
   - component: {fileID: 807739076}
@@ -1702,12 +1703,17 @@ MonoBehaviour:
   playerBoard: {fileID: 1666142982}
   cpuBoard: {fileID: 30002279}
   clearUIRoot: {fileID: 563107617}
+  resultMessageText: {fileID: 2049729877}
   clearMessageText: {fileID: 2082583750}
   timeText: {fileID: 0}
   clearFaridUI: {fileID: 1357280851}
-  retrySceneName: CPU_Hard
+  retrySceneName: CPU_Normal
   stageSelectSceneName: StageSelect
   stopTimeOnFinish: 1
+  winResultMessage: YOU WIN
+  winClearMessage: You defeated the CPU!
+  loseResultMessage: YOU LOSE
+  loseClearMessage: You were topped out...
 --- !u!114 &807739077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1741,27 +1747,6 @@ MonoBehaviour:
   board: {fileID: 30002279}
   spawner: {fileID: 425324617}
   defaultSceneName: 
---- !u!114 &807739079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807739075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b1d1ad1be33245b0aa4020957fdd7e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  size: {x: 10, y: 22}
-  visibleSize: {x: 10, y: 20}
-  blockContainer: {fileID: 0}
-  origin: {x: 0, y: 0, z: 0}
-  boardOffset: {x: 0, y: 0}
-  gridVisual: {fileID: 0}
-  moveGridVisualWithBoard: 1
-  garbagePrefab: {fileID: 0}
-  fixedBlockTag: FixedBlock
 --- !u!4 &807739080
 Transform:
   m_ObjectHideFlags: 0
@@ -1994,6 +1979,7 @@ MonoBehaviour:
   exerciseConfig: {fileID: 0}
   spawnMode: 0
   tIndex: 5
+  forcedPieceIndex: -1
   spawnCpuControlled: 0
   cpuDifficulty: 0
 --- !u!4 &931475396
@@ -2834,7 +2820,7 @@ GameObject:
   - component: {fileID: 1357280854}
   - component: {fileID: 1357280852}
   m_Layer: 5
-  m_Name: ClearFaridUI
+  m_Name: ClearUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2855,18 +2841,17 @@ MonoBehaviour:
   characterPanel: {fileID: 1357280853}
   characterImage: {fileID: 1357280852}
   characterSprites:
-  - {fileID: 21300000, guid: 95b1cd0d5aa5b437caee6e66cf2c24bd, type: 3}
-  - {fileID: 21300000, guid: e4611d4ab8f0e4386b35887cfc6381a7, type: 3}
-  - {fileID: 21300000, guid: 366451fd305b24e8ab80b6898427e4ba, type: 3}
-  - {fileID: 21300000, guid: 1c41d2b5fcdbc4b4dbe905ccc4bc2287, type: 3}
+  - {fileID: 21300000, guid: 0b82e258cd8f242c09eefa631a04a571, type: 3}
+  spriteRectOverrides: []
   currentSpriteIndex: 0
   slideDuration: 0.5
-  hiddenPos: {x: -500, y: -400}
-  shownPos: {x: -500, y: -80}
+  xPosition: -400
+  startY: -400
+  endY: -150
   usePopScale: 0
   popScale: 1.1
   popDuration: 0.15
-  stageClearPanel: {fileID: 0}
+  stageClearPanel: {fileID: 563107617}
   panelDelay: 0.1
 --- !u!114 &1357280852
 MonoBehaviour:
@@ -2888,7 +2873,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1c41d2b5fcdbc4b4dbe905ccc4bc2287, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0b82e258cd8f242c09eefa631a04a571, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2914,8 +2899,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -514.43115, y: -1015.5049}
-  m_SizeDelta: {x: 711.3785, y: 955.1601}
+  m_AnchoredPosition: {x: -427.95538, y: -992.4513}
+  m_SizeDelta: {x: 1064.1094, y: 671.3006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1357280854
 CanvasRenderer:
@@ -3405,6 +3390,7 @@ MonoBehaviour:
   moveGridVisualWithBoard: 1
   garbagePrefab: {fileID: 5585992181458194974, guid: ac21f2fa86cb441febaa7ff9a55937f3, type: 3}
   fixedBlockTag: FixedBlock
+  disableLineClear: 0
 --- !u!4 &1666142983
 Transform:
   m_ObjectHideFlags: 0
@@ -3842,7 +3828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -56, y: -159}
+  m_AnchoredPosition: {x: 300, y: -124}
   m_SizeDelta: {x: 317, y: 102.0222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1950973073
@@ -3889,8 +3875,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TSpinDoubleJudge, Assembly-CSharp
+      - m_Target: {fileID: 807739076}
+        m_TargetAssemblyTypeName: VersusJudge, Assembly-CSharp
         m_MethodName: OnRetryButton
         m_Mode: 1
         m_Arguments:
@@ -3900,7 +3886,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &1950973074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4008,7 +3994,7 @@ GameObject:
   - component: {fileID: 2049729878}
   - component: {fileID: 2049729877}
   m_Layer: 5
-  m_Name: Technique Message
+  m_Name: Result Message
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
