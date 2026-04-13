@@ -35,7 +35,7 @@ public class CpuAgent : MonoBehaviour
         {
             case CpuDifficulty.Easy:
                 thinkDelay = 0.3f;
-                topK = 3;
+                topK = 2;
                 xStride = 2;
                 wLines = 1.0f; wHoles = 3.5f; wAggHeight = 0.35f; wBump = 0.25f; wMaxHeight = 0.8f;
 

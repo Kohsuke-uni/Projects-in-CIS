@@ -406,7 +406,7 @@ MonoBehaviour:
   garbagePrefab: {fileID: 5585992181458194974, guid: ac21f2fa86cb441febaa7ff9a55937f3, type: 3}
   fixedBlockTag: FixedBlock
   disableLineClear: 0
-  pendingGarbageSystem: {fileID: 0}
+  pendingGarbageSystem: {fileID: 1942246413}
 --- !u!4 &125962794
 Transform:
   m_ObjectHideFlags: 0
