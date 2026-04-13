@@ -60,7 +60,7 @@ public class Tetromino : MonoBehaviour
     private float dasTimer = 0f;
     private float arrTimer = 0f;
 
-    public bool isMini; // TSpin Mini 判定用（TSpinDoubleJudge から参照される）
+    public bool isMini;
 
     public bool enablePlayerInput = true;
 
@@ -69,6 +69,7 @@ public class Tetromino : MonoBehaviour
     public bool CpuTryMove(Vector3 delta) => TryMove(delta);
 
     public bool CpuTryRotate(int dir) => TryRotateAndRecordWithSE(dir);
+    public PendingGarbageSystem pendingGarbageSystem;
 
     public void CpuHardDropAndLock()
     {
@@ -722,27 +723,29 @@ public class Tetromino : MonoBehaviour
             if (cell != null) cell.SetParent(null, true);
         }
 
-        // 👇 まず盤面に置く
         board.SetPiece(this);
 
-        // 👇 ★ここを追加（超重要）
         int linesCleared = board.ClearLinesAndGetCount();
 
-        // 👇 対戦用ゴミ処理
+        // ① 先に相殺処理
         var versusJudge = FindObjectOfType<VersusJudge>();
         if (versusJudge != null)
         {
             versusJudge.OnLinesCleared(this, board, linesCleared);
         }
 
-        // 👇 SE
+        // ② そのあと必ずゴミ処理（ここ重要）
+        if (board.pendingGarbageSystem != null)
+        {
+            board.pendingGarbageSystem.ApplyPendingGarbage();
+        }
+
         if (linesCleared > 0)
         {
             SoundManager.Instance?.PlaySE(SeType.LineClear);
             PlaySpecialClearAnimation(linesCleared);
         }
 
-        // 👇 既存Judge（そのままでOK）
         var fortyJudge = FindObjectOfType<FortyLineJudge>();
         if (fortyJudge != null)
         {
@@ -791,48 +794,6 @@ public class Tetromino : MonoBehaviour
             }
         }
 
-        // Legacy code
-        // if (practiceJudge == null)
-        // {
-        //     // (Optional) Legacy: T-Spin Double mode
-        //     var tsdJudge = FindObjectOfType<TSpinDoubleJudge>();
-        //     if (tsdJudge != null)
-        //     {
-        //         tsdJudge.OnPieceLocked(this, linesCleared);
-        //         if (tsdJudge.IsStageCleared)
-        //         {
-        //             enabled = false;
-        //             Destroy(gameObject);
-        //             return;
-        //         }
-        //     }
-
-        //     var tstJudge = FindObjectOfType<TSpinTripleJudge>();
-        //     if (tstJudge != null)
-        //     {
-        //         tstJudge.OnPieceLocked(this, linesCleared);
-        //         if (tstJudge.IsStageCleared)
-        //         {
-        //             enabled = false;
-        //             Destroy(gameObject);
-        //             return;
-        //         }
-        //     }
-        // }
-
-        // var renJudge = FindObjectOfType<RENJudge>();
-        // if (renJudge != null)
-        // {
-        //     renJudge.OnPieceLocked(this, linesCleared);
-        //     if (renJudge.IsStageCleared)
-        //     {
-        //         enabled = false;
-        //         Destroy(gameObject);
-        //         return;
-        //     }
-        // }
-
-        // 次のミノを出す
         enabled = false;
         StartCoroutine(SpawnNextFrame());
     }

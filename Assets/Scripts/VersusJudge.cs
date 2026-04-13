@@ -30,6 +30,9 @@ public class VersusJudge : MonoBehaviour
     [TextArea(1, 3)] public string loseResultMessage = "YOU LOSE";
     [TextArea(1, 3)] public string loseClearMessage = "You were topped out...";
 
+    [Header("Garbage Timing")]
+    public float garbageDelay = 5f;
+
     public bool IsStageCleared { get; private set; } = false;
     public bool PlayerWon { get; private set; } = false;
     public bool PlayerLost { get; private set; } = false;
@@ -38,8 +41,8 @@ public class VersusJudge : MonoBehaviour
     private int cpuRen = 0;
     private bool playerLastWasB2B = false;
     private bool cpuLastWasB2B = false;
-    private int playerPendingGarbage = 0;
-    private int cpuPendingGarbage = 0;
+
+    private int nextPacketId = 1;
 
     private void Start()
     {
@@ -57,14 +60,22 @@ public class VersusJudge : MonoBehaviour
         cpuRen = 0;
         playerLastWasB2B = false;
         cpuLastWasB2B = false;
-        playerPendingGarbage = 0;
-        cpuPendingGarbage = 0;
+
+        if (playerBoard != null && playerBoard.pendingGarbageSystem != null)
+            playerBoard.pendingGarbageSystem.ClearPending();
+
+        if (cpuBoard != null && cpuBoard.pendingGarbageSystem != null)
+            cpuBoard.pendingGarbageSystem.ClearPending();
+
+        Debug.Log("[VersusJudge] Start completed");
     }
 
     public void OnTopOut(Board board)
     {
         if (IsStageCleared) return;
         if (board == null) return;
+
+        Debug.Log($"[VersusJudge] OnTopOut board={board.name}");
 
         if (board == playerBoard)
         {
@@ -88,18 +99,72 @@ public class VersusJudge : MonoBehaviour
         if (piece == null) return;
         if (sender == null) return;
 
+        Debug.Log($"[VersusJudge] OnLinesCleared sender={sender.name}, linesCleared={linesCleared}");
+
         if (linesCleared <= 0)
         {
-            FlushPendingGarbage(sender);
             ResetRenForBoard(sender);
             ResetB2BIfNeeded(sender, false);
             return;
         }
 
         int garbage = CalculateGarbage(piece, sender, linesCleared);
+        Debug.Log($"[VersusJudge] calculated garbage={garbage} from sender={sender.name}");
+
         if (garbage <= 0) return;
 
-        AddPendingGarbage(sender, garbage);
+        SendGarbageToOpponent(sender, garbage);
+    }
+
+    private void SendGarbageToOpponent(Board sender, int attackAmount)
+    {
+        if (attackAmount <= 0) return;
+
+        Board opponent = GetOpponentBoard(sender);
+        if (opponent == null) return;
+
+        PendingGarbageSystem myPending = GetPendingSystem(sender);
+        PendingGarbageSystem opponentPending = GetPendingSystem(opponent);
+
+        int remainingAttack = attackAmount;
+
+        Debug.Log($"[VersusJudge] SendGarbageToOpponent sender={sender.name}, opponent={opponent.name}, attackAmount={attackAmount}");
+
+        if (myPending != null)
+        {
+            remainingAttack = myPending.CancelPendingGarbage(attackAmount);
+            Debug.Log($"[VersusJudge] {sender.name} canceled own pending. attack={attackAmount}, remain={remainingAttack}, ownPendingNow={myPending.PendingLineCount}");
+        }
+
+        if (remainingAttack <= 0)
+        {
+            Debug.Log("[VersusJudge] attack fully canceled by sender side pending");
+            return;
+        }
+
+        if (opponentPending != null)
+        {
+            int packetId = nextPacketId++;
+            opponentPending.ReceiveGarbagePacket(packetId, remainingAttack, garbageDelay);
+            Debug.Log($"[VersusJudge] queued packet id={packetId}, lines={remainingAttack}, target={opponent.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"[VersusJudge] {opponent.name} has no PendingGarbageSystem.");
+        }
+    }
+
+    private PendingGarbageSystem GetPendingSystem(Board board)
+    {
+        if (board == null) return null;
+        return board.pendingGarbageSystem;
+    }
+
+    private Board GetOpponentBoard(Board sender)
+    {
+        if (sender == playerBoard) return cpuBoard;
+        if (sender == cpuBoard) return playerBoard;
+        return null;
     }
 
     private int CalculateGarbage(Tetromino piece, Board sender, int lines)
@@ -117,18 +182,10 @@ public class VersusJudge : MonoBehaviour
         {
             switch (lines)
             {
-                case 1:
-                    baseGarbage = 2;
-                    break;
-                case 2:
-                    baseGarbage = 4;
-                    break;
-                case 3:
-                    baseGarbage = 6;
-                    break;
-                default:
-                    baseGarbage = 0;
-                    break;
+                case 1: baseGarbage = 2; break;
+                case 2: baseGarbage = 4; break;
+                case 3: baseGarbage = 6; break;
+                default: baseGarbage = 0; break;
             }
 
             isB2BAction = lines > 0;
@@ -137,22 +194,14 @@ public class VersusJudge : MonoBehaviour
         {
             switch (lines)
             {
-                case 1:
-                    baseGarbage = 0;
-                    break;
-                case 2:
-                    baseGarbage = 1;
-                    break;
-                case 3:
-                    baseGarbage = 2;
-                    break;
+                case 1: baseGarbage = 0; break;
+                case 2: baseGarbage = 1; break;
+                case 3: baseGarbage = 2; break;
                 case 4:
                     baseGarbage = 4;
                     isB2BAction = true;
                     break;
-                default:
-                    baseGarbage = 0;
-                    break;
+                default: baseGarbage = 0; break;
             }
         }
 
@@ -169,11 +218,9 @@ public class VersusJudge : MonoBehaviour
         int total = baseGarbage + renBonus + b2bBonus;
 
         if (sender != null && sender.IsBoardEmpty())
-        {
             total += 10;
-        }
 
-        Debug.Log($"VersusJudge: sender={sender.name}, lines={lines}, tspin={isTSpin}, tspinMini={isTSpinMini}, ren={ren}, renBonus={renBonus}, b2bBonus={b2bBonus}, totalGarbage={total}, pendingBefore={GetPendingGarbage(sender)}");
+        Debug.Log($"[VersusJudge] sender={sender.name}, lines={lines}, tspin={isTSpin}, tspinMini={isTSpinMini}, ren={ren}, renBonus={renBonus}, b2bBonus={b2bBonus}, totalGarbage={total}");
         return Mathf.Max(0, total);
     }
 
@@ -182,6 +229,13 @@ public class VersusJudge : MonoBehaviour
         if (piece == null) return false;
         if (lines <= 0) return false;
         return piece.typeIndex == 5 && piece.lastMoveWasRotation;
+    }
+
+    private bool IsTSpinMini(Tetromino piece, int lines)
+    {
+        if (piece == null) return false;
+        if (lines != 1) return false;
+        return piece.typeIndex == 5 && piece.lastMoveWasRotation && piece.isMini;
     }
 
     private int IncreaseRenForBoard(Board sender)
@@ -249,61 +303,13 @@ public class VersusJudge : MonoBehaviour
         return 5;
     }
 
-    private void AddPendingGarbage(Board sender, int amount)
-    {
-        if (amount <= 0) return;
-
-        if (sender == playerBoard)
-        {
-            playerPendingGarbage += amount;
-            Debug.Log($"VersusJudge: Player pending garbage = {playerPendingGarbage}");
-        }
-        else if (sender == cpuBoard)
-        {
-            cpuPendingGarbage += amount;
-            Debug.Log($"VersusJudge: CPU pending garbage = {cpuPendingGarbage}");
-        }
-    }
-
-    private int GetPendingGarbage(Board sender)
-    {
-        if (sender == playerBoard) return playerPendingGarbage;
-        if (sender == cpuBoard) return cpuPendingGarbage;
-        return 0;
-    }
-
-    private void ClearPendingGarbage(Board sender)
-    {
-        if (sender == playerBoard)
-            playerPendingGarbage = 0;
-        else if (sender == cpuBoard)
-            cpuPendingGarbage = 0;
-    }
-
-    private void FlushPendingGarbage(Board sender)
-    {
-        int pending = GetPendingGarbage(sender);
-        if (pending <= 0) return;
-
-        if (sender == playerBoard && cpuBoard != null)
-        {
-            Debug.Log($"VersusJudge: Player combo ended. Send {pending} garbage to CPU.");
-            cpuBoard.AddGarbageLines(pending);
-            ClearPendingGarbage(sender);
-        }
-        else if (sender == cpuBoard && playerBoard != null)
-        {
-            Debug.Log($"VersusJudge: CPU combo ended. Send {pending} garbage to Player.");
-            playerBoard.AddGarbageLines(pending);
-            ClearPendingGarbage(sender);
-        }
-    }
-
     private void HandleFinish(bool isWin)
     {
         IsStageCleared = true;
 
-        var controlUI = FindObjectOfType<GameControlUI>();
+        Debug.Log($"[VersusJudge] HandleFinish isWin={isWin}");
+
+        GameControlUI controlUI = FindObjectOfType<GameControlUI>();
         if (controlUI != null)
             controlUI.HideAllUI();
 
@@ -375,18 +381,11 @@ public class VersusJudge : MonoBehaviour
     {
         if (string.IsNullOrEmpty(stageSelectSceneName))
         {
-            Debug.LogWarning("VersusJudge: stageSelectSceneName が設定されていません。");
+            Debug.LogWarning("[VersusJudge] stageSelectSceneName が設定されていません。");
             return;
         }
 
         Time.timeScale = 1f;
         SceneManager.LoadScene(stageSelectSceneName);
-    }
-
-    private bool IsTSpinMini(Tetromino piece, int lines)
-    {
-        if (piece == null) return false;
-        if (lines != 1) return false;
-        return piece.typeIndex == 5 && piece.lastMoveWasRotation && piece.isMini;
     }
 }

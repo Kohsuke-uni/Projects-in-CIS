@@ -66,7 +66,6 @@ public class CpuAgent : MonoBehaviour
                 hardDropDelay = 0.02f;
                 break;
         }
-        Debug.Log($"[CPU Apply] diff={difficulty} thinkDelay={thinkDelay} topK={topK} xStride={xStride} rotateStepDelay={rotateStepDelay} moveStepDelay={moveStepDelay} hardDropDelay={hardDropDelay}");
     }
 
     private IEnumerator ThinkAndPlay()
@@ -281,7 +280,5 @@ public class CpuAgent : MonoBehaviour
         {
             difficulty = CpuDifficulty.Hard;
         }
-
-        Debug.Log($"CPU difficulty auto-set to: {difficulty} (Scene: {sceneName})");
     }
 }

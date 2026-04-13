@@ -32,12 +32,13 @@ public class Board : MonoBehaviour
     public GameObject garbagePrefab;
 
     [Header("Special Blocks")]
-    [Tooltip("このタグが付いているブロックはラインが消えても残し、下にも動かさない（壁などに使用）")]
     public string fixedBlockTag = "FixedBlock";
 
     [Header("Line Clear")]
-    [Tooltip("true にするとライン消去を無効化する（Make Shape Mode などで使用）")]
     public bool disableLineClear = false;
+
+    [Header("Pending Garbage")]
+    public PendingGarbageSystem pendingGarbageSystem;
 
     private Transform[,] grid;
 
@@ -45,6 +46,7 @@ public class Board : MonoBehaviour
     {
         ApplyBoardPosition();
         grid = new Transform[size.x, size.y];
+        Debug.Log($"[Board:{name}] Awake size={size} visibleSize={visibleSize}");
     }
 
     private void OnValidate()
@@ -91,6 +93,7 @@ public class Board : MonoBehaviour
             if (IsOccupied(cell))
                 return false;
         }
+
         return true;
     }
 
@@ -115,7 +118,7 @@ public class Board : MonoBehaviour
 
             if (cell.x < 0 || cell.x >= size.x || cell.y < 0)
             {
-                Debug.LogWarning($"Board.SetPiece: out of bounds cell={cell}, world={block.position}");
+                Debug.LogWarning($"[Board:{name}] SetPiece out of bounds cell={cell}, world={block.position}");
                 continue;
             }
 
@@ -158,6 +161,7 @@ public class Board : MonoBehaviour
             if (grid[x, y] == null)
                 return false;
         }
+
         return true;
     }
 
@@ -221,7 +225,7 @@ public class Board : MonoBehaviour
         {
             for (int i = blockContainer.childCount - 1; i >= 0; i--)
             {
-                var child = blockContainer.GetChild(i).gameObject;
+                GameObject child = blockContainer.GetChild(i).gameObject;
                 child.SetActive(false);
                 Destroy(child);
             }
@@ -247,7 +251,7 @@ public class Board : MonoBehaviour
         {
             for (int i = blockContainer.childCount - 1; i >= 0; i--)
             {
-                var child = blockContainer.GetChild(i).gameObject;
+                GameObject child = blockContainer.GetChild(i).gameObject;
                 child.SetActive(false);
                 DestroyImmediate(child);
             }
@@ -283,7 +287,7 @@ public class Board : MonoBehaviour
 
     public List<BlockState> CaptureBlockStates()
     {
-        var result = new List<BlockState>();
+        List<BlockState> result = new List<BlockState>();
 
         for (int y = 0; y < size.y; y++)
         {
@@ -339,25 +343,50 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void AddGarbageLines(int count)
+    public void ApplyGarbageLinesNow(int count)
     {
-        if (count <= 0) return;
+        Debug.Log($"[Board:{name}] ApplyGarbageLinesNow(count) called count={count}");
+
+        if (count <= 0)
+        {
+            Debug.Log($"[Board:{name}] ApplyGarbageLinesNow skipped because count <= 0");
+            return;
+        }
+
+        int sharedHole = Random.Range(0, size.x);
+        Debug.Log($"[Board:{name}] ApplyGarbageLinesNow selected sharedHole={sharedHole}");
+
+        ApplyGarbageLinesNow(count, sharedHole);
+    }
+
+    public void ApplyGarbageLinesNow(int count, int sharedHole)
+    {
+        Debug.Log($"[Board:{name}] ApplyGarbageLinesNow(count, hole) called count={count}, sharedHole={sharedHole}");
+
+        if (count <= 0)
+        {
+            Debug.Log($"[Board:{name}] ApplyGarbageLinesNow(count, hole) skipped because count <= 0");
+            return;
+        }
 
         Tetromino activePiece = FindActiveTetrominoOnThisBoard();
+        Debug.Log($"[Board:{name}] activePiece={(activePiece != null ? activePiece.name : "null")}");
 
         for (int i = 0; i < count; i++)
         {
-            AddGarbageLine();
+            Debug.Log($"[Board:{name}] Adding garbage line {i + 1}/{count} with hole={sharedHole}");
+            AddGarbageLine(sharedHole);
 
             if (activePiece != null)
             {
                 bool escaped = MoveActivePieceToLowestNonOverlappingHeight(activePiece);
+                Debug.Log($"[Board:{name}] MoveActivePieceToLowestNonOverlappingHeight result={escaped}");
 
                 if (!escaped)
                 {
-                    Debug.Log("Board: active piece overlapped after garbage, top out.");
+                    Debug.Log($"[Board:{name}] active piece overlapped after garbage, top out");
 
-                    var versusJudge = FindObjectOfType<VersusJudge>();
+                    VersusJudge versusJudge = FindObjectOfType<VersusJudge>();
                     if (versusJudge != null)
                     {
                         versusJudge.OnTopOut(this);
@@ -368,8 +397,10 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void AddGarbageLine()
+    private void AddGarbageLine(int hole)
     {
+        Debug.Log($"[Board:{name}] AddGarbageLine called hole={hole}");
+
         for (int y = size.y - 2; y >= 0; y--)
         {
             for (int x = 0; x < size.x; x++)
@@ -383,13 +414,13 @@ public class Board : MonoBehaviour
             }
         }
 
-        int hole = Random.Range(0, size.x);
-
         for (int x = 0; x < size.x; x++)
         {
-            if (x == hole) continue;
+            if (x == hole)
+                continue;
 
             GameObject block;
+
             if (garbagePrefab != null)
             {
                 block = Instantiate(garbagePrefab);
@@ -397,7 +428,7 @@ public class Board : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Board: garbagePrefab が未設定です。");
+                Debug.LogWarning($"[Board:{name}] garbagePrefab is null");
                 block = new GameObject("Garbage");
                 block.AddComponent<SpriteRenderer>();
             }
@@ -407,7 +438,13 @@ public class Board : MonoBehaviour
             Vector2Int cell = new Vector2Int(x, 0);
             grid[x, 0] = block.transform;
             block.transform.position = GridToWorld(cell);
-            block.transform.SetParent(blockContainer, true);
+
+            if (blockContainer != null)
+            {
+                block.transform.SetParent(blockContainer, true);
+            }
+
+            Debug.Log($"[Board:{name}] Garbage block placed at x={x}, y=0");
         }
     }
 
@@ -464,6 +501,7 @@ public class Board : MonoBehaviour
                     return false;
             }
         }
+
         return true;
     }
 }
