@@ -81,14 +81,28 @@ public class NextQueueUI : MonoBehaviour
             if (idx < 0 || idx >= activePreviewPrefabs.Length) continue;
 
             Tetromino prefab = activePreviewPrefabs[idx];
-            var go = Instantiate(prefab.gameObject, listRoot != null ? listRoot : transform);
+            Transform parent = listRoot != null ? listRoot : transform;
+
+            GameObject go = Instantiate(prefab.gameObject, parent);
+            go.SetActive(false);
 
             Vector3 pos = i * itemOffset;
-            if (idx == 0 || idx == 3) // I or O
+            if (idx == 0 || idx == 3)
                 pos.x = -0.36f;
+
             go.transform.localPosition = pos;
             go.transform.localRotation = Quaternion.identity;
             go.transform.localScale = Vector3.one * itemScale;
+
+            Tetromino tet = go.GetComponent<Tetromino>();
+            if (tet != null)
+            {
+                tet.isPreviewOnly = true;
+                tet.enabled = false;
+                tet.board = null;
+                tet.spawner = null;
+                tet.ghost = null;
+            }
 
             if (overrideSortingOrder)
             {
@@ -97,16 +111,24 @@ public class NextQueueUI : MonoBehaviour
                     renderers[r].sortingOrder = previewSortingOrder;
             }
 
-            foreach (var mb in go.GetComponentsInChildren<MonoBehaviour>())
+            foreach (var mb in go.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (mb is Tetromino)
+                    continue;
                 mb.enabled = false;
-            foreach (var col in go.GetComponentsInChildren<Collider2D>())
+            }
+
+            foreach (var col in go.GetComponentsInChildren<Collider2D>(true))
                 col.enabled = false;
-            foreach (var rb in go.GetComponentsInChildren<Rigidbody2D>())
+
+            foreach (var rb in go.GetComponentsInChildren<Rigidbody2D>(true))
                 Destroy(rb);
 
-            var ghost = go.GetComponentInChildren<GhostPiece>();
-            if (ghost != null) Destroy(ghost.gameObject);
+            var ghost = go.GetComponentInChildren<GhostPiece>(true);
+            if (ghost != null)
+                Destroy(ghost.gameObject);
 
+            go.SetActive(true);
             previews.Add(go);
         }
     }

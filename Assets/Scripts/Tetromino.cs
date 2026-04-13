@@ -40,6 +40,7 @@ public class Tetromino : MonoBehaviour
     private bool locked = false;
     private bool fastDropping = false;
     private float accumulatedFall = 0f;
+    public bool skipSpawnValidation = false;
 
     private bool grounded = false;
     private bool groundedAllowanceInitialized = false;
@@ -64,6 +65,7 @@ public class Tetromino : MonoBehaviour
     public bool isMini;
 
     public bool enablePlayerInput = true;
+    public bool isPreviewOnly = false;
 
     public int RotationIndex => rotationIndex;
 
@@ -185,6 +187,12 @@ public class Tetromino : MonoBehaviour
 
     private void Start()
     {
+        if (isPreviewOnly)
+        {
+            enabled = false;
+            return;
+        }
+
         if (board == null) board = FindObjectOfType<Board>();
 
         Vector3 p = transform.position;
