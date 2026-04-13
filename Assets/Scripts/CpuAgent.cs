@@ -5,6 +5,29 @@ using UnityEngine.SceneManagement;
 
 public class CpuAgent : MonoBehaviour
 {
+    public static bool HasRuntimeDifficultyOverride { get; private set; }
+    public static CpuDifficulty RuntimeDifficultyOverride { get; private set; } = CpuDifficulty.Normal;
+    public static bool HasLastResolvedDifficulty { get; private set; }
+    public static CpuDifficulty LastResolvedDifficulty { get; private set; } = CpuDifficulty.Normal;
+
+    public static void SetRuntimeDifficultyOverride(CpuDifficulty difficulty)
+    {
+        RuntimeDifficultyOverride = difficulty;
+        HasRuntimeDifficultyOverride = true;
+    }
+
+    public static void ClearRuntimeDifficultyOverride()
+    {
+        HasRuntimeDifficultyOverride = false;
+        RuntimeDifficultyOverride = CpuDifficulty.Normal;
+    }
+
+    public static void RememberResolvedDifficulty(CpuDifficulty difficulty)
+    {
+        LastResolvedDifficulty = difficulty;
+        HasLastResolvedDifficulty = true;
+    }
+
     public CpuDifficulty difficulty = CpuDifficulty.Normal;
 
     private Tetromino piece;
@@ -21,16 +44,26 @@ public class CpuAgent : MonoBehaviour
     private void Awake()
     {
         piece = GetComponent<Tetromino>();
-        board = piece.board;
+        board = piece != null ? piece.board : null;
+    }
+
+    private void Start()
+    {
+        if (piece == null)
+            piece = GetComponent<Tetromino>();
+
+        if (piece != null)
+            board = piece.board;
 
         AutoSetDifficultyByScene();
-        
         ApplyDifficulty();
         StartCoroutine(ThinkAndPlay());
     }
 
     private void ApplyDifficulty()
     {
+        RememberResolvedDifficulty(difficulty);
+
         switch (difficulty)
         {
             case CpuDifficulty.Easy:
@@ -267,6 +300,13 @@ public class CpuAgent : MonoBehaviour
 
     private void AutoSetDifficultyByScene()
     {
+        if (HasRuntimeDifficultyOverride)
+        {
+            difficulty = RuntimeDifficultyOverride;
+            Debug.Log($"CPU difficulty set from runtime override: {difficulty}");
+            return;
+        }
+
         string sceneName = SceneManager.GetActiveScene().name;
 
         if (sceneName.Contains("CPU_Easy"))

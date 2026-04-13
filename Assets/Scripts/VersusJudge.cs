@@ -13,11 +13,14 @@ public class VersusJudge : MonoBehaviour
     public Text resultMessageText;
     public Text clearMessageText;
     public Text timeText;
+    public GameObject newRecordRoot;
+    public Text bestTimeText;
 
     [Header("Optional Effects")]
     public ClearFaridUI clearFaridUI;
 
     [Header("Scene Settings")]
+    public string cpuSceneName = "CPU";
     public string retrySceneName = "";
     public string stageSelectSceneName = "StageSelect";
     public bool stopTimeOnFinish = true;
@@ -40,11 +43,14 @@ public class VersusJudge : MonoBehaviour
     private bool cpuLastWasB2B = false;
     private int playerPendingGarbage = 0;
     private int cpuPendingGarbage = 0;
+    private bool lastClearWasNewRecord = false;
 
     private void Start()
     {
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(false);
 
         if (clearFaridUI != null)
             clearFaridUI.gameObject.SetActive(false);
@@ -59,6 +65,8 @@ public class VersusJudge : MonoBehaviour
         cpuLastWasB2B = false;
         playerPendingGarbage = 0;
         cpuPendingGarbage = 0;
+        lastClearWasNewRecord = false;
+        RefreshBestTimeUI();
     }
 
     public void OnTopOut(Board board)
@@ -95,6 +103,9 @@ public class VersusJudge : MonoBehaviour
             ResetB2BIfNeeded(sender, false);
             return;
         }
+
+        if (sender == playerBoard)
+            SaveManager.AddLinesCleared(linesCleared);
 
         int garbage = CalculateGarbage(piece, sender, linesCleared);
         if (garbage <= 0) return;
@@ -302,6 +313,7 @@ public class VersusJudge : MonoBehaviour
     private void HandleFinish(bool isWin)
     {
         IsStageCleared = true;
+        StopActiveGameplay();
 
         var controlUI = FindObjectOfType<GameControlUI>();
         if (controlUI != null)
@@ -311,7 +323,13 @@ public class VersusJudge : MonoBehaviour
             GameTimer.Instance.StopTimer();
 
         float finishTime = GetFinishTimeSeconds();
+        SaveManager.AddRecordedTime(finishTime);
+        lastClearWasNewRecord = false;
+        if (isWin && TryGetActiveCpuDifficulty(out CpuDifficulty difficulty))
+            lastClearWasNewRecord = SaveManager.RegisterCpuBestTime(difficulty, finishTime);
         UpdateTexts(isWin, finishTime);
+        UpdateNewRecordUI();
+        RefreshBestTimeUI();
 
         if (clearFaridUI != null)
         {
@@ -327,6 +345,30 @@ public class VersusJudge : MonoBehaviour
             Time.timeScale = 0f;
     }
 
+    private void StopActiveGameplay()
+    {
+        Tetromino[] tetrominoes = FindObjectsOfType<Tetromino>();
+        for (int i = 0; i < tetrominoes.Length; i++)
+        {
+            Tetromino tetromino = tetrominoes[i];
+            if (tetromino == null)
+                continue;
+
+            tetromino.enablePlayerInput = false;
+            tetromino.enabled = false;
+        }
+
+        GhostPiece[] ghosts = FindObjectsOfType<GhostPiece>();
+        for (int i = 0; i < ghosts.Length; i++)
+        {
+            GhostPiece ghost = ghosts[i];
+            if (ghost == null)
+                continue;
+
+            ghost.enabled = false;
+        }
+    }
+
     private float GetFinishTimeSeconds()
     {
         if (GameTimer.Instance == null)
@@ -338,13 +380,39 @@ public class VersusJudge : MonoBehaviour
     private void UpdateTexts(bool isWin, float finishTime)
     {
         if (timeText != null)
-            timeText.text = $"You took {finishTime:F2} seconds";
+        {
+            string timeLabel = $"You took {finishTime:F2} seconds";
+            if (isWin && lastClearWasNewRecord && newRecordRoot == null)
+                timeLabel += "\nNEW RECORD!";
+            timeText.text = timeLabel;
+        }
 
         if (resultMessageText != null)
             resultMessageText.text = isWin ? winResultMessage : loseResultMessage;
 
         if (clearMessageText != null)
             clearMessageText.text = isWin ? winClearMessage : loseClearMessage;
+    }
+
+    private void UpdateNewRecordUI()
+    {
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(lastClearWasNewRecord);
+    }
+
+    private void RefreshBestTimeUI()
+    {
+        if (bestTimeText == null)
+            return;
+
+        if (!TryGetActiveCpuDifficulty(out CpuDifficulty difficulty))
+        {
+            bestTimeText.text = "BEST\n--:--";
+            return;
+        }
+
+        float bestTime = SaveManager.GetBestCpuTimeSeconds(difficulty);
+        bestTimeText.text = $"BEST\n{FormatElapsedTime(bestTime)}";
     }
 
     public void OnRetryButton()
@@ -359,6 +427,11 @@ public class VersusJudge : MonoBehaviour
             GameTimer.Instance.ResetTimer();
 
         Time.timeScale = 1f;
+        if (PreserveActiveCpuDifficultyForRetry())
+        {
+            SceneManager.LoadScene(ResolveCpuSceneNameForLoad());
+            return;
+        }
 
         if (!string.IsNullOrEmpty(retrySceneName))
         {
@@ -371,6 +444,84 @@ public class VersusJudge : MonoBehaviour
         }
     }
 
+    public void OnNextStageButton()
+    {
+        CpuDifficulty? nextDifficulty = GetNextCpuDifficulty();
+        if (nextDifficulty == null)
+        {
+            OnStageSelectButton();
+            return;
+        }
+
+        CpuAgent.SetRuntimeDifficultyOverride(nextDifficulty.Value);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(ResolveCpuSceneNameForLoad());
+    }
+
+    private bool PreserveActiveCpuDifficultyForRetry()
+    {
+        if (TryGetActiveCpuDifficulty(out CpuDifficulty difficulty))
+        {
+            CpuAgent.SetRuntimeDifficultyOverride(difficulty);
+            return true;
+        }
+
+        return false;
+    }
+
+    private CpuDifficulty? GetNextCpuDifficulty()
+    {
+        if (!TryGetActiveCpuDifficulty(out CpuDifficulty currentDifficulty))
+            return null;
+
+        switch (currentDifficulty)
+        {
+            case CpuDifficulty.Easy:
+                return CpuDifficulty.Normal;
+            case CpuDifficulty.Normal:
+                return CpuDifficulty.Hard;
+            default:
+                return null;
+        }
+    }
+
+    private bool TryGetActiveCpuDifficulty(out CpuDifficulty difficulty)
+    {
+        CpuAgent[] cpuAgents = FindObjectsOfType<CpuAgent>();
+        for (int i = 0; i < cpuAgents.Length; i++)
+        {
+            CpuAgent cpuAgent = cpuAgents[i];
+            if (cpuAgent == null)
+                continue;
+
+            difficulty = cpuAgent.difficulty;
+            return true;
+        }
+
+        if (CpuAgent.HasRuntimeDifficultyOverride)
+        {
+            difficulty = CpuAgent.RuntimeDifficultyOverride;
+            return true;
+        }
+
+        if (CpuAgent.HasLastResolvedDifficulty)
+        {
+            difficulty = CpuAgent.LastResolvedDifficulty;
+            return true;
+        }
+
+        difficulty = CpuDifficulty.Normal;
+        return false;
+    }
+
+    private string ResolveCpuSceneNameForLoad()
+    {
+        if (!string.IsNullOrWhiteSpace(cpuSceneName))
+            return cpuSceneName;
+
+        return SceneManager.GetActiveScene().name;
+    }
+
     public void OnStageSelectButton()
     {
         if (string.IsNullOrEmpty(stageSelectSceneName))
@@ -379,8 +530,19 @@ public class VersusJudge : MonoBehaviour
             return;
         }
 
+        CpuAgent.ClearRuntimeDifficultyOverride();
         Time.timeScale = 1f;
         SceneManager.LoadScene(stageSelectSceneName);
+    }
+
+    private string FormatElapsedTime(float seconds)
+    {
+        if (seconds < 0f)
+            return "--:--";
+
+        int minutes = Mathf.FloorToInt(seconds / 60f);
+        float remainingSeconds = seconds % 60f;
+        return $"{minutes}:{remainingSeconds:00.00}";
     }
 
     private bool IsTSpinMini(Tetromino piece, int lines)

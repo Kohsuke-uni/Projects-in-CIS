@@ -109,6 +109,7 @@ public class HoldPieceUI : MonoBehaviour
 
         Tetromino prefab = activePreviewPrefabs[idx];
         currentPreview = Instantiate(prefab.gameObject, displayRoot != null ? displayRoot : transform);
+        currentPreview.SetActive(false);
         currentPreview.transform.localPosition = GetOffsetForPiece(idx);
         currentPreview.transform.localRotation = Quaternion.identity;
         currentPreview.transform.localScale = Vector3.one * itemScale;
@@ -120,15 +121,14 @@ public class HoldPieceUI : MonoBehaviour
                 renderers[i].sortingOrder = previewSortingOrder;
         }
 
-        foreach (var mb in currentPreview.GetComponentsInChildren<MonoBehaviour>())
-            mb.enabled = false;
-        foreach (var col in currentPreview.GetComponentsInChildren<Collider2D>())
-            col.enabled = false;
-        foreach (var rb in currentPreview.GetComponentsInChildren<Rigidbody2D>())
+        foreach (var mb in currentPreview.GetComponentsInChildren<MonoBehaviour>(true))
+            Destroy(mb);
+        foreach (var col in currentPreview.GetComponentsInChildren<Collider2D>(true))
+            Destroy(col);
+        foreach (var rb in currentPreview.GetComponentsInChildren<Rigidbody2D>(true))
             Destroy(rb);
 
-        var ghost = currentPreview.GetComponentInChildren<GhostPiece>();
-        if (ghost != null) Destroy(ghost.gameObject);
+        currentPreview.SetActive(true);
     }
 
     private Vector3 GetOffsetForPiece(int pieceIndex)
