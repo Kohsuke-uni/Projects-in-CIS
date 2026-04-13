@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
         }
 
         SceneManager.LoadScene(defaultSceneName);
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
     }
 
 
@@ -53,5 +54,6 @@ public class GameManager : MonoBehaviour
         }
 
         SceneManager.LoadScene(sceneName);
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
     }
 }

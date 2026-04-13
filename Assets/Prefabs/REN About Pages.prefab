@@ -240,7 +240,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4251860346135688088
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1291,13 +1291,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Ren is the consecutive line clear combo. If you get lucky enough you can
-    chain up to 20 ren in a game of Tetris.
+  m_text: 'Ren is the consecutive line clear combo counter. If you stack the sides
+    high enough and get lucky enough with your draws you can chain up to 20 ren in
+    a game.
 
 
-    The best chance you can have at
-    chaining ren is if you have four columns with three blocks arranged in various
-    ways.'
+    The best chance you can have at chaining ren is if you have four
+    columns with three blocks in between, arranged in various ways.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
   m_sharedMaterial: {fileID: -2504890859898317026, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
@@ -3722,7 +3722,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &553768949340940696
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4249,7 +4249,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'In competitive Tetris, garbage from opponents can come at any time and
+  m_text: 'In competitive matches, garbage from opponents can come at any time and
     if you want to accumulate a lot of ren you will need to stack high. That''s why
     the best strategy is to build on the sides.
 

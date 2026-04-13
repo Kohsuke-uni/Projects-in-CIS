@@ -141,22 +141,25 @@ public static class SaveManager
         return Data.bestRen;
     }
 
-    public static void RegisterExerciseClear(string exerciseId, float clearTimeSeconds)
+    public static bool RegisterExerciseClear(string exerciseId, float clearTimeSeconds)
     {
         if (string.IsNullOrWhiteSpace(exerciseId))
-            return;
+            return false;
 
         ExercisePerformanceData performance = GetOrCreateExercisePerformance(exerciseId);
         performance.completed = true;
         performance.clearCount++;
+        bool isBest = false;
 
         if (clearTimeSeconds > 0f &&
             (performance.bestTimeSeconds < 0f || clearTimeSeconds < performance.bestTimeSeconds))
         {
             performance.bestTimeSeconds = clearTimeSeconds;
+            isBest = true;
         }
 
         Save();
+        return isBest;
     }
 
     public static ExercisePerformanceData GetExercisePerformance(string exerciseId)

@@ -32,6 +32,10 @@ public class HoldPieceUI : MonoBehaviour
     [Tooltip("特定ミノだけ個別の表示位置を指定（x,yローカル座標）")]
     public PiecePositionOverride[] piecePositionOverrides;
 
+    [Header("Rendering")]
+    public bool overrideSortingOrder = true;
+    public int previewSortingOrder = 2;
+
     private GameObject currentPreview;
 
     private Tetromino[] ActivePreviewPrefabs
@@ -108,6 +112,13 @@ public class HoldPieceUI : MonoBehaviour
         currentPreview.transform.localPosition = GetOffsetForPiece(idx);
         currentPreview.transform.localRotation = Quaternion.identity;
         currentPreview.transform.localScale = Vector3.one * itemScale;
+
+        if (overrideSortingOrder)
+        {
+            SpriteRenderer[] renderers = currentPreview.GetComponentsInChildren<SpriteRenderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+                renderers[i].sortingOrder = previewSortingOrder;
+        }
 
         foreach (var mb in currentPreview.GetComponentsInChildren<MonoBehaviour>())
             mb.enabled = false;

@@ -228,7 +228,7 @@ public class VersusJudge : MonoBehaviour
     {
         if (piece == null) return false;
         if (lines <= 0) return false;
-        return piece.typeIndex == 5 && piece.lastMoveWasRotation;
+        return piece.lastLockWasTSpin;
     }
 
     private bool IsTSpinMini(Tetromino piece, int lines)

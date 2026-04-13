@@ -32,6 +32,7 @@ public class PracticeJudge : MonoBehaviour
 
     [Header("UI / Scene Settings")]
     public GameObject clearUIRoot;
+    public GameObject newRecordRoot;
     public GameObject regularClearButtonsRoot;
     public GameObject sessionClearButtonsRoot;
     public string stageSelectSceneName = "TechniqueSelect";
@@ -53,6 +54,7 @@ public class PracticeJudge : MonoBehaviour
     public bool IsStageCleared { get; private set; } = false;
 
     bool isEasyLikeMode = false;
+    bool lastClearWasNewRecord = false;
 
     void Start()
     {
@@ -60,6 +62,8 @@ public class PracticeJudge : MonoBehaviour
 
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(false);
 
         UpdateClearButtonMode();
     }
@@ -207,9 +211,11 @@ public class PracticeJudge : MonoBehaviour
 
         float clearTime = GetClearTimeSeconds();
         SaveManager.AddRecordedTime(clearTime);
-        SaveManager.RegisterExerciseClear(GetCurrentDisplayName(), clearTime);
+        lastClearWasNewRecord = SaveManager.RegisterExerciseClear(GetCurrentDisplayName(), clearTime);
+        FindObjectOfType<ExerciseSceneLoader>()?.RefreshExerciseHud();
         int spriteIndex = GetSpriteIndexByTime(clearTime, isEasyLikeMode);
         UpdateClearTexts(clearTime, spriteIndex);
+        UpdateNewRecordUI();
         UpdateClearButtonMode();
 
         if (clearFaridUI == null)
@@ -239,6 +245,12 @@ public class PracticeJudge : MonoBehaviour
 
         if (sessionClearButtonsRoot != null)
             sessionClearButtonsRoot.SetActive(isSession);
+    }
+
+    void UpdateNewRecordUI()
+    {
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(lastClearWasNewRecord);
     }
 
     float GetClearTimeSeconds()
@@ -425,9 +437,7 @@ public class PracticeJudge : MonoBehaviour
         if (loader == null || loader.exercise == null)
             return string.Empty;
 
-        return !string.IsNullOrWhiteSpace(loader.exercise.displayName)
-            ? loader.exercise.displayName
-            : loader.exercise.name;
+        return loader.GetExercisePerformanceKey();
     }
 
     string GetAutoNextSceneNameOrFallback()

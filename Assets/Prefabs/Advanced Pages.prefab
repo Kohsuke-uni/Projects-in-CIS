@@ -1666,19 +1666,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'T-Spin Triple clears 3 lines at once and scores the most points in modern
-    Tetris.
+    stacking games.
 
 
     You need an F-shape with an overhang.
 
 
-    The easiest way to
-    form the base shape is with an L or J piece and a T.
+    The easiest
+    way to form the base shape is with an L or J piece and a T.
 
 
-    In the example to
-    the right you can rotate the T piece cw to wedge it under the overhang and then
-    cw again to "kick" it down into place.
+    In the example
+    to the right you can rotate the T piece cw to wedge it under the overhang and
+    then cw again to "kick" it down into place.
 
 
     It''s easy to explain but difficult
@@ -3265,9 +3265,9 @@ MonoBehaviour:
     stacking divides the board into two sections. You stack in the first 6 columns,
     leave a controlled gap, and stack again in the last 3 columns.\n\nThis shape
     naturally creates structures that make T-spins easier to set up.\n\nT-spins score
-    some of the highest points in modern Tetris and are essential for advanced play.\n\nNote:
-    6\u20133 is harder to manage than 9\u20131.\nIf your stack becomes unstable,
-    return to 9\u20131 to rebuild consistency."
+    some of the highest points in modern stacking games and are essential for advanced
+    play.\n\nNote: 6\u20133 is harder to manage than 9\u20131.\nIf your stack becomes
+    unstable, return to 9\u20131 to rebuild consistency."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
   m_sharedMaterial: {fileID: -2504890859898317026, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}

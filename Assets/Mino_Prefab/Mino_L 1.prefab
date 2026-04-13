@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 608475ed5d3f54eceaa2244d7ff4ab23, type: 3}
-  m_Color: {r: 1, g: 0.39215687, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.14509805, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -141,6 +141,7 @@ MonoBehaviour:
   dasDelay: 0.15
   arrInterval: 0.03
   board: {fileID: 0}
+  spawner: {fileID: 0}
   pivotOverride: {fileID: 1629365579879602644}
   ghost: {fileID: 0}
   keepCellSpritesUpright: 1
@@ -252,7 +253,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 608475ed5d3f54eceaa2244d7ff4ab23, type: 3}
-  m_Color: {r: 1, g: 0.39215687, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.14509805, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -336,7 +337,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 608475ed5d3f54eceaa2244d7ff4ab23, type: 3}
-  m_Color: {r: 1, g: 0.39215687, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.14509805, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -420,7 +421,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 608475ed5d3f54eceaa2244d7ff4ab23, type: 3}
-  m_Color: {r: 1, g: 0.39215687, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.14509805, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

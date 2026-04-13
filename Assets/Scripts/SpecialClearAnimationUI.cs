@@ -119,7 +119,7 @@ public class SpecialClearAnimationUI : MonoBehaviour
     void BuildTetris()
     {
         Color glow = new Color(1f, 0.87f, 0.22f, 1f);
-        CreateCenteredText("TETRIS", new Vector2(0f, 0f), tetrisFontSize, FontStyles.Bold, Color.white, glow, 0.65f);
+        CreateCenteredText("QUAD CLEAR", new Vector2(0f, 0f), tetrisFontSize, FontStyles.Bold, Color.white, glow, 0.65f);
 
         Color[] palette =
         {
@@ -139,7 +139,7 @@ public class SpecialClearAnimationUI : MonoBehaviour
     void BuildTSpinDouble()
     {
         Color accent = new Color(0.73f, 0.33f, 1f, 1f);
-        CreateStackedText("T-SPIN", "DOUBLE", accent);
+        CreateStackedText("SPIN", "DOUBLE", accent);
 
         for (int i = 0; i < 2; i++)
         {
@@ -154,7 +154,7 @@ public class SpecialClearAnimationUI : MonoBehaviour
     void BuildTSpinTriple()
     {
         Color accent = new Color(0.22f, 0.95f, 1f, 1f);
-        CreateStackedText("T-SPIN", "TRIPLE", accent);
+        CreateStackedText("SPIN", "TRIPLE", accent);
 
         for (int i = 0; i < 18; i++)
             CreateCircleParticle(tSpinTripleRingParticleSize, new Color(accent.r, accent.g, accent.b, 0.72f));

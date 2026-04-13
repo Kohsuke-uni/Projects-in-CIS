@@ -46,6 +46,8 @@ public class GhostPiece : MonoBehaviour
 
     private void CopyShapeAndRotation()
     {
+        bool copyTargetColors = !SaveManager.GetUseClassicMinos();
+
         // ターゲットの子4つの localPosition をコピー（形を常に一致させる）
         if (target.Cells != null && target.Cells.Length >= 4)
         {
@@ -56,14 +58,17 @@ public class GhostPiece : MonoBehaviour
                     // Copy shape
                     cells[i].localPosition = target.Cells[i].localPosition;
 
-                    // Copy color but force ghost alpha
-                    var targetSR = target.Cells[i].GetComponent<SpriteRenderer>();
-                    var ghostSR = cells[i].GetComponent<SpriteRenderer>();
-
-                    if (targetSR != null && ghostSR != null)
+                    if (copyTargetColors)
                     {
-                        Color c = targetSR.color;
-                        ghostSR.color = new Color(c.r, c.g, c.b, ghostAlpha);
+                        // In classic mode, keep the ghost prefab's built-in visuals.
+                        var targetSR = target.Cells[i].GetComponent<SpriteRenderer>();
+                        var ghostSR = cells[i].GetComponent<SpriteRenderer>();
+
+                        if (targetSR != null && ghostSR != null)
+                        {
+                            Color c = targetSR.color;
+                            ghostSR.color = new Color(c.r, c.g, c.b, ghostAlpha);
+                        }
                     }
                 }
             }
