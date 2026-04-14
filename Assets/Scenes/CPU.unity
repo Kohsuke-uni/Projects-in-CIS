@@ -2364,7 +2364,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 54.4, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1373510934
@@ -2393,14 +2393,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c818f9558818f40e682e14e31c257344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pendingGarbageSystem: {fileID: 1373510934}
+  pendingGarbageSystem: {fileID: 1768445137}
   laneRoot: {fileID: 1009717868}
   cellPrefab: {fileID: 1652849747885444297, guid: 2f3c35502902e47409013810db9a080c, type: 3}
   visibleLines: 20
   cellHeight: 24
   spacing: 2
-  emptyColor: {r: 1, g: 1, b: 1, a: 0}
-  normalColor: {r: 1, g: 1, b: 1, a: 0}
+  emptyColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 0.9490196}
   dangerColor: {r: 1, g: 0.35, b: 0.35, a: 1}
   dangerThreshold: 8
   blinkWhenDanger: 1
@@ -3421,8 +3421,8 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 23.52, y: 13.184063}
+  m_DrawMode: 1
+  m_Size: {x: 6.97, y: 28.7}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -3436,13 +3436,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1995448686}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -10.2076, y: 4.7844, z: 0}
-  m_LocalScale: {x: 0.51191986, y: 0.25527146, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.05, y: 4.05, z: 0}
+  m_LocalScale: {x: 0.37, y: 0.37, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2008386708
 GameObject:
   m_ObjectHideFlags: 0
