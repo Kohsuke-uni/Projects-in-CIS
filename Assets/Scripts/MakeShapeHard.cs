@@ -114,8 +114,8 @@ public class MakeShapeHard : MonoBehaviour
             return;
         }
 
-        // ライン消去を無効化（シェイプのブロックが消えないように）
-        board.disableLineClear = true;
+        // Hard モードはライン消去を有効にする（ランダムミノが出るため必要）
+        board.disableLineClear = false;
 
         // ターゲット形状を解決
         targetCells = ResolveTargetCells();
@@ -153,12 +153,7 @@ public class MakeShapeHard : MonoBehaviour
             return;
         }
 
-        // 2. はみ出し判定（シェイプ外にブロックがあれば強制リトライ）
-        if (HasBlocksOutsideShape())
-        {
-            SoundManager.Instance?.PlaySE(SeType.StageFail);
-            ForceRestartScene();
-        }
+        // Hard モードははみ出し判定なし（ランダムミノはハート外に置かれることが前提）
     }
 
     // ===========================================================

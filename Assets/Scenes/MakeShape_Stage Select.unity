@@ -544,8 +544,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: d491b8db1acbd4bb6a60c40bed1007bb, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &174146712
@@ -1234,8 +1237,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: b7d79eff729a041ee975c25206ab8de4, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &515425355
@@ -1696,8 +1702,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: 4d7e8a91d158a49dab7824123c0e5334, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &739968524
@@ -1848,8 +1857,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: 3bd956869acc7470eacd29b7359d8acb, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &815716540
@@ -2525,6 +2537,9 @@ MonoBehaviour:
   hardDropSE: {fileID: 8300000, guid: e3382891c1edc456999eab9deb53bac1, type: 3}
   lockSE: {fileID: 8300000, guid: 1585d1e9d0bc74ee7b75ce9dd75292f9, type: 3}
   lineClearSE: {fileID: 8300000, guid: 468dc6797504e46aab541ed967d2fbc8, type: 3}
+  tSpinDoubleSE: {fileID: 0}
+  tSpinTripleSE: {fileID: 0}
+  quadClearSEs: []
   stageClearSE: {fileID: 8300000, guid: 4ff98dd2297264424961fb4938740e67, type: 3}
   stageFailSE: {fileID: 8300000, guid: 0ae0bc170034449e8896085b2351118c, type: 3}
   holdSE: {fileID: 8300000, guid: 934b2f8177822401a8e7f26fa2032b66, type: 3}
@@ -2534,6 +2549,9 @@ MonoBehaviour:
   hardDropSEVolume: 0.02
   lockSEVolume: 0.15
   lineClearSEVolume: 1
+  tSpinDoubleSEVolume: 1
+  tSpinTripleSEVolume: 1
+  quadClearSEVolume: 1
   stageClearSEVolume: 1
   stageFailSEVolume: 1
   holdSEVolume: 0.3
@@ -2607,8 +2625,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: 20d5c99579f5548038e14e35177ddd61, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &998934835
@@ -2893,8 +2914,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: d4f2045e8b53244e1ba420cb9b00561a, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &1178446709
@@ -3247,8 +3271,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: 3d58ee2a313614e49bb215f03d637b99, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &1301916472
@@ -3474,8 +3501,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: 3ac4203309f21481ba1a624d738ba1cd, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &1399688917
@@ -4176,8 +4206,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: 271e65f3cfd20459099b9e03387a4859, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &1857944278
@@ -4403,8 +4436,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Exercise_Scene
+  cpuDifficulty: 1
   targetExercise: {fileID: 11400000, guid: 06cd64f692dac4a8584803b959afb763, type: 2}
+  sessionExercises: []
   useExerciseTargetScene: 1
+  shuffleExerciseSession: 1
   isREN: 0
   renMode: 0
 --- !u!114 &1861151040
