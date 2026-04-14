@@ -762,7 +762,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Create a heart shape using only Z pieces!
+  m_text: Get a Perfect Clear!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
   m_sharedMaterial: {fileID: -2504890859898317026, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
@@ -6397,7 +6397,7 @@ GameObject:
   - component: {fileID: 1265424789}
   - component: {fileID: 1265424788}
   - component: {fileID: 1265424786}
-  - component: {fileID: 1265424793}
+  - component: {fileID: 1265424791}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6475,7 +6475,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1265424793
+--- !u!114 &1265424791
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6484,29 +6484,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1265424785}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87e08c827e53e28428cbea242bd25370, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d7bb49d44e53c34299994bfde176062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shapeType: 0
-  customTargetCells: []
-  shapeOffset: {x: 0, y: 0}
-  spawnOnlyPieceIndex: 6
-  targetCellPrefab: {fileID: 0}
-  pendingColor: {r: 1, g: 0.4, b: 0.4, a: 0.35}
-  filledColor: {r: 0.3, g: 1, b: 0.3, a: 0.25}
-  showStepHint: 1
-  stepHintColors:
-  - {r: 1, g: 0.25, b: 0.25, a: 0.6}
-  - {r: 1, g: 0.6, b: 0.1, a: 0.6}
-  - {r: 1, g: 1, b: 0.1, a: 0.6}
-  - {r: 0.1, g: 0.85, b: 0.2, a: 0.6}
-  - {r: 0.1, g: 0.8, b: 1, a: 0.6}
-  - {r: 0.7, g: 0.2, b: 1, a: 0.6}
   clearUIRoot: {fileID: 457641377}
   stageSelectSceneName: TechniqueSelect
   nextStageSceneName: 
   stopTimeOnClear: 1
-  clearFaridUI: {fileID: 1451352937}
+  clearFaridUI: {fileID: 1878209928}
   clearMessageText: {fileID: 1020829155}
   timeText: {fileID: 366832668}
   board: {fileID: 205784702}
@@ -7648,17 +7633,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5173533993652119170, guid: 9286e4c7914bf499bbe2ada70c6daf3c, type: 3}
   m_PrefabInstance: {fileID: 3113054712905033589}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1451352937 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4178091439849523952, guid: 9286e4c7914bf499bbe2ada70c6daf3c, type: 3}
-  m_PrefabInstance: {fileID: 3113054712905033589}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86106b06e3bf44739aa2d7cf656409ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1468814265 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7355847559966827371, guid: 92bace89a2493421195bfa50ef82bf43, type: 3}
@@ -9685,6 +9659,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1859340128441341451, guid: 51ee6642bc422404f95202ea32a75777, type: 3}
   m_PrefabInstance: {fileID: 1841153536}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1878209928 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4178091439849523952, guid: 9286e4c7914bf499bbe2ada70c6daf3c, type: 3}
+  m_PrefabInstance: {fileID: 3113054712905033589}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86106b06e3bf44739aa2d7cf656409ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1895492925
 GameObject:
   m_ObjectHideFlags: 0
