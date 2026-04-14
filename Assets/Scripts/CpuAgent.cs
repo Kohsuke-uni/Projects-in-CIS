@@ -5,6 +5,29 @@ using UnityEngine.SceneManagement;
 
 public class CpuAgent : MonoBehaviour
 {
+    public static bool HasRuntimeDifficultyOverride { get; private set; }
+    public static CpuDifficulty RuntimeDifficultyOverride { get; private set; } = CpuDifficulty.Normal;
+    public static bool HasLastResolvedDifficulty { get; private set; }
+    public static CpuDifficulty LastResolvedDifficulty { get; private set; } = CpuDifficulty.Normal;
+
+    public static void SetRuntimeDifficultyOverride(CpuDifficulty difficulty)
+    {
+        RuntimeDifficultyOverride = difficulty;
+        HasRuntimeDifficultyOverride = true;
+    }
+
+    public static void ClearRuntimeDifficultyOverride()
+    {
+        HasRuntimeDifficultyOverride = false;
+        RuntimeDifficultyOverride = CpuDifficulty.Normal;
+    }
+
+    public static void RememberResolvedDifficulty(CpuDifficulty difficulty)
+    {
+        LastResolvedDifficulty = difficulty;
+        HasLastResolvedDifficulty = true;
+    }
+
     public CpuDifficulty difficulty = CpuDifficulty.Normal;
 
     private Tetromino piece;
@@ -21,21 +44,31 @@ public class CpuAgent : MonoBehaviour
     private void Awake()
     {
         piece = GetComponent<Tetromino>();
-        board = piece.board;
+        board = piece != null ? piece.board : null;
+    }
+
+    private void Start()
+    {
+        if (piece == null)
+            piece = GetComponent<Tetromino>();
+
+        if (piece != null)
+            board = piece.board;
 
         AutoSetDifficultyByScene();
-        
         ApplyDifficulty();
         StartCoroutine(ThinkAndPlay());
     }
 
     private void ApplyDifficulty()
     {
+        RememberResolvedDifficulty(difficulty);
+
         switch (difficulty)
         {
             case CpuDifficulty.Easy:
                 thinkDelay = 0.3f;
-                topK = 3;
+                topK = 2;
                 xStride = 2;
                 wLines = 1.0f; wHoles = 3.5f; wAggHeight = 0.35f; wBump = 0.25f; wMaxHeight = 0.8f;
 
@@ -66,7 +99,6 @@ public class CpuAgent : MonoBehaviour
                 hardDropDelay = 0.02f;
                 break;
         }
-        Debug.Log($"[CPU Apply] diff={difficulty} thinkDelay={thinkDelay} topK={topK} xStride={xStride} rotateStepDelay={rotateStepDelay} moveStepDelay={moveStepDelay} hardDropDelay={hardDropDelay}");
     }
 
     private IEnumerator ThinkAndPlay()
@@ -267,6 +299,13 @@ public class CpuAgent : MonoBehaviour
 
     private void AutoSetDifficultyByScene()
     {
+        if (HasRuntimeDifficultyOverride)
+        {
+            difficulty = RuntimeDifficultyOverride;
+            Debug.Log($"CPU difficulty set from runtime override: {difficulty}");
+            return;
+        }
+
         string sceneName = SceneManager.GetActiveScene().name;
 
         if (sceneName.Contains("CPU_Easy"))
@@ -281,7 +320,5 @@ public class CpuAgent : MonoBehaviour
         {
             difficulty = CpuDifficulty.Hard;
         }
-
-        Debug.Log($"CPU difficulty auto-set to: {difficulty} (Scene: {sceneName})");
     }
 }

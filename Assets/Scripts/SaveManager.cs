@@ -122,6 +122,33 @@ public static class SaveManager
         return Data.bestFortyLineTimeSeconds;
     }
 
+    public static bool RegisterCpuBestTime(CpuDifficulty difficulty, float clearTimeSeconds)
+    {
+        if (clearTimeSeconds <= 0f)
+            return false;
+
+        ref float bestTime = ref GetCpuBestTimeField(difficulty);
+        bool isBest = bestTime < 0f || clearTimeSeconds < bestTime;
+        if (isBest)
+        {
+            bestTime = clearTimeSeconds;
+            Save();
+        }
+
+        return isBest;
+    }
+
+    public static float GetBestCpuTimeSeconds(CpuDifficulty difficulty)
+    {
+        return difficulty switch
+        {
+            CpuDifficulty.Easy => Data.bestCpuEasyTimeSeconds,
+            CpuDifficulty.Normal => Data.bestCpuNormalTimeSeconds,
+            CpuDifficulty.Hard => Data.bestCpuHardTimeSeconds,
+            _ => -1f,
+        };
+    }
+
     public static bool RegisterBestRen(int ren)
     {
         if (ren < 0) return false;
@@ -189,6 +216,19 @@ public static class SaveManager
         };
         Data.exercisePerformance.Add(performance);
         return performance;
+    }
+
+    private static ref float GetCpuBestTimeField(CpuDifficulty difficulty)
+    {
+        switch (difficulty)
+        {
+            case CpuDifficulty.Easy:
+                return ref Data.bestCpuEasyTimeSeconds;
+            case CpuDifficulty.Normal:
+                return ref Data.bestCpuNormalTimeSeconds;
+            default:
+                return ref Data.bestCpuHardTimeSeconds;
+        }
     }
 
     private static void EnsureLoaded()

@@ -165,6 +165,11 @@ public class PageTurner : MonoBehaviour
         {
             return "SRS_T_Stage Select";
         }
+        if (!string.IsNullOrWhiteSpace(pagesName) &&
+            pagesName.IndexOf("REN", System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return "REN_Stage Select";
+        }
 
         return titleSceneName;
     }

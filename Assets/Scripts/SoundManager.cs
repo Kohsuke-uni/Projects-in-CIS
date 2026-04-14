@@ -246,6 +246,7 @@ public class SoundManager : MonoBehaviour
             sceneName.Contains("TSD_Stage Select") ||
             sceneName.Contains("TST_Stage Select") ||
             sceneName.Contains("REN_Stage Select") ||
+            sceneName.Contains("CPU_Stage Select") ||
             sceneName.Contains("About") || 
             sceneName.Contains("SRS_Main") ||
             sceneName.Contains("Settings"))

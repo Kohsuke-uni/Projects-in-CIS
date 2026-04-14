@@ -3,6 +3,24 @@ using System.Collections.Generic;
 
 public class NextQueueUI : MonoBehaviour
 {
+    public enum TetrominoType
+    {
+        I = 0,
+        J = 1,
+        L = 2,
+        O = 3,
+        S = 4,
+        T = 5,
+        Z = 6
+    }
+
+    [System.Serializable]
+    public struct PiecePositionOverride
+    {
+        public TetrominoType pieceType;
+        public Vector2 localOffset;
+    }
+
     [Header("References")]
     public Spawner spawner;
     public Transform listRoot;
@@ -12,6 +30,8 @@ public class NextQueueUI : MonoBehaviour
     [Header("Layout")]
     public Vector3 itemOffset = new Vector3(0, -1.1f, 0);
     public float itemScale = 0.5f;
+    [Tooltip("各Next枠の基準位置に対するピースごとの補正")]
+    public PiecePositionOverride[] piecePositionOverrides;
 
     [Header("Rendering")]
     public bool overrideSortingOrder = true;
@@ -82,13 +102,22 @@ public class NextQueueUI : MonoBehaviour
 
             Tetromino prefab = activePreviewPrefabs[idx];
             var go = Instantiate(prefab.gameObject, listRoot != null ? listRoot : transform);
+            go.SetActive(false);
 
-            Vector3 pos = i * itemOffset;
-            if (idx == 0 || idx == 3) // I or O
-                pos.x = -0.36f;
+            Vector3 pos = GetPositionForPiece(idx, i);
             go.transform.localPosition = pos;
             go.transform.localRotation = Quaternion.identity;
             go.transform.localScale = Vector3.one * itemScale;
+
+            Tetromino tet = go.GetComponent<Tetromino>();
+            if (tet != null)
+            {
+                tet.isPreviewOnly = true;
+                tet.enabled = false;
+                tet.board = null;
+                tet.spawner = null;
+                tet.ghost = null;
+            }
 
             if (overrideSortingOrder)
             {
@@ -97,17 +126,40 @@ public class NextQueueUI : MonoBehaviour
                     renderers[r].sortingOrder = previewSortingOrder;
             }
 
-            foreach (var mb in go.GetComponentsInChildren<MonoBehaviour>())
-                mb.enabled = false;
-            foreach (var col in go.GetComponentsInChildren<Collider2D>())
-                col.enabled = false;
-            foreach (var rb in go.GetComponentsInChildren<Rigidbody2D>())
+            foreach (var mb in go.GetComponentsInChildren<MonoBehaviour>(true))
+                Destroy(mb);
+            foreach (var col in go.GetComponentsInChildren<Collider2D>(true))
+                Destroy(col);
+            foreach (var rb in go.GetComponentsInChildren<Rigidbody2D>(true))
                 Destroy(rb);
 
-            var ghost = go.GetComponentInChildren<GhostPiece>();
-            if (ghost != null) Destroy(ghost.gameObject);
-
+            go.SetActive(true);
             previews.Add(go);
         }
+    }
+
+    private Vector3 GetPositionForPiece(int pieceIndex, int queueIndex)
+    {
+        Vector3 pos = queueIndex * itemOffset;
+
+        if (piecePositionOverrides != null)
+        {
+            for (int i = 0; i < piecePositionOverrides.Length; i++)
+            {
+                if ((int)piecePositionOverrides[i].pieceType != pieceIndex)
+                    continue;
+
+                Vector2 offset = piecePositionOverrides[i].localOffset;
+                pos.x += offset.x;
+                pos.y += offset.y;
+                return pos;
+            }
+        }
+
+        // Preserve the previous default centering for wide/square pieces
+        if (pieceIndex == (int)TetrominoType.I || pieceIndex == (int)TetrominoType.O)
+            pos.x = -0.36f;
+
+        return pos;
     }
 }
