@@ -1693,8 +1693,10 @@ MonoBehaviour:
   gridVisual: {fileID: 0}
   moveGridVisualWithBoard: 1
   garbagePrefab: {fileID: 0}
+  garbageBlockTag: 
   fixedBlockTag: FixedBlock
   disableLineClear: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!4 &205784703
 Transform:
   m_ObjectHideFlags: 0
@@ -3332,6 +3334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
+  cpuDifficulty: 1
   targetExercise: {fileID: 0}
   sessionExercises: []
   useExerciseTargetScene: 1
@@ -4184,6 +4187,7 @@ MonoBehaviour:
   classicPreviewPrefabs: []
   itemOffset: {x: 0, y: -2.7, z: 0}
   itemScale: 0.8
+  piecePositionOverrides: []
   overrideSortingOrder: 1
   previewSortingOrder: 2
 --- !u!1 &750430238
@@ -6458,8 +6462,10 @@ MonoBehaviour:
   gridVisual: {fileID: 0}
   moveGridVisualWithBoard: 1
   garbagePrefab: {fileID: 0}
+  garbageBlockTag: 
   fixedBlockTag: FixedBlock
   disableLineClear: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!4 &1265424790
 Transform:
   m_ObjectHideFlags: 0
@@ -6495,12 +6501,12 @@ MonoBehaviour:
   filledColor: {r: 0.3, g: 1, b: 0.3, a: 0.25}
   showStepHint: 1
   stepHintColors:
-  - {r: 1, g: 0.25, b: 0.25, a: 0.6}
-  - {r: 1, g: 0.6, b: 0.1, a: 0.6}
-  - {r: 1, g: 1, b: 0.1, a: 0.6}
-  - {r: 0.1, g: 0.85, b: 0.2, a: 0.6}
-  - {r: 0.1, g: 0.8, b: 1, a: 0.6}
-  - {r: 0.7, g: 0.2, b: 1, a: 0.6}
+  - {r: 0.8113208, g: 0.7883588, b: 0.7883588, a: 0.2627451}
+  - {r: 0.8113208, g: 0.7883588, b: 0.7883588, a: 0.2627451}
+  - {r: 0.8113208, g: 0.7883588, b: 0.7883588, a: 0.2627451}
+  - {r: 0.8113208, g: 0.7883588, b: 0.7883588, a: 0.2627451}
+  - {r: 0.8113208, g: 0.7883588, b: 0.7883588, a: 0.2627451}
+  - {r: 0.8113208, g: 0.7883588, b: 0.7883588, a: 0.2627451}
   clearUIRoot: {fileID: 0}
   stageSelectSceneName: TechniqueSelect
   nextStageSceneName: 
@@ -10700,8 +10706,11 @@ MonoBehaviour:
   keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
+  skipSpawnValidation: 0
   isMini: 0
   enablePlayerInput: 1
+  isPreviewOnly: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!212 &241011667311681318
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10912,8 +10921,11 @@ MonoBehaviour:
   keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
+  skipSpawnValidation: 0
   isMini: 0
   enablePlayerInput: 1
+  isPreviewOnly: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!1 &1312087950979975889
 GameObject:
   m_ObjectHideFlags: 0
@@ -11837,8 +11849,11 @@ MonoBehaviour:
   keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
+  skipSpawnValidation: 0
   isMini: 0
   enablePlayerInput: 1
+  isPreviewOnly: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!4 &8495925649941786639
 Transform:
   m_ObjectHideFlags: 0
