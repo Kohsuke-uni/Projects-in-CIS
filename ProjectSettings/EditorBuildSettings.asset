@@ -147,13 +147,17 @@ EditorBuildSettings:
     path: Assets/Scenes/MakeShape_Heart.unity
     guid: 75969c23747d20b4eb4d5953e5c98328
   - enabled: 1
+    path: Assets/Scenes/MakeShape_Hard.unity
+    guid: 59a486a91991bd545a5f2b55485214f5
+  - enabled: 1
+    path: Assets/Scenes/Art_Stage Select.unity
+    guid: 04340f6038ee88a42a0e0cabf5f6e681
+  - enabled: 1
     path: Assets/Scenes/Settings.unity
     guid: 855ad2c828de243edb7dd5bffbbb7781
   - enabled: 1
     path: Assets/Scenes/About_Art.unity
     guid: fac888459e7a6d44793089d757f834e4
-    path: Assets/Scenes/CPU.unity
-    guid: e39152c8406a14fdb8ceca0e28f36ca8
   - enabled: 1
     path: Assets/Scenes/CPU_Stage Select.unity
     guid: e28345e34832e4ddfba1fd5d0c8fb57f
