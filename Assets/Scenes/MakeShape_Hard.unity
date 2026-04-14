@@ -762,7 +762,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Create a heart shape using only Z pieces!
+  m_text: "Create a \nheart shape!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
   m_sharedMaterial: {fileID: -2504890859898317026, guid: 6af94fbdd2e124181a1892a853cdf440, type: 2}
@@ -6397,7 +6397,7 @@ GameObject:
   - component: {fileID: 1265424789}
   - component: {fileID: 1265424788}
   - component: {fileID: 1265424786}
-  - component: {fileID: 1265424793}
+  - component: {fileID: 1265424794}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6475,7 +6475,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1265424793
+--- !u!114 &1265424794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6484,13 +6484,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1265424785}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87e08c827e53e28428cbea242bd25370, type: 3}
+  m_Script: {fileID: 11500000, guid: cc063af249c716949b502aad69d5d124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shapeType: 0
   customTargetCells: []
   shapeOffset: {x: 0, y: 0}
-  spawnOnlyPieceIndex: 6
   targetCellPrefab: {fileID: 0}
   pendingColor: {r: 1, g: 0.4, b: 0.4, a: 0.35}
   filledColor: {r: 0.3, g: 1, b: 0.3, a: 0.25}
@@ -6502,7 +6501,7 @@ MonoBehaviour:
   - {r: 0.1, g: 0.85, b: 0.2, a: 0.6}
   - {r: 0.1, g: 0.8, b: 1, a: 0.6}
   - {r: 0.7, g: 0.2, b: 1, a: 0.6}
-  clearUIRoot: {fileID: 457641377}
+  clearUIRoot: {fileID: 0}
   stageSelectSceneName: TechniqueSelect
   nextStageSceneName: 
   stopTimeOnClear: 1
