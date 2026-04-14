@@ -2399,8 +2399,8 @@ MonoBehaviour:
   visibleLines: 20
   cellHeight: 24
   spacing: 2
-  emptyColor: {r: 0, g: 0, b: 0, a: 0}
-  normalColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.95}
+  emptyColor: {r: 1, g: 1, b: 1, a: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 0}
   dangerColor: {r: 1, g: 0.35, b: 0.35, a: 1}
   dangerThreshold: 8
   blinkWhenDanger: 1
