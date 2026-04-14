@@ -108,11 +108,8 @@ public class HoldPieceUI : MonoBehaviour
         if (idx < 0 || idx >= activePreviewPrefabs.Length) return;
 
         Tetromino prefab = activePreviewPrefabs[idx];
-        Transform parent = displayRoot != null ? displayRoot : transform;
-
-        currentPreview = Instantiate(prefab.gameObject, parent);
+        currentPreview = Instantiate(prefab.gameObject, displayRoot != null ? displayRoot : transform);
         currentPreview.SetActive(false);
-
         currentPreview.transform.localPosition = GetOffsetForPiece(idx);
         currentPreview.transform.localRotation = Quaternion.identity;
         currentPreview.transform.localScale = Vector3.one * itemScale;
@@ -135,21 +132,11 @@ public class HoldPieceUI : MonoBehaviour
         }
 
         foreach (var mb in currentPreview.GetComponentsInChildren<MonoBehaviour>(true))
-        {
-            if (mb is Tetromino)
-                continue;
-            mb.enabled = false;
-        }
-
+            Destroy(mb);
         foreach (var col in currentPreview.GetComponentsInChildren<Collider2D>(true))
-            col.enabled = false;
-
+            Destroy(col);
         foreach (var rb in currentPreview.GetComponentsInChildren<Rigidbody2D>(true))
             Destroy(rb);
-
-        var ghost = currentPreview.GetComponentInChildren<GhostPiece>(true);
-        if (ghost != null)
-            Destroy(ghost.gameObject);
 
         currentPreview.SetActive(true);
     }

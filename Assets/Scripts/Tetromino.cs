@@ -77,6 +77,7 @@ public class Tetromino : MonoBehaviour
     public void CpuHardDropAndLock()
     {
         while (TryMove(Vector3.down)) { }
+        PlayHardDropSE();
         Lock();
     }
 
@@ -100,7 +101,7 @@ public class Tetromino : MonoBehaviour
         dasTimer = 0f;
         arrTimer = 0f;
         if (TryMoveHorizontalOnce(-1))
-            SoundManager.Instance?.PlaySE(SeType.Move);
+            PlayActionSE(SeType.Move);
     }
 
     public void InputMoveRight()
@@ -111,7 +112,7 @@ public class Tetromino : MonoBehaviour
         dasTimer = 0f;
         arrTimer = 0f;
         if (TryMoveHorizontalOnce(+1))
-            SoundManager.Instance?.PlaySE(SeType.Move);
+            PlayActionSE(SeType.Move);
     }
 
     public void InputStopHorizontal()
@@ -127,7 +128,7 @@ public class Tetromino : MonoBehaviour
 
         fastDropping = true;
         if (TryMove(Vector3.down))
-            SoundManager.Instance?.PlaySE(SeType.Move);
+            PlayActionSE(SeType.Move);
     }
 
     public void InputSoftDropEnd()
@@ -140,7 +141,7 @@ public class Tetromino : MonoBehaviour
         if (!enablePlayerInput || locked || GameControlUI.IsPaused) return;
 
         while (TryMove(Vector3.down)) { }
-        SoundManager.Instance?.PlaySE(SeType.HardDrop);
+        PlayHardDropSE();
         Lock();
     }
 
@@ -150,7 +151,7 @@ public class Tetromino : MonoBehaviour
 
         if (spawner != null && spawner.RequestHold(this))
         {
-            SoundManager.Instance?.PlaySE(SeType.Hold);
+            PlayActionSE(SeType.Hold);
         }
     }
 
@@ -196,7 +197,15 @@ public class Tetromino : MonoBehaviour
         if (board == null) board = FindObjectOfType<Board>();
 
         Vector3 p = transform.position;
-        transform.position = new Vector3(Mathf.Round(p.x), Mathf.Round(p.y), 0f);
+        if (board != null)
+        {
+            Vector2Int spawnCell = board.WorldToGrid(p);
+            transform.position = board.GridToWorld(spawnCell);
+        }
+        else
+        {
+            transform.position = new Vector3(Mathf.Round(p.x), Mathf.Round(p.y), 0f);
+        }
 
         if (board == null || !board.IsValidPosition(this, Vector3.zero))
         {
@@ -370,7 +379,7 @@ public class Tetromino : MonoBehaviour
         {
             if (TryMove(Vector3.up))
             {
-                SoundManager.Instance?.PlaySE(SeType.Move);
+                PlayActionSE(SeType.Move);
                 if (!hardDropOnlyLock) ArmInactivityTimerNow();
             }
         }
@@ -439,7 +448,7 @@ public class Tetromino : MonoBehaviour
             }
             else
             {
-                SoundManager.Instance?.PlaySE(SeType.Move);
+                PlayActionSE(SeType.Move);
             }
         }
     }
@@ -453,7 +462,7 @@ public class Tetromino : MonoBehaviour
             if (RotateSRS(dir))
             {
                 rotated = true;
-                SoundManager.Instance?.PlaySE(SeType.Rotate);
+                PlayActionSE(SeType.Rotate);
 
                 if (grounded && !hardDropOnlyLock)
                 {
@@ -489,7 +498,7 @@ public class Tetromino : MonoBehaviour
             {
                 if (fastDropping)
                 {
-                    SoundManager.Instance?.PlaySE(SeType.Move);
+                    PlayActionSE(SeType.Move);
                 }
                 continue;
             }
@@ -721,7 +730,7 @@ public class Tetromino : MonoBehaviour
         locked = true;
         lastLockWasTSpin = false;
 
-        SoundManager.Instance?.PlaySE(SeType.Lock);
+        PlayActionSE(SeType.Lock);
 
         if (ghost != null)
         {
@@ -744,6 +753,12 @@ public class Tetromino : MonoBehaviour
         if (versusJudge != null)
         {
             versusJudge.OnLinesCleared(this, board, linesCleared);
+            if (versusJudge.IsStageCleared)
+            {
+                enabled = false;
+                Destroy(gameObject);
+                return;
+            }
         }
 
         // ② そのあと必ずゴミ処理（ここ重要）
@@ -857,6 +872,19 @@ public class Tetromino : MonoBehaviour
         }
 
         SoundManager.Instance.PlaySE(SeType.LineClear);
+    }
+
+    private void PlayActionSE(SeType type)
+    {
+        if (!enablePlayerInput)
+            return;
+
+        SoundManager.Instance?.PlaySE(type);
+    }
+
+    private void PlayHardDropSE()
+    {
+        SoundManager.Instance?.PlaySE(SeType.HardDrop);
     }
 
     private bool EvaluateTSpinAtCurrentPosition()

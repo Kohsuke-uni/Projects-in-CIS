@@ -30,6 +30,8 @@ public class Board : MonoBehaviour
 
     [Header("Garbage Settings")]
     public GameObject garbagePrefab;
+    [Tooltip("ガベージブロックに付ける任意タグ。通常は空のままでOK")]
+    public string garbageBlockTag = "";
 
     [Header("Special Blocks")]
     public string fixedBlockTag = "FixedBlock";
@@ -399,6 +401,8 @@ public class Board : MonoBehaviour
 
     private void AddGarbageLine(int hole)
     {
+        ClearTopRowForGarbageRise();
+
         Debug.Log($"[Board:{name}] AddGarbageLine called hole={hole}");
 
         for (int y = size.y - 2; y >= 0; y--)
@@ -433,18 +437,37 @@ public class Board : MonoBehaviour
                 block.AddComponent<SpriteRenderer>();
             }
 
-            block.tag = fixedBlockTag;
+            if (!string.IsNullOrEmpty(garbageBlockTag))
+                block.tag = garbageBlockTag;
 
             Vector2Int cell = new Vector2Int(x, 0);
             grid[x, 0] = block.transform;
             block.transform.position = GridToWorld(cell);
-
+            
             if (blockContainer != null)
             {
                 block.transform.SetParent(blockContainer, true);
             }
 
             Debug.Log($"[Board:{name}] Garbage block placed at x={x}, y=0");
+        }
+    }
+
+    private void ClearTopRowForGarbageRise()
+    {
+        int topY = size.y - 1;
+        if (topY < 0)
+            return;
+
+        for (int x = 0; x < size.x; x++)
+        {
+            Transform block = grid[x, topY];
+            if (block == null)
+                continue;
+
+            block.gameObject.SetActive(false);
+            Destroy(block.gameObject);
+            grid[x, topY] = null;
         }
     }
 

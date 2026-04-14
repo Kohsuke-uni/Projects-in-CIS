@@ -53,27 +53,27 @@ MonoBehaviour:
   characterPanel: {fileID: 1145504659044718378}
   characterImage: {fileID: 6359926487555491520}
   characterSprites:
-  - {fileID: 21300000, guid: ff0e6b3626e834ce793e9c180eba5195, type: 3}
-  - {fileID: 21300000, guid: 0b82e258cd8f242c09eefa631a04a571, type: 3}
-  - {fileID: 21300000, guid: 0b82e258cd8f242c09eefa631a04a571, type: 3}
-  - {fileID: 21300000, guid: 86a41c222a2394af4bc4491addd4e72e, type: 3}
+  - {fileID: 21300000, guid: eb377cfaf0ad24636a012540811810ef, type: 3}
+  - {fileID: 21300000, guid: c1ce3d7dccf424de2a678e353046a107, type: 3}
+  - {fileID: 21300000, guid: c1ce3d7dccf424de2a678e353046a107, type: 3}
+  - {fileID: 21300000, guid: 9776f2135770c47cfa75ea87a3e11b57, type: 3}
   spriteRectOverrides:
   - overrideRect: 1
-    x: -572
+    x: -504
     y: -144
     startY: -1015
     endY: -144
     width: 917
     height: 832
   - overrideRect: 1
-    x: -329
+    x: -514
     y: -144
     startY: -1015
     endY: -144
     width: 1234
     height: 832
   - overrideRect: 1
-    x: -329
+    x: -514
     y: -144
     startY: -1015
     endY: -144
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0b82e258cd8f242c09eefa631a04a571, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c1ce3d7dccf424de2a678e353046a107, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
