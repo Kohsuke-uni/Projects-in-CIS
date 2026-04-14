@@ -2301,6 +2301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1378077670}
   - component: {fileID: 1378077669}
+  - component: {fileID: 1378077671}
   m_Layer: 0
   m_Name: Board_CPU
   m_TagString: Untagged
@@ -2331,6 +2332,21 @@ MonoBehaviour:
   garbageBlockTag: 
   fixedBlockTag: FixedBlock
   disableLineClear: 0
+  pendingGarbageSystem: {fileID: 1378077671}
+--- !u!114 &1378077671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378077668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e178b36a688f4e73b117d0b984dfb5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetBoard: {fileID: 1378077669}
+  useUnscaledTime: 0
 --- !u!4 &1378077670
 Transform:
   m_ObjectHideFlags: 0
@@ -2900,6 +2916,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1768445136}
   - component: {fileID: 1768445135}
+  - component: {fileID: 1768445137}
   m_Layer: 0
   m_Name: Board_Player
   m_TagString: Untagged
@@ -2930,6 +2947,21 @@ MonoBehaviour:
   garbageBlockTag: 
   fixedBlockTag: FixedBlock
   disableLineClear: 0
+  pendingGarbageSystem: {fileID: 1768445137}
+--- !u!114 &1768445137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768445134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e178b36a688f4e73b117d0b984dfb5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetBoard: {fileID: 1768445135}
+  useUnscaledTime: 0
 --- !u!4 &1768445136
 Transform:
   m_ObjectHideFlags: 0

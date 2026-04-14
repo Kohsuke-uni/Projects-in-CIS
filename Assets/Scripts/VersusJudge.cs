@@ -44,9 +44,8 @@ public class VersusJudge : MonoBehaviour
     private int cpuRen = 0;
     private bool playerLastWasB2B = false;
     private bool cpuLastWasB2B = false;
-    private int playerPendingGarbage = 0;
-    private int cpuPendingGarbage = 0;
     private bool lastClearWasNewRecord = false;
+    private int nextPacketId = 1;
 
     private void Start()
     {
@@ -66,8 +65,6 @@ public class VersusJudge : MonoBehaviour
         cpuRen = 0;
         playerLastWasB2B = false;
         cpuLastWasB2B = false;
-        playerPendingGarbage = 0;
-        cpuPendingGarbage = 0;
         lastClearWasNewRecord = false;
         RefreshBestTimeUI();
 
@@ -157,12 +154,9 @@ public class VersusJudge : MonoBehaviour
 
         if (opponentPending != null)
         {
-            for (int i = 0; i < remainingAttack; i++)
-            {
-                int packetId = nextPacketId++;
-                opponentPending.ReceiveGarbagePacket(packetId, 1, garbageDelay);
-                Debug.Log($"[VersusJudge] queued packet id={packetId}, lines=1, target={opponent.name}");
-            }
+            int packetId = nextPacketId++;
+            opponentPending.ReceiveGarbagePacket(packetId, remainingAttack, garbageDelay);
+            Debug.Log($"[VersusJudge] queued packet id={packetId}, lines={remainingAttack}, target={opponent.name}");
         }
         else
         {
@@ -552,12 +546,5 @@ public class VersusJudge : MonoBehaviour
         int minutes = Mathf.FloorToInt(seconds / 60f);
         float remainingSeconds = seconds % 60f;
         return $"{minutes}:{remainingSeconds:00.00}";
-    }
-
-    private bool IsTSpinMini(Tetromino piece, int lines)
-    {
-        if (piece == null) return false;
-        if (lines != 1) return false;
-        return piece.typeIndex == 5 && piece.lastMoveWasRotation && piece.isMini;
     }
 }
