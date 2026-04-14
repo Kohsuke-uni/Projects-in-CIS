@@ -44,8 +44,8 @@ public class MakeShapeHard : MonoBehaviour
     [Tooltip("ターゲットセルに表示するプレハブ（SpriteRenderer 付き）。未設定時は白い四角で代替")]
     public GameObject targetCellPrefab;
 
-    [Tooltip("未充填セルのオーバーレイ色（ステップ色が無効なときに使用）")]
-    public Color pendingColor = new Color(1f, 0.5f, 0.5f, 0.18f);
+    [Tooltip("未充填セルのオーバーレイ色")]
+    public Color pendingColor = new Color(0.75f, 0.75f, 0.75f, 0.4f);
 
     [Tooltip("充填済みセルのオーバーレイ色")]
     public Color filledColor = new Color(0.3f, 1f, 0.3f, 0.25f);
