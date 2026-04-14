@@ -2409,7 +2409,7 @@ MonoBehaviour:
   winClearMessage: You defeated the CPU!
   loseResultMessage: YOU LOSE
   loseClearMessage: You were topped out...
-  garbageDelay: 0.8
+  garbageDelay: 5
 --- !u!114 &1263199678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2426,7 +2426,7 @@ MonoBehaviour:
   howToPlayPanel: {fileID: 1535150234}
   desktopHowToPlayPanel: {fileID: 0}
   mobileHowToPlayPanel: {fileID: 0}
-  stageSelectSceneName: REN_StageSelect
+  stageSelectSceneName: CPU_StageSelect
   titleSceneName: Title
 --- !u!114 &1263199679
 MonoBehaviour:

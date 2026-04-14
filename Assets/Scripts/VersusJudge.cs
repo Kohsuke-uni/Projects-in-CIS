@@ -144,9 +144,12 @@ public class VersusJudge : MonoBehaviour
 
         if (opponentPending != null)
         {
-            int packetId = nextPacketId++;
-            opponentPending.ReceiveGarbagePacket(packetId, remainingAttack, garbageDelay);
-            Debug.Log($"[VersusJudge] queued packet id={packetId}, lines={remainingAttack}, target={opponent.name}");
+            for (int i = 0; i < remainingAttack; i++)
+            {
+                int packetId = nextPacketId++;
+                opponentPending.ReceiveGarbagePacket(packetId, 1, garbageDelay);
+                Debug.Log($"[VersusJudge] queued packet id={packetId}, lines=1, target={opponent.name}");
+            }
         }
         else
         {

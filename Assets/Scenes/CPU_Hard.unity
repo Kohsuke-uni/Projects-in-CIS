@@ -1028,7 +1028,7 @@ MonoBehaviour:
   timeText: {fileID: 0}
   clearFaridUI: {fileID: 1002931733}
   retrySceneName: CPU_Hard
-  stageSelectSceneName: StageSelect
+  stageSelectSceneName: CPU_StageSelect
   stopTimeOnFinish: 1
   winResultMessage: YOU WIN
   winClearMessage: You defeated the CPU!
@@ -1434,6 +1434,9 @@ MonoBehaviour:
   hardDropSE: {fileID: 8300000, guid: e3382891c1edc456999eab9deb53bac1, type: 3}
   lockSE: {fileID: 8300000, guid: 1585d1e9d0bc74ee7b75ce9dd75292f9, type: 3}
   lineClearSE: {fileID: 8300000, guid: 468dc6797504e46aab541ed967d2fbc8, type: 3}
+  tSpinDoubleSE: {fileID: 0}
+  tSpinTripleSE: {fileID: 0}
+  quadClearSEs: []
   stageClearSE: {fileID: 8300000, guid: 4ff98dd2297264424961fb4938740e67, type: 3}
   stageFailSE: {fileID: 8300000, guid: 0ae0bc170034449e8896085b2351118c, type: 3}
   holdSE: {fileID: 8300000, guid: 934b2f8177822401a8e7f26fa2032b66, type: 3}
@@ -1443,6 +1446,9 @@ MonoBehaviour:
   hardDropSEVolume: 0.02
   lockSEVolume: 0.15
   lineClearSEVolume: 1
+  tSpinDoubleSEVolume: 1
+  tSpinTripleSEVolume: 1
+  quadClearSEVolume: 1
   stageClearSEVolume: 1
   stageFailSEVolume: 1
   holdSEVolume: 0.3
@@ -1519,6 +1525,8 @@ MonoBehaviour:
   classicPreviewPrefabs: []
   itemOffset: {x: 0, y: -2.5, z: 0}
   itemScale: 0.8
+  overrideSortingOrder: 1
+  previewSortingOrder: 2
 --- !u!1 &460217225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1757,9 +1765,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TSpinDoubleJudge, Assembly-CSharp
-        m_MethodName: OnNextStageButton
+      - m_Target: {fileID: 305957287}
+        m_TargetAssemblyTypeName: VersusJudge, Assembly-CSharp
+        m_MethodName: OnRetryButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3444,8 +3452,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TSpinDoubleJudge, Assembly-CSharp
+      - m_Target: {fileID: 305957287}
+        m_TargetAssemblyTypeName: VersusJudge, Assembly-CSharp
         m_MethodName: OnRetryButton
         m_Mode: 1
         m_Arguments:
@@ -3661,8 +3669,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TSpinDoubleJudge, Assembly-CSharp
+      - m_Target: {fileID: 305957287}
+        m_TargetAssemblyTypeName: VersusJudge, Assembly-CSharp
         m_MethodName: OnStageSelectButton
         m_Mode: 1
         m_Arguments:
@@ -4203,6 +4211,8 @@ MonoBehaviour:
   itemScale: 1
   itemOffset: {x: 0, y: 0, z: 0}
   piecePositionOverrides: []
+  overrideSortingOrder: 1
+  previewSortingOrder: 2
 --- !u!1 &1965504575
 GameObject:
   m_ObjectHideFlags: 0

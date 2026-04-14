@@ -134,7 +134,7 @@ public class PendingGarbageSystem : MonoBehaviour
 
     public void ApplyPendingGarbage()
     {
-        ReleaseReadyPackets();
+        ForceReleaseNextReadyPacket();
     }
 
     public void ForceReleaseNextReadyPacket()
