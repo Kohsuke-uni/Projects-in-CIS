@@ -6,7 +6,7 @@ Install Unity 2022.3.55f1 Inside Unity Hub, install Unity Editor version 2022.3.
 
 If Unity requests the installation of Visual Studio or related components during setup, please allow all of them.
 
-Clone the Repository Clone the following GitHub repository to your local machine: https://github.com/Adiiiii117/Software_Design
+[Clone the Repository Clone the following GitHub repository to your local machine:https: [//github.com/Kohsuke-uni/Projects-in-CIS](https://github.com/Kohsuke-uni/Projects-in-CIS)
 
 (Optional but recommended) Install Visual Studio Code for editing and reviewing C# scripts inside the Scripts directory.
 
