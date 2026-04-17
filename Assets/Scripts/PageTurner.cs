@@ -67,6 +67,12 @@ public class PageTurner : MonoBehaviour
         ShowPage(index);
     }
 
+    public void OnBackButton()
+    {
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+        SceneManager.LoadScene(GetReturnSceneName());
+    }
+
     public void Prev()
     {
         SoundManager.Instance?.PlaySE(SeType.ButtonClick);
@@ -169,6 +175,11 @@ public class PageTurner : MonoBehaviour
             pagesName.IndexOf("REN", System.StringComparison.OrdinalIgnoreCase) >= 0)
         {
             return "REN_Stage Select";
+        }
+        if (!string.IsNullOrWhiteSpace(pagesName) &&
+            pagesName.IndexOf("Art", System.StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return "Art_Stage Select";
         }
 
         return titleSceneName;

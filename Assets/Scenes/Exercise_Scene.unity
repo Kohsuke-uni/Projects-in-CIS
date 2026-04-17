@@ -1407,8 +1407,10 @@ MonoBehaviour:
   gridVisual: {fileID: 0}
   moveGridVisualWithBoard: 1
   garbagePrefab: {fileID: 0}
+  garbageBlockTag: 
   fixedBlockTag: FixedBlock
   disableLineClear: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!4 &205784703
 Transform:
   m_ObjectHideFlags: 0
@@ -3091,6 +3093,7 @@ MonoBehaviour:
   classicPreviewPrefabs: []
   itemOffset: {x: 0, y: -2.7, z: 0}
   itemScale: 0.8
+  piecePositionOverrides: []
   overrideSortingOrder: 1
   previewSortingOrder: 2
 --- !u!1 &750430238
@@ -4834,8 +4837,10 @@ MonoBehaviour:
   gridVisual: {fileID: 0}
   moveGridVisualWithBoard: 1
   garbagePrefab: {fileID: 0}
+  garbageBlockTag: 
   fixedBlockTag: FixedBlock
   disableLineClear: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!4 &1265424790
 Transform:
   m_ObjectHideFlags: 0
@@ -5051,7 +5056,7 @@ MonoBehaviour:
   clearUIRoot: {fileID: 1769750587}
   clearButtonsRoot: {fileID: 1981588760}
   newRecordRoot: {fileID: 202458118}
-  stageSelectSceneName: REN_StageSelect
+  stageSelectSceneName: REN_Stage Select
   nextStageSceneName: Exercise_Scene
   stopTimeOnClear: 1
   clearFaridUI: {fileID: 438506535}
@@ -9186,8 +9191,11 @@ MonoBehaviour:
   keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
+  skipSpawnValidation: 0
   isMini: 0
   enablePlayerInput: 1
+  isPreviewOnly: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!212 &241011667311681318
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9398,8 +9406,11 @@ MonoBehaviour:
   keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
+  skipSpawnValidation: 0
   isMini: 0
   enablePlayerInput: 1
+  isPreviewOnly: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!1 &1312087950979975889
 GameObject:
   m_ObjectHideFlags: 0
@@ -9788,16 +9799,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8955680113224175349, guid: 92bace89a2493421195bfa50ef82bf43, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8955680113224175349, guid: 92bace89a2493421195bfa50ef82bf43, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1265424791}
+      objectReference: {fileID: 1265424792}
     - target: {fileID: 8955680113224175349, guid: 92bace89a2493421195bfa50ef82bf43, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnStageSelectButton
       objectReference: {fileID: 0}
     - target: {fileID: 8955680113224175349, guid: 92bace89a2493421195bfa50ef82bf43, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PracticeJudge, Assembly-CSharp
+      value: ExerciseSceneLoader, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3603539088910789873, guid: 92bace89a2493421195bfa50ef82bf43, type: 3}
@@ -10327,8 +10342,11 @@ MonoBehaviour:
   keepCellSpritesUpright: 1
   typeIndex: 0
   spawnedFromHold: 0
+  skipSpawnValidation: 0
   isMini: 0
   enablePlayerInput: 1
+  isPreviewOnly: 0
+  pendingGarbageSystem: {fileID: 0}
 --- !u!4 &8495925649941786639
 Transform:
   m_ObjectHideFlags: 0

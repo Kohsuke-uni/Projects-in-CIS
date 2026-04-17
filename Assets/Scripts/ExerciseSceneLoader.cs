@@ -464,6 +464,26 @@ public class ExerciseSceneLoader : MonoBehaviour
             practiceJudge.OnNextStageButton();
     }
 
+    public void OnStageSelectButton()
+    {
+        if (isREN)
+        {
+            if (renJudge == null)
+                renJudge = FindObjectOfType<RENJudge>();
+
+            if (renJudge != null && renJudge.enabled)
+                renJudge.OnStageSelectButton();
+
+            return;
+        }
+
+        if (practiceJudge == null)
+            practiceJudge = FindObjectOfType<PracticeJudge>();
+
+        if (practiceJudge != null && practiceJudge.enabled)
+            practiceJudge.OnStageSelectButton();
+    }
+
     private bool TryResolveNextExercise(out SRSExercise nextExercise)
     {
         nextExercise = null;

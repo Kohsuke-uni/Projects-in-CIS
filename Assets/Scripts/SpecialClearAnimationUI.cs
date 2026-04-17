@@ -10,7 +10,8 @@ public class SpecialClearAnimationUI : MonoBehaviour
     {
         Tetris,
         TSpinDouble,
-        TSpinTriple
+        TSpinTriple,
+        PerfectClear
     }
 
     [Header("Layout")]
@@ -43,6 +44,11 @@ public class SpecialClearAnimationUI : MonoBehaviour
     public float tSpinTripleRingStartRadius = 30f;
     public float tSpinTripleRingEndRadius = 54f;
     public float tSpinTripleCenterParticleDistance = 40f;
+    public int perfectClearParticleCount = 24;
+    public float perfectClearParticleSize = 8f;
+    public float perfectClearRingStartRadius = 42f;
+    public float perfectClearRingEndRadius = 138f;
+    public float perfectClearSecondaryRingRatio = 0.6f;
 
     readonly List<Graphic> activeGraphics = new List<Graphic>();
     Coroutine playingRoutine;
@@ -73,6 +79,11 @@ public class SpecialClearAnimationUI : MonoBehaviour
         Play(SpecialClearType.TSpinTriple);
     }
 
+    public void PlayPerfectClear()
+    {
+        Play(SpecialClearType.PerfectClear);
+    }
+
     public void Play(SpecialClearType clearType)
     {
         if (animationLayer == null)
@@ -97,6 +108,9 @@ public class SpecialClearAnimationUI : MonoBehaviour
                 break;
             case SpecialClearType.TSpinTriple:
                 BuildTSpinTriple();
+                break;
+            case SpecialClearType.PerfectClear:
+                BuildPerfectClear();
                 break;
         }
 
@@ -163,6 +177,19 @@ public class SpecialClearAnimationUI : MonoBehaviour
             CreateCircleParticle(tSpinTripleCenterParticleSize, new Color(accent.r, accent.g, accent.b, 0.85f));
     }
 
+    void BuildPerfectClear()
+    {
+        Color accent = new Color(1f, 0.96f, 0.5f, 1f);
+        Color softAccent = new Color(1f, 0.72f, 0.32f, 0.9f);
+        CreateStackedText("PERFECT", "CLEAR", accent);
+
+        for (int i = 0; i < perfectClearParticleCount; i++)
+        {
+            Color particleColor = i % 3 == 0 ? Color.white : (i % 2 == 0 ? accent : softAccent);
+            CreateCircleParticle(perfectClearParticleSize, particleColor);
+        }
+    }
+
     void UpdateAnimation(SpecialClearType clearType, Vector2 center, float t)
     {
         int graphicIndex = 0;
@@ -214,6 +241,24 @@ public class SpecialClearAnimationUI : MonoBehaviour
                 Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * tSpinDoubleParticleDistance * t;
                 particle.rectTransform.anchoredPosition = center + offset;
                 SetGraphicAlpha(particle, Mathf.Lerp(0.8f, 0f, t));
+            }
+            return;
+        }
+
+        if (clearType == SpecialClearType.PerfectClear)
+        {
+            int particleCount = perfectClearParticleCount;
+            for (int i = 0; i < particleCount; i++)
+            {
+                Image particle = activeGraphics[graphicIndex++] as Image;
+                float baseAngle = ((float)i / Mathf.Max(particleCount, 1)) * Mathf.PI * 2f;
+                float spin = Mathf.PI * 3f * t;
+                float radius = Mathf.Lerp(perfectClearRingStartRadius, perfectClearRingEndRadius, t);
+                float ringScale = (i % 2 == 0) ? 1f : perfectClearSecondaryRingRatio;
+                Vector2 offset = new Vector2(Mathf.Cos(baseAngle + spin), Mathf.Sin(baseAngle + spin)) * radius * ringScale;
+                particle.rectTransform.anchoredPosition = center + offset;
+                particle.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.55f, 1.2f, t);
+                SetGraphicAlpha(particle, Mathf.Lerp(0.95f, 0f, t));
             }
             return;
         }

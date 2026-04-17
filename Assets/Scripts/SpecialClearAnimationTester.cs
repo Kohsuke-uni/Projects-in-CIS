@@ -17,5 +17,8 @@ public class SpecialClearAnimationTester : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
             animationUI.PlayTSpinTriple();
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            animationUI.PlayPerfectClear();
     }
 }

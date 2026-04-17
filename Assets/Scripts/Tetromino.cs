@@ -769,6 +769,10 @@ public class Tetromino : MonoBehaviour
 
         if (linesCleared > 0)
         {
+            var perfectClearJudge = FindObjectOfType<PerfectClearJudge>();
+            if (perfectClearJudge != null && perfectClearJudge.enabled)
+                SaveManager.AddLinesCleared(linesCleared);
+
             PlayLineClearSE(linesCleared);
             PlaySpecialClearAnimation(linesCleared);
         }
@@ -827,9 +831,18 @@ public class Tetromino : MonoBehaviour
 
     private void PlaySpecialClearAnimation(int linesCleared)
     {
+        if (!enablePlayerInput)
+            return;
+
         SpecialClearAnimationUI animationUI = FindObjectOfType<SpecialClearAnimationUI>();
         if (animationUI == null)
             return;
+
+        if (IsPerfectClear(linesCleared))
+        {
+            animationUI.PlayPerfectClear();
+            return;
+        }
 
         if (lastLockWasTSpin)
         {
@@ -843,6 +856,14 @@ public class Tetromino : MonoBehaviour
 
         if (linesCleared == 4)
             animationUI.PlayTetris();
+    }
+
+    private bool IsPerfectClear(int linesCleared)
+    {
+        if (linesCleared <= 0 || board == null)
+            return false;
+
+        return board.IsBoardEmpty();
     }
 
     private void PlayLineClearSE(int linesCleared)

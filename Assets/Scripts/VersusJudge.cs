@@ -15,9 +15,12 @@ public class VersusJudge : MonoBehaviour
     public Text timeText;
     public GameObject newRecordRoot;
     public Text bestTimeText;
+    public GameObject mobileUiRoot;
+    public Text playerRenText;
 
     [Header("Optional Effects")]
     public ClearFaridUI clearFaridUI;
+    public SpecialClearAnimationUI specialClearAnimationUI;
 
     [Header("Scene Settings")]
     public string cpuSceneName = "CPU";
@@ -36,6 +39,10 @@ public class VersusJudge : MonoBehaviour
     [Header("Garbage Timing")]
     public float garbageDelay = 5f;
 
+    [Header("Garbage Appearance")]
+    public GameObject defaultGarbagePrefab;
+    public GameObject classicGarbagePrefab;
+
     public bool IsStageCleared { get; private set; } = false;
     public bool PlayerWon { get; private set; } = false;
     public bool PlayerLost { get; private set; } = false;
@@ -49,10 +56,13 @@ public class VersusJudge : MonoBehaviour
 
     private void Start()
     {
+        EnsureSpecialClearAnimationUI();
+
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
         if (newRecordRoot != null)
             newRecordRoot.SetActive(false);
+        UpdateMobileUiVisibility(true);
 
         if (clearFaridUI != null)
             clearFaridUI.gameObject.SetActive(false);
@@ -67,6 +77,8 @@ public class VersusJudge : MonoBehaviour
         cpuLastWasB2B = false;
         lastClearWasNewRecord = false;
         RefreshBestTimeUI();
+        RefreshRenUI();
+        ApplyGarbageAppearance();
 
         if (playerBoard != null && playerBoard.pendingGarbageSystem != null)
             playerBoard.pendingGarbageSystem.ClearPending();
@@ -75,6 +87,58 @@ public class VersusJudge : MonoBehaviour
             cpuBoard.pendingGarbageSystem.ClearPending();
 
         Debug.Log("[VersusJudge] Start completed");
+    }
+
+    private void ApplyGarbageAppearance()
+    {
+        GameObject selectedGarbagePrefab = SaveManager.GetUseClassicMinos() && classicGarbagePrefab != null
+            ? classicGarbagePrefab
+            : defaultGarbagePrefab;
+
+        if (playerBoard != null && selectedGarbagePrefab != null)
+            playerBoard.garbagePrefab = selectedGarbagePrefab;
+
+        if (cpuBoard != null && selectedGarbagePrefab != null)
+            cpuBoard.garbagePrefab = selectedGarbagePrefab;
+    }
+
+    private void EnsureSpecialClearAnimationUI()
+    {
+        if (specialClearAnimationUI != null)
+            return;
+
+        specialClearAnimationUI = FindObjectOfType<SpecialClearAnimationUI>();
+        if (specialClearAnimationUI != null)
+            return;
+
+        Canvas canvas = FindObjectOfType<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogWarning("[VersusJudge] No Canvas found for SpecialClearAnimationUI.");
+            return;
+        }
+
+        GameObject animationRoot = new GameObject("Clear Animations", typeof(RectTransform));
+        RectTransform rect = animationRoot.GetComponent<RectTransform>();
+        rect.SetParent(canvas.transform, false);
+        rect.anchorMin = new Vector2(0.5f, 0.5f);
+        rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.anchoredPosition = Vector2.zero;
+        rect.sizeDelta = canvas.pixelRect.size;
+
+        specialClearAnimationUI = animationRoot.AddComponent<SpecialClearAnimationUI>();
+        specialClearAnimationUI.centerOffset = Vector2.zero;
+        specialClearAnimationUI.stackedTextSpacing = 48f;
+        specialClearAnimationUI.tSpinDoubleBarWidth = 4f;
+        specialClearAnimationUI.tSpinDoubleBarHeight = 96f;
+        specialClearAnimationUI.tSpinDoubleParticleSize = 12f;
+        specialClearAnimationUI.tSpinDoubleParticleDistance = 108f;
+        specialClearAnimationUI.tSpinTripleRingParticleSize = 6f;
+        specialClearAnimationUI.tSpinTripleCenterParticleSize = 10f;
+        specialClearAnimationUI.tSpinTripleRingStartRadius = 60f;
+        specialClearAnimationUI.tSpinTripleRingEndRadius = 108f;
+        specialClearAnimationUI.tSpinTripleCenterParticleDistance = 80f;
     }
 
     public void OnTopOut(Board board)
@@ -112,6 +176,7 @@ public class VersusJudge : MonoBehaviour
         {
             ResetRenForBoard(sender);
             ResetB2BIfNeeded(sender, false);
+            RefreshRenUI();
             return;
         }
 
@@ -120,6 +185,7 @@ public class VersusJudge : MonoBehaviour
 
         int garbage = CalculateGarbage(piece, sender, linesCleared);
         Debug.Log($"[VersusJudge] calculated garbage={garbage} from sender={sender.name}");
+        RefreshRenUI();
 
         if (garbage <= 0) return;
 
@@ -296,6 +362,15 @@ public class VersusJudge : MonoBehaviour
             cpuLastWasB2B = value;
     }
 
+    private void RefreshRenUI()
+    {
+        if (playerRenText != null)
+        {
+            int displayedPlayerRen = Mathf.Max(0, playerRen - 1);
+            playerRenText.text = displayedPlayerRen > 0 ? $"{displayedPlayerRen} REN" : string.Empty;
+        }
+    }
+
     private int GetRenBonus(int ren)
     {
         if (ren <= 1) return 0;
@@ -344,8 +419,18 @@ public class VersusJudge : MonoBehaviour
         if (clearUIRoot != null)
             clearUIRoot.SetActive(true);
 
+        UpdateMobileUiVisibility(false);
+
         if (stopTimeOnFinish)
             Time.timeScale = 0f;
+    }
+
+    private void UpdateMobileUiVisibility(bool visible)
+    {
+        if (mobileUiRoot == null)
+            return;
+
+        mobileUiRoot.SetActive(visible && Application.isMobilePlatform);
     }
 
     private void StopActiveGameplay()
@@ -422,6 +507,7 @@ public class VersusJudge : MonoBehaviour
     {
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
+        UpdateMobileUiVisibility(true);
 
         if (clearFaridUI != null)
             clearFaridUI.gameObject.SetActive(false);

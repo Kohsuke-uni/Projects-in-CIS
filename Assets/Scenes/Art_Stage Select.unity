@@ -202,7 +202,6 @@ GameObject:
   - component: {fileID: 226686793}
   - component: {fileID: 226686792}
   - component: {fileID: 226686791}
-  - component: {fileID: 226686790}
   m_Layer: 5
   m_Name: Easy
   m_TagString: Untagged
@@ -231,26 +230,6 @@ RectTransform:
   m_AnchoredPosition: {x: -500, y: -371.18}
   m_SizeDelta: {x: 281, y: 104.9}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &226686790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 226686788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9c977429a2a443b0bf7c271769e9212, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneName: MakeShape_Heart
-  cpuDifficulty: 1
-  targetExercise: {fileID: 0}
-  sessionExercises: []
-  useExerciseTargetScene: 0
-  shuffleExerciseSession: 0
-  isREN: 0
-  renMode: 1
 --- !u!114 &226686791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,16 +274,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 226686790}
-        m_TargetAssemblyTypeName: SceneLoadButton, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 1
+      - m_Target: {fileID: 502927662}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LoadSceneByName
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: SRS_SZ_About
+          m_StringArgument: MakeShape_Heart
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &226686792
@@ -599,7 +578,6 @@ GameObject:
   - component: {fileID: 411178751}
   - component: {fileID: 411178750}
   - component: {fileID: 411178749}
-  - component: {fileID: 411178748}
   m_Layer: 5
   m_Name: Perfect Clear
   m_TagString: Untagged
@@ -626,28 +604,8 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -371.18}
-  m_SizeDelta: {x: 281, y: 104.9}
+  m_SizeDelta: {x: 454, y: 104.9}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &411178748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 411178746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9c977429a2a443b0bf7c271769e9212, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneName: PerfectClear
-  cpuDifficulty: 1
-  targetExercise: {fileID: 11400000, guid: 67fa18655c99a48c799ee196b8c503d7, type: 2}
-  sessionExercises: []
-  useExerciseTargetScene: 0
-  shuffleExerciseSession: 1
-  isREN: 1
-  renMode: 1
 --- !u!114 &411178749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -692,16 +650,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 411178748}
-        m_TargetAssemblyTypeName: SceneLoadButton, Assembly-CSharp
-        m_MethodName: LoadExerciseScene
-        m_Mode: 1
+      - m_Target: {fileID: 502927662}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LoadSceneByName
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: SRS_SZ_About
+          m_StringArgument: PerfectClear
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &411178750
@@ -1128,7 +1086,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BLOCK ART
+  m_text: Block Art
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 87ab40617510d46f7a20733795f26923, type: 2}
   m_sharedMaterial: {fileID: -7201399160472464817, guid: 87ab40617510d46f7a20733795f26923, type: 2}
@@ -1839,7 +1797,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 443.021}
-  m_SizeDelta: {x: 753.9661, y: 92}
+  m_SizeDelta: {x: 514.3, y: 92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1524266099
 MonoBehaviour:
@@ -1913,8 +1871,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8, y: 0.8}
-  m_SizeDelta: {x: 894.1, y: 363.1}
+  m_AnchoredPosition: {x: 0, y: 0.8}
+  m_SizeDelta: {x: 1292.16, y: 363.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1561914799
 MonoBehaviour:
@@ -1989,7 +1947,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 443.021}
-  m_SizeDelta: {x: 796.9408, y: 122.4}
+  m_SizeDelta: {x: 558.57, y: 122.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1635711563
 MonoBehaviour:
@@ -2041,7 +1999,6 @@ GameObject:
   - component: {fileID: 1670174342}
   - component: {fileID: 1670174341}
   - component: {fileID: 1670174340}
-  - component: {fileID: 1670174339}
   m_Layer: 5
   m_Name: Hard
   m_TagString: Untagged
@@ -2070,26 +2027,6 @@ RectTransform:
   m_AnchoredPosition: {x: 500, y: -371.18}
   m_SizeDelta: {x: 281, y: 104.9}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1670174339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1670174337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9c977429a2a443b0bf7c271769e9212, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneName: MakeShape_Hard
-  cpuDifficulty: 1
-  targetExercise: {fileID: 11400000, guid: 67fa18655c99a48c799ee196b8c503d7, type: 2}
-  sessionExercises: []
-  useExerciseTargetScene: 0
-  shuffleExerciseSession: 1
-  isREN: 1
-  renMode: 2
 --- !u!114 &1670174340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2134,16 +2071,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1670174339}
-        m_TargetAssemblyTypeName: SceneLoadButton, Assembly-CSharp
-        m_MethodName: LoadExerciseScene
-        m_Mode: 1
+      - m_Target: {fileID: 502927662}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LoadSceneByName
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: SRS_SZ_About
+          m_StringArgument: MakeShape_Hard
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1670174341
@@ -2714,7 +2651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2b376f7f792f423d9ad47aea0f369d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: About_Art
+  sceneName: About
   pagesObject: {fileID: 7716620877491974326, guid: a5dce94e555e2b64cab1f05b43ae9894, type: 3}
 --- !u!114 &2113089150
 MonoBehaviour:

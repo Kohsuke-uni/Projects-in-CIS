@@ -1,10 +1,26 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class PerfectClearJudge : MonoBehaviour
 {
+    [System.Serializable]
+    private struct SnapshotState
+    {
+        public List<Board.BlockState> boardBlocks;
+        public Spawner.RuntimeState spawnerState;
+        public float timerSeconds;
+        public int activePieceIndex;
+        public bool activePieceSpawnedFromHold;
+        public bool hasEverHadBlock;
+    }
+
     public GameObject clearUIRoot;
+    public GameObject undoButtonRoot;
+    public GameObject newRecordRoot;
+    public Text bestTimeText;
     public string stageSelectSceneName = "TechniqueSelect";
     public string nextStageSceneName = "";
     public bool stopTimeOnClear = true;
@@ -19,9 +35,15 @@ public class PerfectClearJudge : MonoBehaviour
     public bool IsStageCleared { get; private set; } = false;
 
     private bool hasEverHadBlock = false;
+    readonly List<SnapshotState> snapshotHistory = new List<SnapshotState>();
+    Spawner spawner;
+    bool suppressSnapshotCapture = false;
+    int lastSnapshottedPieceInstanceId = -1;
+    bool lastClearWasNewRecord = false;
 
     void Start()
     {
+        spawner = FindObjectOfType<Spawner>();
         if (board == null) board = FindObjectOfType<Board>();
 
         if (board == null)
@@ -31,6 +53,22 @@ public class PerfectClearJudge : MonoBehaviour
 
         if (clearUIRoot != null)
             clearUIRoot.SetActive(false);
+        if (undoButtonRoot != null)
+            undoButtonRoot.SetActive(true);
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(false);
+        RefreshBestTimeUI();
+
+        if (spawner != null)
+            spawner.PieceSpawned += OnPieceSpawned;
+
+        StartCoroutine(CaptureInitialSnapshotNextFrame());
+    }
+
+    void OnDestroy()
+    {
+        if (spawner != null)
+            spawner.PieceSpawned -= OnPieceSpawned;
     }
 
     void Update()
@@ -80,9 +118,12 @@ public class PerfectClearJudge : MonoBehaviour
 
         float clearTime = GetClearTimeSeconds();
         SaveManager.AddRecordedTime(clearTime);
+        lastClearWasNewRecord = SaveManager.RegisterPerfectClearTime(clearTime);
 
         int spriteIndex = GetSpriteIndexByTime(clearTime);
         UpdateClearTexts(clearTime, spriteIndex);
+        UpdateNewRecordUI();
+        RefreshBestTimeUI();
 
         if (clearUIRoot != null)
             clearUIRoot.SetActive(true);
@@ -94,6 +135,142 @@ public class PerfectClearJudge : MonoBehaviour
         }
 
         if (stopTimeOnClear) Time.timeScale = 0f;
+    }
+
+    void UpdateNewRecordUI()
+    {
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(lastClearWasNewRecord);
+    }
+
+    void RefreshBestTimeUI()
+    {
+        if (bestTimeText == null)
+            return;
+
+        float bestTime = SaveManager.GetBestPerfectClearTimeSeconds();
+        bestTimeText.text = $"BEST\n{FormatBestTime(bestTime)}";
+    }
+
+    string FormatBestTime(float seconds)
+    {
+        if (seconds < 0f)
+            return "--:--";
+
+        return FormatTime(seconds);
+    }
+
+    IEnumerator CaptureInitialSnapshotNextFrame()
+    {
+        yield return null;
+
+        if (!isActiveAndEnabled || IsStageCleared)
+            yield break;
+
+        Tetromino activePiece = FindObjectOfType<Tetromino>();
+        if (activePiece != null)
+            CaptureSnapshotForPiece(activePiece);
+    }
+
+    void OnPieceSpawned(Tetromino piece)
+    {
+        if (suppressSnapshotCapture) return;
+        if (piece == null || IsStageCleared) return;
+
+        CaptureSnapshotForPiece(piece);
+    }
+
+    void CaptureSnapshotForPiece(Tetromino piece)
+    {
+        if (piece == null || spawner == null)
+            return;
+
+        if (piece.board != null)
+            board = piece.board;
+
+        if (board == null)
+            return;
+
+        int pieceInstanceId = piece.GetInstanceID();
+        if (pieceInstanceId == lastSnapshottedPieceInstanceId)
+            return;
+
+        snapshotHistory.Add(new SnapshotState
+        {
+            boardBlocks = board.CaptureBlockStates(),
+            spawnerState = spawner.CaptureRuntimeState(),
+            timerSeconds = GetClearTimeSeconds(),
+            activePieceIndex = piece.typeIndex,
+            activePieceSpawnedFromHold = piece.spawnedFromHold,
+            hasEverHadBlock = hasEverHadBlock
+        });
+        lastSnapshottedPieceInstanceId = pieceInstanceId;
+    }
+
+    public void OnUndoButton()
+    {
+        if (IsStageCleared) return;
+        if (snapshotHistory.Count < 2) return;
+        if (board == null || spawner == null) return;
+
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+
+        snapshotHistory.RemoveAt(snapshotHistory.Count - 1);
+        SnapshotState snapshot = snapshotHistory[snapshotHistory.Count - 1];
+        RestoreSnapshot(snapshot);
+    }
+
+    void RestoreSnapshot(SnapshotState snapshot)
+    {
+        suppressSnapshotCapture = true;
+
+        RemoveActiveGameplayObjects();
+        board.ClearBoardImmediate();
+
+        board.RestoreBlockStates(snapshot.boardBlocks, clearExisting: false);
+        Tetromino restoredPiece = spawner.RestoreRuntimeStateAndSpawn(
+            snapshot.spawnerState,
+            snapshot.activePieceIndex,
+            snapshot.activePieceSpawnedFromHold);
+        lastSnapshottedPieceInstanceId = restoredPiece != null ? restoredPiece.GetInstanceID() : -1;
+
+        hasEverHadBlock = snapshot.hasEverHadBlock;
+
+        if (GameTimer.Instance != null)
+            GameTimer.Instance.SetElapsedTime(snapshot.timerSeconds, true);
+
+        suppressSnapshotCapture = false;
+    }
+
+    void RemoveActiveGameplayObjects()
+    {
+        Tetromino[] activePieces = FindObjectsOfType<Tetromino>();
+        for (int i = 0; i < activePieces.Length; i++)
+        {
+            Tetromino activePiece = activePieces[i];
+            if (activePiece == null)
+                continue;
+
+            if (activePiece.ghost != null)
+            {
+                activePiece.ghost.gameObject.SetActive(false);
+                Destroy(activePiece.ghost.gameObject);
+            }
+
+            activePiece.gameObject.SetActive(false);
+            Destroy(activePiece.gameObject);
+        }
+
+        GhostPiece[] ghosts = FindObjectsOfType<GhostPiece>();
+        for (int i = 0; i < ghosts.Length; i++)
+        {
+            GhostPiece ghost = ghosts[i];
+            if (ghost == null)
+                continue;
+
+            ghost.gameObject.SetActive(false);
+            Destroy(ghost.gameObject);
+        }
     }
 
     float GetClearTimeSeconds()
@@ -114,7 +291,7 @@ public class PerfectClearJudge : MonoBehaviour
     void UpdateClearTexts(float clearTime, int spriteIndex)
     {
         if (timeText != null)
-            timeText.text = FormatTime(clearTime);
+            timeText.text = "Time: " +FormatTime(clearTime);
 
         if (clearMessageText != null)
             clearMessageText.text = GetClearComment(spriteIndex);

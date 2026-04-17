@@ -13,6 +13,9 @@ public class SaveData
     public float bestCpuEasyTimeSeconds = -1f;
     public float bestCpuNormalTimeSeconds = -1f;
     public float bestCpuHardTimeSeconds = -1f;
+    public float bestMakeShapeHeartTimeSeconds = -1f;
+    public float bestMakeShapeHardTimeSeconds = -1f;
+    public float bestPerfectClearTimeSeconds = -1f;
     public int bestRen = -1;
     public List<ExercisePerformanceData> exercisePerformance = new List<ExercisePerformanceData>();
 }

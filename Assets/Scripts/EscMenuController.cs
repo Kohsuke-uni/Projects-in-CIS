@@ -116,9 +116,16 @@ public class EscMenuController : MonoBehaviour
 
     public void OnCloseButton()
     {
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+
+        if (IsAnyHowToPlayPanelActive())
+        {
+            CloseHowToPlay();
+            return;
+        }
+
         if (!isMenuOpen) return;
 
-        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
         ToggleMenu();
     }
 

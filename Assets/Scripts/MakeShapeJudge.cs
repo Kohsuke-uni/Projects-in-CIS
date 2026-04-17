@@ -71,6 +71,8 @@ public class MakeShapeJudge : MonoBehaviour
 
     [Header("UI / Scene Settings")]
     public GameObject clearUIRoot;
+    public GameObject newRecordRoot;
+    public Text bestTimeText;
     public string stageSelectSceneName = "TechniqueSelect";
     public string nextStageSceneName = "";
     public bool stopTimeOnClear = true;
@@ -97,6 +99,7 @@ public class MakeShapeJudge : MonoBehaviour
     HashSet<Vector2Int> targetCellSet; // 高速な所属チェック用
     readonly List<GameObject> overlayObjects = new List<GameObject>();
     int[] cellStepIndex; // overlayObjects と同順で、何ステップ目のセルか（-1=未割当）
+    bool lastClearWasNewRecord = false;
 
     // ===========================================================
     //  Unity ライフサイクル
@@ -138,6 +141,8 @@ public class MakeShapeJudge : MonoBehaviour
         }
 
         if (clearUIRoot != null) clearUIRoot.SetActive(false);
+        if (newRecordRoot != null) newRecordRoot.SetActive(false);
+        RefreshBestTimeUI();
     }
 
     // ===========================================================
@@ -215,9 +220,13 @@ public class MakeShapeJudge : MonoBehaviour
 
         float clearTime = GetClearTimeSeconds();
         SaveManager.AddRecordedTime(clearTime);
+        lastClearWasNewRecord = shapeType == ShapeType.Heart &&
+            SaveManager.RegisterMakeShapeHeartTime(clearTime);
 
         int spriteIndex = GetSpriteIndexByTime(clearTime);
         UpdateClearTexts(clearTime, spriteIndex);
+        UpdateNewRecordUI();
+        RefreshBestTimeUI();
 
         if (clearFaridUI != null)
         {
@@ -230,6 +239,35 @@ public class MakeShapeJudge : MonoBehaviour
         }
 
         if (stopTimeOnClear) Time.timeScale = 0f;
+    }
+
+    void UpdateNewRecordUI()
+    {
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(lastClearWasNewRecord);
+    }
+
+    void RefreshBestTimeUI()
+    {
+        if (bestTimeText == null)
+            return;
+
+        if (shapeType != ShapeType.Heart)
+        {
+            bestTimeText.text = "BEST\n--:--";
+            return;
+        }
+
+        float bestTime = SaveManager.GetBestMakeShapeHeartTimeSeconds();
+        bestTimeText.text = $"BEST\n{FormatBestTime(bestTime)}";
+    }
+
+    string FormatBestTime(float seconds)
+    {
+        if (seconds < 0f)
+            return "--:--";
+
+        return FormatTime(seconds);
     }
 
     void ForceRestartScene()
@@ -441,7 +479,7 @@ public class MakeShapeJudge : MonoBehaviour
     void UpdateClearTexts(float clearTime, int spriteIndex)
     {
         if (timeText != null)
-            timeText.text = FormatTime(clearTime);
+            timeText.text = "Time: " +FormatTime(clearTime);
 
         if (clearMessageText != null)
             clearMessageText.text = GetClearComment(spriteIndex);

@@ -168,6 +168,36 @@ public static class SaveManager
         return Data.bestRen;
     }
 
+    public static bool RegisterMakeShapeHeartTime(float clearTimeSeconds)
+    {
+        return RegisterBestTime(ref Data.bestMakeShapeHeartTimeSeconds, clearTimeSeconds);
+    }
+
+    public static float GetBestMakeShapeHeartTimeSeconds()
+    {
+        return Data.bestMakeShapeHeartTimeSeconds;
+    }
+
+    public static bool RegisterMakeShapeHardTime(float clearTimeSeconds)
+    {
+        return RegisterBestTime(ref Data.bestMakeShapeHardTimeSeconds, clearTimeSeconds);
+    }
+
+    public static float GetBestMakeShapeHardTimeSeconds()
+    {
+        return Data.bestMakeShapeHardTimeSeconds;
+    }
+
+    public static bool RegisterPerfectClearTime(float clearTimeSeconds)
+    {
+        return RegisterBestTime(ref Data.bestPerfectClearTimeSeconds, clearTimeSeconds);
+    }
+
+    public static float GetBestPerfectClearTimeSeconds()
+    {
+        return Data.bestPerfectClearTimeSeconds;
+    }
+
     public static bool RegisterExerciseClear(string exerciseId, float clearTimeSeconds)
     {
         if (string.IsNullOrWhiteSpace(exerciseId))
@@ -229,6 +259,21 @@ public static class SaveManager
             default:
                 return ref Data.bestCpuHardTimeSeconds;
         }
+    }
+
+    private static bool RegisterBestTime(ref float bestTimeSeconds, float clearTimeSeconds)
+    {
+        if (clearTimeSeconds <= 0f)
+            return false;
+
+        bool isBest = bestTimeSeconds < 0f || clearTimeSeconds < bestTimeSeconds;
+        if (isBest)
+        {
+            bestTimeSeconds = clearTimeSeconds;
+            Save();
+        }
+
+        return isBest;
     }
 
     private static void EnsureLoaded()

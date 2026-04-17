@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 /// <summary>
 /// Make Shape Hard のジャッジコンポーネント。
@@ -15,6 +16,16 @@ using UnityEngine.UI;
 /// </summary>
 public class MakeShapeHard : MonoBehaviour
 {
+    [System.Serializable]
+    private struct SnapshotState
+    {
+        public List<Board.BlockState> boardBlocks;
+        public Spawner.RuntimeState spawnerState;
+        public float timerSeconds;
+        public int activePieceIndex;
+        public bool activePieceSpawnedFromHold;
+    }
+
     // ===========================================================
     //  形の種類
     // ===========================================================
@@ -67,6 +78,9 @@ public class MakeShapeHard : MonoBehaviour
 
     [Header("UI / Scene Settings")]
     public GameObject clearUIRoot;
+    public GameObject undoButtonRoot;
+    public GameObject newRecordRoot;
+    public Text bestTimeText;
     public string stageSelectSceneName = "TechniqueSelect";
     public string nextStageSceneName = "";
     public bool stopTimeOnClear = true;
@@ -93,6 +107,11 @@ public class MakeShapeHard : MonoBehaviour
     HashSet<Vector2Int> targetCellSet; // 高速な所属チェック用
     readonly List<GameObject> overlayObjects = new List<GameObject>();
     int[] cellStepIndex; // overlayObjects と同順で、何ステップ目のセルか（-1=未割当）
+    readonly List<SnapshotState> snapshotHistory = new List<SnapshotState>();
+    Spawner spawner;
+    bool suppressSnapshotCapture = false;
+    int lastSnapshottedPieceInstanceId = -1;
+    bool lastClearWasNewRecord = false;
 
     // ===========================================================
     //  Unity ライフサイクル
@@ -100,7 +119,7 @@ public class MakeShapeHard : MonoBehaviour
 
     void Awake()
     {
-        var spawner = FindObjectOfType<Spawner>();
+        spawner = FindObjectOfType<Spawner>();
         if (spawner != null)
             spawner.forcedPieceIndex = -1;
     }
@@ -132,6 +151,20 @@ public class MakeShapeHard : MonoBehaviour
         }
 
         if (clearUIRoot != null) clearUIRoot.SetActive(false);
+        if (undoButtonRoot != null) undoButtonRoot.SetActive(true);
+        if (newRecordRoot != null) newRecordRoot.SetActive(false);
+        RefreshBestTimeUI();
+
+        if (spawner != null)
+            spawner.PieceSpawned += OnPieceSpawned;
+
+        StartCoroutine(CaptureInitialSnapshotNextFrame());
+    }
+
+    void OnDestroy()
+    {
+        if (spawner != null)
+            spawner.PieceSpawned -= OnPieceSpawned;
     }
 
     // ===========================================================
@@ -142,6 +175,9 @@ public class MakeShapeHard : MonoBehaviour
     {
         if (IsStageCleared) return;
         if (targetCells == null || targetCells.Length == 0) return;
+
+        if (linesCleared > 0)
+            SaveManager.AddLinesCleared(linesCleared);
 
         UpdateOverlayColors();
 
@@ -188,6 +224,19 @@ public class MakeShapeHard : MonoBehaviour
         SceneManager.LoadScene(stageSelectSceneName);
     }
 
+    public void OnUndoButton()
+    {
+        if (IsStageCleared) return;
+        if (snapshotHistory.Count < 2) return;
+        if (board == null || spawner == null) return;
+
+        SoundManager.Instance?.PlaySE(SeType.ButtonClick);
+
+        snapshotHistory.RemoveAt(snapshotHistory.Count - 1);
+        SnapshotState snapshot = snapshotHistory[snapshotHistory.Count - 1];
+        RestoreSnapshot(snapshot);
+    }
+
     // ===========================================================
     //  クリア・リトライ処理
     // ===========================================================
@@ -204,9 +253,12 @@ public class MakeShapeHard : MonoBehaviour
 
         float clearTime = GetClearTimeSeconds();
         SaveManager.AddRecordedTime(clearTime);
+        lastClearWasNewRecord = SaveManager.RegisterMakeShapeHardTime(clearTime);
 
         int spriteIndex = GetSpriteIndexByTime(clearTime);
         UpdateClearTexts(clearTime, spriteIndex);
+        UpdateNewRecordUI();
+        RefreshBestTimeUI();
 
         if (clearFaridUI != null)
         {
@@ -221,10 +273,131 @@ public class MakeShapeHard : MonoBehaviour
         if (stopTimeOnClear) Time.timeScale = 0f;
     }
 
+    void UpdateNewRecordUI()
+    {
+        if (newRecordRoot != null)
+            newRecordRoot.SetActive(lastClearWasNewRecord);
+    }
+
+    void RefreshBestTimeUI()
+    {
+        if (bestTimeText == null)
+            return;
+
+        float bestTime = SaveManager.GetBestMakeShapeHardTimeSeconds();
+        bestTimeText.text = $"BEST\n{FormatBestTime(bestTime)}";
+    }
+
+    string FormatBestTime(float seconds)
+    {
+        if (seconds < 0f)
+            return "--:--";
+
+        return FormatTime(seconds);
+    }
+
     void ForceRestartScene()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    IEnumerator CaptureInitialSnapshotNextFrame()
+    {
+        yield return null;
+
+        if (!isActiveAndEnabled || IsStageCleared)
+            yield break;
+
+        Tetromino activePiece = FindObjectOfType<Tetromino>();
+        if (activePiece != null)
+            CaptureSnapshotForPiece(activePiece);
+    }
+
+    void OnPieceSpawned(Tetromino piece)
+    {
+        if (suppressSnapshotCapture) return;
+        if (piece == null || IsStageCleared) return;
+
+        CaptureSnapshotForPiece(piece);
+    }
+
+    void CaptureSnapshotForPiece(Tetromino piece)
+    {
+        if (piece == null || spawner == null)
+            return;
+
+        if (piece.board != null)
+            board = piece.board;
+
+        if (board == null)
+            return;
+
+        int pieceInstanceId = piece.GetInstanceID();
+        if (pieceInstanceId == lastSnapshottedPieceInstanceId)
+            return;
+
+        snapshotHistory.Add(new SnapshotState
+        {
+            boardBlocks = board.CaptureBlockStates(),
+            spawnerState = spawner.CaptureRuntimeState(),
+            timerSeconds = GetClearTimeSeconds(),
+            activePieceIndex = piece.typeIndex,
+            activePieceSpawnedFromHold = piece.spawnedFromHold
+        });
+        lastSnapshottedPieceInstanceId = pieceInstanceId;
+    }
+
+    void RestoreSnapshot(SnapshotState snapshot)
+    {
+        suppressSnapshotCapture = true;
+
+        RemoveActiveGameplayObjects();
+        board.ClearBoardImmediate();
+
+        board.RestoreBlockStates(snapshot.boardBlocks, clearExisting: false);
+        Tetromino restoredPiece = spawner.RestoreRuntimeStateAndSpawn(
+            snapshot.spawnerState,
+            snapshot.activePieceIndex,
+            snapshot.activePieceSpawnedFromHold);
+        lastSnapshottedPieceInstanceId = restoredPiece != null ? restoredPiece.GetInstanceID() : -1;
+
+        if (GameTimer.Instance != null)
+            GameTimer.Instance.SetElapsedTime(snapshot.timerSeconds, true);
+
+        UpdateOverlayColors();
+        suppressSnapshotCapture = false;
+    }
+
+    void RemoveActiveGameplayObjects()
+    {
+        Tetromino[] activePieces = FindObjectsOfType<Tetromino>();
+        for (int i = 0; i < activePieces.Length; i++)
+        {
+            Tetromino activePiece = activePieces[i];
+            if (activePiece == null)
+                continue;
+
+            if (activePiece.ghost != null)
+            {
+                activePiece.ghost.gameObject.SetActive(false);
+                Destroy(activePiece.ghost.gameObject);
+            }
+
+            activePiece.gameObject.SetActive(false);
+            Destroy(activePiece.gameObject);
+        }
+
+        GhostPiece[] ghosts = FindObjectsOfType<GhostPiece>();
+        for (int i = 0; i < ghosts.Length; i++)
+        {
+            GhostPiece ghost = ghosts[i];
+            if (ghost == null)
+                continue;
+
+            ghost.gameObject.SetActive(false);
+            Destroy(ghost.gameObject);
+        }
     }
 
     // ===========================================================

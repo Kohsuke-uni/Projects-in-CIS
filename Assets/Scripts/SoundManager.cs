@@ -236,17 +236,8 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        // --- メニュー系シーン (TechniqueSelect / StageSelect) ---
-        if (sceneName.Contains("TechniqueSelect") ||
-            sceneName.Contains("StageSelect") ||
-            sceneName.Contains("SRS_I_Stage Select") ||
-            sceneName.Contains("SRS_JL_Stage Select") ||
-            sceneName.Contains("SRS_SZ_Stage Select") ||
-            sceneName.Contains("SRS_T_Stage Select") ||
-            sceneName.Contains("TSD_Stage Select") ||
-            sceneName.Contains("TST_Stage Select") ||
-            sceneName.Contains("REN_Stage Select") ||
-            sceneName.Contains("CPU_Stage Select") ||
+        // --- メニュー系シーン (Stage Select/Settings) ---
+        if (sceneName.Contains("Stage Select") ||
             sceneName.Contains("About") || 
             sceneName.Contains("SRS_Main") ||
             sceneName.Contains("Settings"))
